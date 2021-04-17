@@ -1,0 +1,239 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema",
+    "$id": "http://example.com/example.json",
+    "type": "object",
+    "title": "Ingredient",
+    "description": "Schema for an ingredient",
+    "default": {},
+    "examples": [
+        {
+            "name": "Broccoli",
+            "minerals": [
+                "Iron",
+                "Magnesium"
+            ],
+            "seasonality": [
+                {
+                    "season": "Summer",
+                    "area": "Belgium"
+                },
+                {
+                    "season": "Fall",
+                    "area": "Belgium"
+                }
+            ],
+            "stores": [
+                "Farmer's Market"
+            ],
+            "tags": [
+                "Leafy Greens"
+            ],
+            "vitamins": [
+                "C",
+                "K"
+            ]
+        }
+    ],
+    "required": [
+        "name",
+        "minerals",
+        "seasonality",
+        "stores",
+        "tags",
+        "vitamins"
+    ],
+    "properties": {
+        "name": {
+            "$id": "#/properties/name",
+            "type": "string",
+            "title": "Name",
+            "description": "The name of the ingredient.",
+            "default": "",
+            "examples": [
+                "Broccoli"
+            ]
+        },
+        "minerals": {
+            "$id": "#/properties/minerals",
+            "type": "array",
+            "title": "Minerals",
+            "description": "Which minerals does this ingredient contain.",
+            "default": [],
+            "examples": [
+                [
+                    "Iron",
+                    "Magnesium"
+                ]
+            ],
+            "additionalItems": true,
+            "items": {
+                "$id": "#/properties/minerals/items",
+                "anyOf": [
+                    {
+                        "$id": "#/properties/minerals/items/anyOf/0",
+                        "type": "string",
+                        "title": "Mineral",
+                        "description": "The name of a single mineral.",
+                        "default": "",
+                        "examples": [
+                            "Iron",
+                            "Magnesium"
+                        ]
+                    }
+                ]
+            }
+        },
+        "seasonality": {
+            "$id": "#/properties/seasonality",
+            "type": "array",
+            "title": "Seasonality",
+            "description": "The seasonality of this ingredient.",
+            "default": [],
+            "examples": [
+                [
+                    {
+                        "season": "Summer",
+                        "area": "Belgium"
+                    },
+                    {
+                        "season": "Fall",
+                        "area": "Belgium"
+                    }
+                ]
+            ],
+            "additionalItems": true,
+            "items": {
+                "$id": "#/properties/seasonality/items",
+                "anyOf": [
+                    {
+                        "$id": "#/properties/seasonality/items/anyOf/0",
+                        "type": "object",
+                        "title": "Season",
+                        "description": "Season schema.",
+                        "default": {},
+                        "examples": [
+                            {
+                                "season": "Summer",
+                                "area": "Belgium"
+                            }
+                        ],
+                        "required": [
+                            "season",
+                            "area"
+                        ],
+                        "properties": {
+                            "season": {
+                                "$id": "#/properties/seasonality/items/anyOf/0/properties/season",
+                                "type": "string",
+                                "title": "SeasonName",
+                                "description": "The name of the season.",
+                                "default": "",
+                                "examples": [
+                                    "Summer"
+                                ]
+                            },
+                            "area": {
+                                "$id": "#/properties/seasonality/items/anyOf/0/properties/area",
+                                "type": "string",
+                                "title": "Area",
+                                "description": "The area affecting this season.",
+                                "default": "",
+                                "examples": [
+                                    "Belgium"
+                                ]
+                            }
+                        },
+                        "additionalProperties": true
+                    }
+                ]
+            }
+        },
+        "stores": {
+            "$id": "#/properties/stores",
+            "type": "array",
+            "title": "Stores",
+            "description": "Where can I buy this ingredient?",
+            "default": [],
+            "examples": [
+                [
+                    "Farmer's Market"
+                ]
+            ],
+            "additionalItems": true,
+            "items": {
+                "$id": "#/properties/stores/items",
+                "anyOf": [
+                    {
+                        "$id": "#/properties/stores/items/anyOf/0",
+                        "type": "string",
+                        "title": "Store",
+                        "description": "The name of the store.",
+                        "default": "",
+                        "examples": [
+                            "Farmer's Market"
+                        ]
+                    }
+                ]
+            }
+        },
+        "tags": {
+            "$id": "#/properties/tags",
+            "type": "array",
+            "title": "Tags",
+            "description": "Additional tags for this ingredient.",
+            "default": [],
+            "examples": [
+                [
+                    "Leafy Greens"
+                ]
+            ],
+            "additionalItems": true,
+            "items": {
+                "$id": "#/properties/tags/items",
+                "anyOf": [
+                    {
+                        "$id": "#/properties/tags/items/anyOf/0",
+                        "type": "string",
+                        "title": "Tag",
+                        "description": "The name of the tag.",
+                        "default": "",
+                        "examples": [
+                            "Leafy Greens"
+                        ]
+                    }
+                ]
+            }
+        },
+        "vitamins": {
+            "$id": "#/properties/vitamins",
+            "type": "array",
+            "title": "Vitamins",
+            "description": "Which vitamins does this ingredient contain.",
+            "default": [],
+            "examples": [
+                [
+                    "C",
+                    "K"
+                ]
+            ],
+            "additionalItems": true,
+            "items": {
+                "$id": "#/properties/vitamins/items",
+                "anyOf": [
+                    {
+                        "$id": "#/properties/vitamins/items/anyOf/0",
+                        "type": "string",
+                        "title": "Vitamin",
+                        "description": "The name of the vitamin.",
+                        "default": "",
+                        "examples": [
+                            "C",
+                            "K"
+                        ]
+                    }
+                ]
+            }
+        }
+    },
+    "additionalProperties": true
+}

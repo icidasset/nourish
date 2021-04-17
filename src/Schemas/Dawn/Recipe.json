@@ -1,0 +1,177 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema",
+    "$id": "http://example.com/example.json",
+    "type": "object",
+    "title": "Recipe",
+    "description": "Schema for a recipe.",
+    "default": {},
+    "examples": [
+        {
+            "name": "Mom's World Famous Banana Bread",
+            "description": "This classic banana bread recipe comes from my mom -- the walnuts add a nice texture and flavor to the banana bread.",
+            "cookTime": "PT1H",
+            "prepTime": "PT15M",
+            "ingredients": [
+                {
+                    "name": "Banana",
+                    "description": "3 or 4 ripe bananas, smashed"
+                },
+                {
+                    "name": "Egg",
+                    "description": "1 egg"
+                },
+                {
+                    "name": "Sugar",
+                    "description": "3/4 cup of sugar"
+                }
+            ],
+            "instructions": "Preheat the oven to 350 degrees. Mix in the ingredients in a bowl. Add the flour last. Pour the mixture into a loaf pan and bake for one hour.",
+            "yields": "1 loaf",
+            "image": "bananabread.jpg"
+        }
+    ],
+    "required": [
+        "name",
+        "description",
+        "ingredients",
+        "instructions"
+    ],
+    "properties": {
+        "name": {
+            "$id": "#/properties/name",
+            "type": "string",
+            "title": "Name",
+            "description": "The name of the recipe.",
+            "default": "",
+            "examples": [
+                "Mom's World Famous Banana Bread"
+            ]
+        },
+        "description": {
+            "$id": "#/properties/description",
+            "type": "string",
+            "title": "Description",
+            "description": "A description of the recipe.",
+            "default": "",
+            "examples": [
+                "This classic banana bread recipe comes from my mom -- the walnuts add a nice texture and flavor to the banana bread."
+            ]
+        },
+        "cookTime": {
+            "$id": "#/properties/cookTime",
+            "type": "string",
+            "title": "Cook time",
+            "description": "The time it takes to actually cook the dish, in ISO 8601 duration format.",
+            "default": "",
+            "examples": [
+                "PT1H"
+            ]
+        },
+        "prepTime": {
+            "$id": "#/properties/prepTime",
+            "type": "string",
+            "title": "Prepare time",
+            "description": "The length of time it takes to prepare the items to be used in instructions or a direction, in ISO 8601 duration format.",
+            "default": "",
+            "examples": [
+                "PT15M"
+            ]
+        },
+        "ingredients": {
+            "$id": "#/properties/ingredients",
+            "type": "array",
+            "title": "Ingredients",
+            "description": "The ingredients for the recipe.",
+            "default": [],
+            "examples": [
+                [
+                    {
+                        "name": "Banana",
+                        "description": "3 or 4 ripe bananas, smashed"
+                    },
+                    {
+                        "name": "Egg",
+                        "description": "1 egg"
+                    }
+                ]
+            ],
+            "additionalItems": true,
+            "items": {
+                "$id": "#/properties/ingredients/items",
+                "anyOf": [
+                    {
+                        "$id": "#/properties/ingredients/items/anyOf/0",
+                        "type": "object",
+                        "title": "Ingredient",
+                        "description": "A specific ingredient and how to use it in this recipe.",
+                        "default": {},
+                        "examples": [
+                            {
+                                "name": "Banana",
+                                "description": "3 or 4 ripe bananas, smashed"
+                            }
+                        ],
+                        "required": [
+                            "name",
+                            "description"
+                        ],
+                        "properties": {
+                            "name": {
+                                "$id": "#/properties/ingredients/items/anyOf/0/properties/name",
+                                "type": "string",
+                                "title": "Name",
+                                "description": "The name of an ingredient, this matches the name in the ingredient schema.",
+                                "default": "",
+                                "examples": [
+                                    "Banana"
+                                ]
+                            },
+                            "description": {
+                                "$id": "#/properties/ingredients/items/anyOf/0/properties/description",
+                                "type": "string",
+                                "title": "Description",
+                                "description": "The amount and state of the ingredient to be used in the recipe.",
+                                "default": "",
+                                "examples": [
+                                    "3 or 4 ripe bananas, smashed"
+                                ]
+                            }
+                        },
+                        "additionalProperties": true
+                    }
+                ]
+            }
+        },
+        "instructions": {
+            "$id": "#/properties/instructions",
+            "type": "string",
+            "title": "Instructions",
+            "description": "Instructions to make this recipe, written in the Markdown format.",
+            "default": "",
+            "examples": [
+                "Preheat the oven to 350 degrees. Mix in the ingredients in a bowl. Add the flour last. Pour the mixture into a loaf pan and bake for one hour."
+            ]
+        },
+        "yields": {
+            "$id": "#/properties/yields",
+            "type": "string",
+            "title": "Yields",
+            "description": "The nourishment resulting from this recipe.",
+            "default": "",
+            "examples": [
+                "1 loaf"
+            ]
+        },
+        "image": {
+            "$id": "#/properties/image",
+            "type": "string",
+            "title": "Image",
+            "description": "Image URL for the recipe.",
+            "default": "",
+            "examples": [
+                "bananabread.jpg"
+            ]
+        }
+    },
+    "additionalProperties": true
+}
