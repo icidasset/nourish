@@ -7,4 +7,4 @@ import Radix exposing (..)
 
 view : Page -> Model -> Html Msg
 view page model =
-    Html.text ""
+    Html.text "Ingredients"
