@@ -26,7 +26,11 @@ fromUrl url =
 
 urlChanged : Url -> Radix.Manager
 urlChanged url model =
-    Return.singleton { model | url = url }
+    Return.singleton
+        { model
+            | page = fromUrl url
+            , url = url
+        }
 
 
 urlRequested : Browser.UrlRequest -> Radix.Manager

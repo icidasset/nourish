@@ -39,7 +39,6 @@ gen := "src/Static/Generated"
 @dev-server:
 	echo "🤵  Putting up a server for ya"
 	echo "http://localhost:8005"
-	# devd --quiet build --port=8005 --all
 
 	./node_modules/.bin/vite ./src \
 		--clearScreen false \

@@ -2,16 +2,13 @@ module Main exposing (main)
 
 import Browser
 import Browser.Navigation as Nav
-import Chunky exposing (..)
-import Html
-import Html.Attributes as A
-import Ingredients.View as Ingredients
 import Page exposing (Page(..))
 import Radix exposing (Model, Msg(..))
 import Return exposing (return)
 import Routing
 import Tailwind as T
 import Url exposing (Url)
+import View
 
 
 
@@ -84,26 +81,5 @@ subscriptions _ =
 view : Model -> Browser.Document Msg
 view model =
     { title = "Nourish"
-    , body =
-        [ case model.page of
-            Index ->
-                -- TODO
-                Html.text ""
-
-            Ingredients page ->
-                Ingredients.view page model
-
-        --
-        , chunk
-            Html.div
-            [ "min-h-screen"
-            , "text-red-500"
-
-            --
-            , "bg-gray-800"
-            , "dark:text-green-500"
-            ]
-            []
-            [ Html.text "testing 2 3" ]
-        ]
+    , body = [ View.view model ]
     }
