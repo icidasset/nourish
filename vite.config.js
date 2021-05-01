@@ -9,14 +9,16 @@ module.exports = {
   plugins: [
     {
       ...elm,
-      transform: (...args) => elm.transform(...args).then(r => {
-        if (r) console.log(execSync(`just css`).toString())
-        return r
-      })
+      transform: (...args) => {
+        if (!args[1].endsWith(".elm")) return
+
+        console.log(execSync(`just css`).toString())
+        return elm.transform(...args)
+      }
     }
   ],
 
-  publicDir: "src/Static/",
+  publicDir: "Static",
 
   // Build
   build: {

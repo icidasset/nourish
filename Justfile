@@ -1,4 +1,4 @@
-gen := "src/Static/Generated"
+gen := "src/Generated"
 
 
 @default: dev-build

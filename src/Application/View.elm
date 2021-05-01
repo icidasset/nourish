@@ -16,6 +16,7 @@ view model =
     chunk
         Html.main_
         [ "bg-gray-100"
+        , "font-body"
         , "min-h-screen"
         , "relative"
         , "text-gray-900"
@@ -51,29 +52,55 @@ navigation page =
                 Ingredients.navigation ingredientsPage
 
         --
-        , mainNavigation
+        , mainNavigation page
         ]
 
 
-mainNavigation =
+mainNavigation page =
     chunk
         Html.nav
-        [ "bg-gray-400"
+        [ "bg-gray-100"
         , "flex"
         , "justify-between"
         , "px-10"
         , "py-5"
-        , "text-gray-600"
+        , "text-gray-500"
         ]
         []
-        [ link [ A.href "/ingredients" ] [ Icons.park 20 Inherit ]
-        , link [ A.href "/store" ] [ Icons.store 20 Inherit ]
-        , link [ A.href "/recipes" ] [ Icons.local_dining 20 Inherit ]
-        , link [ A.href "/menu" ] [ Icons.calendar_view_week 20 Inherit ]
+        [ link
+            (case page of
+                Ingredients _ ->
+                    True
+
+                _ ->
+                    False
+            )
+            [ A.href "/ingredients/" ]
+            [ Icons.park 20 Inherit ]
+        , link
+            False
+            [ A.href "/store/" ]
+            [ Icons.store 20 Inherit ]
+        , link
+            False
+            [ A.href "/recipes/" ]
+            [ Icons.local_dining 20 Inherit ]
+        , link
+            False
+            [ A.href "/menu/" ]
+            [ Icons.calendar_view_week 20 Inherit ]
         ]
 
 
-link =
+link isActive =
     chunk
         Html.a
-        [ "inline-block", "opacity-80" ]
+        [ "inline-block"
+
+        --
+        , if isActive then
+            "text-lime-500"
+
+          else
+            "text-inherit"
+        ]
