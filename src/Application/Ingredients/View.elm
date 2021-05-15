@@ -6,18 +6,19 @@ import Html.Attributes as A
 import Ingredients.Page exposing (Page(..))
 import Material.Icons as Icons
 import Material.Icons.Types exposing (Coloring(..))
+import MultiSelect
 import Radix exposing (..)
 import UI.Kit
 
 
 view : Page -> Model -> Html Msg
-view page model =
+view page =
     case page of
         Index ->
-            index model
+            index
 
-        New ->
-            new model
+        New context ->
+            new context
 
 
 
@@ -33,7 +34,7 @@ navigation page =
                 Icons.add
                 "Add ingredient"
 
-        New ->
+        New _ ->
             UI.Kit.bottomNavButton
                 [ A.href "../" ]
                 Icons.arrow_back
@@ -45,17 +46,20 @@ navigation page =
 
 
 index _ =
-    Html.text ""
+    UI.Kit.layout
+        []
+        [ UI.Kit.h1
+            []
+            [ Html.text "Ingredients" ]
+        ]
 
 
 
 -- NEW
 
 
-new _ =
-    chunk
-        Html.div
-        [ "p-5" ]
+new context _ =
+    UI.Kit.layout
         []
         [ UI.Kit.h1
             []
@@ -63,13 +67,31 @@ new _ =
 
         --
         , UI.Kit.label
-            []
+            [ A.for "ingredient_name" ]
             [ Html.text "Name" ]
         , UI.Kit.textField
             [ A.type_ "text"
             , A.value "Brocolli"
+            , A.id "ingredient_name"
             ]
             []
+
+        --
+        , UI.Kit.label
+            [ A.for "ingredient_tags" ]
+            [ Html.text "Tags" ]
+        , chunk
+            Html.div
+            [ "mb-6" ]
+            []
+            [ UI.Kit.multiSelect
+                { inputPlaceholder = "Type to find or create a tag"
+                , items = List.sort [ "Vegetable", "Legume", "Fruit" ]
+                , msg = GotNewTags
+                , uid = "uid"
+                }
+                context.tags
+            ]
 
         --
         , UI.Kit.button

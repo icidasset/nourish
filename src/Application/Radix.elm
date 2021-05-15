@@ -2,6 +2,7 @@ module Radix exposing (..)
 
 import Browser
 import Browser.Navigation as Nav
+import MultiSelect
 import Page exposing (Page)
 import Url exposing (Url)
 
@@ -23,6 +24,10 @@ type alias Model =
 
 type Msg
     = Bypassed
+      -----------------------------------------
+      -- Ingredients
+      -----------------------------------------
+    | GotNewTags MultiSelect.State
       -----------------------------------------
       -- Routing
       -----------------------------------------

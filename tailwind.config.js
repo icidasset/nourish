@@ -8,7 +8,8 @@ module.exports = {
 
 
   purge: [
-    "src/Application/**/*.elm"
+    "src/Application/**/*.elm",
+    "src/Library/**/*.elm"
   ],
 
 

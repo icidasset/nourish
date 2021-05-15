@@ -19,9 +19,9 @@ view model =
         , "font-body"
         , "min-h-screen"
         , "relative"
-        , "text-gray-900"
+        , "text-gray-700"
         ]
-        []
+        [ A.style "text-rendering" "geometricPrecision" ]
         [ case model.page of
             Index ->
                 -- TODO
@@ -65,6 +65,7 @@ mainNavigation page =
         , "px-10"
         , "py-5"
         , "text-gray-500"
+        , "text-opacity-80"
         ]
         []
         [ link
@@ -96,10 +97,11 @@ link isActive =
     chunk
         Html.a
         [ "inline-block"
+        , "text-opacity-80"
 
         --
         , if isActive then
-            "text-lime-500"
+            "text-green-500"
 
           else
             "text-inherit"

@@ -3,7 +3,8 @@
     "source-directories": [
         "src/Application",
         "src/Generated",
-        "src/Library"
+        "src/Library",
+        "../../Work/webnative-elm/src"
     ],
     "elm-version": "0.19.1",
     "dependencies": {

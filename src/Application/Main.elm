@@ -2,6 +2,7 @@ module Main exposing (main)
 
 import Browser
 import Browser.Navigation as Nav
+import Ingredients.Page
 import Page exposing (Page(..))
 import Radix exposing (Model, Msg(..))
 import Return exposing (return)
@@ -54,6 +55,22 @@ update msg =
     case msg of
         Bypassed ->
             Return.singleton
+
+        -----------------------------------------
+        -- Ingredients
+        -----------------------------------------
+        GotNewTags state ->
+            -- TODO
+            \model ->
+                (case model.page of
+                    Ingredients (Ingredients.Page.New context) ->
+                        Ingredients (Ingredients.Page.New { context | tags = state })
+
+                    p ->
+                        p
+                )
+                    |> (\page -> { model | page = page })
+                    |> Return.singleton
 
         -----------------------------------------
         -- Routing

@@ -8,6 +8,7 @@
     "examples": [
         {
             "name": "Broccoli",
+            "emoji": "🥦",
             "minerals": [
                 "Iron",
                 "Magnesium"
@@ -51,6 +52,16 @@
             "default": "",
             "examples": [
                 "Broccoli"
+            ]
+        },
+        "emoji": {
+            "$id": "#/properties/emoji",
+            "type": "string",
+            "title": "Emoji",
+            "description": "An emoji associated to this ingredient.",
+            "default": "",
+            "examples": [
+                "🥦"
             ]
         },
         "minerals": {
