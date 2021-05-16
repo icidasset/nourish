@@ -110,7 +110,7 @@ view styles cfg (State stt) =
                     Html.button
                     styles.addButton
                     [ E.onClick (onSearch cfg stt "") ]
-                    [ Icons.add_circle 16 Inherit ]
+                    [ Icons.add_circle 18 Inherit ]
                 ]
             )
 
@@ -130,20 +130,25 @@ view styles cfg (State stt) =
                         , E.onInput (onSearch cfg stt)
                         ]
                         []
-                    , chunk
-                        Html.div
-                        styles.searchResultsContainer
-                        []
-                        (List.map
-                            (\result ->
-                                chunk
-                                    Html.div
-                                    styles.searchResult
-                                    [ E.onClick (onSelect cfg stt result True) ]
-                                    [ Html.text result ]
-                            )
-                            searchResults
-                        )
+                    , case searchResults of
+                        [] ->
+                            Html.text ""
+
+                        _ ->
+                            chunk
+                                Html.div
+                                styles.searchResultsContainer
+                                []
+                                (List.map
+                                    (\result ->
+                                        chunk
+                                            Html.div
+                                            styles.searchResult
+                                            [ E.onClick (onSelect cfg stt result True) ]
+                                            [ Html.text result ]
+                                    )
+                                    searchResults
+                                )
                     ]
 
             Nothing ->

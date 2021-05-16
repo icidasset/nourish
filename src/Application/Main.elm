@@ -3,6 +3,7 @@ module Main exposing (main)
 import Browser
 import Browser.Navigation as Nav
 import Ingredients.Page
+import Ingredients.State as Ingredients
 import Page exposing (Page(..))
 import Radix exposing (Model, Msg(..))
 import Return exposing (return)
@@ -39,7 +40,8 @@ main =
 init : Flags -> Url -> Nav.Key -> ( Model, Cmd Msg )
 init flags url navKey =
     Tuple.pair
-        { page = Routing.fromUrl url
+        { ingredients = []
+        , page = Routing.fromUrl url
         , navKey = navKey
         , url = url
         }
@@ -59,18 +61,8 @@ update msg =
         -----------------------------------------
         -- Ingredients
         -----------------------------------------
-        GotNewTags state ->
-            -- TODO
-            \model ->
-                (case model.page of
-                    Ingredients (Ingredients.Page.New context) ->
-                        Ingredients (Ingredients.Page.New { context | tags = state })
-
-                    p ->
-                        p
-                )
-                    |> (\page -> { model | page = page })
-                    |> Return.singleton
+        GotContextForNewIngredient a ->
+            Ingredients.gotContextForNewIngredient a
 
         -----------------------------------------
         -- Routing

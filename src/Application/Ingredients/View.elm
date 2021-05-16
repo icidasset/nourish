@@ -3,6 +3,7 @@ module Ingredients.View exposing (navigation, view)
 import Chunky exposing (..)
 import Html exposing (Html)
 import Html.Attributes as A
+import Html.Events as E
 import Ingredients.Page exposing (Page(..))
 import Material.Icons as Icons
 import Material.Icons.Types exposing (Coloring(..))
@@ -70,9 +71,37 @@ new context _ =
             [ A.for "ingredient_name" ]
             [ Html.text "Name" ]
         , UI.Kit.textField
-            [ A.type_ "text"
-            , A.value "Brocolli"
-            , A.id "ingredient_name"
+            [ A.id "ingredient_name"
+            , E.onInput (\name -> GotContextForNewIngredient { context | name = name })
+            , A.placeholder "Brocolli"
+            , A.type_ "text"
+            , A.value context.name
+            ]
+            []
+
+        --
+        , UI.Kit.label
+            [ A.for "ingredient_emoji" ]
+            [ Html.text "Emoji" ]
+        , chunk
+            Html.input
+            (List.map
+                (\c ->
+                    case c of
+                        "placeholder-opacity-60" ->
+                            "placeholder-opacity-30"
+
+                        _ ->
+                            c
+                )
+                UI.Kit.textFieldClasses
+            )
+            -- TODO: https://package.elm-lang.org/packages/BrianHicks/elm-string-graphemes/latest/String-Graphemes#length
+            [ A.id "ingredient_emoji"
+            , E.onInput (\emoji -> GotContextForNewIngredient { context | emoji = emoji })
+            , A.placeholder "🥦"
+            , A.type_ "text"
+            , A.value context.emoji
             ]
             []
 
@@ -87,7 +116,7 @@ new context _ =
             [ UI.Kit.multiSelect
                 { inputPlaceholder = "Type to find or create a tag"
                 , items = List.sort [ "Vegetable", "Legume", "Fruit" ]
-                , msg = GotNewTags
+                , msg = \tags -> GotContextForNewIngredient { context | tags = tags }
                 , uid = "uid"
                 }
                 context.tags

@@ -17,12 +17,16 @@ type Page
 
 
 type alias NewContext =
-    { tags : MultiSelect.State
+    { emoji : String
+    , name : String
+    , tags : MultiSelect.State
     }
 
 
 new : Page
 new =
     New
-        { tags = MultiSelect.init [ "Vegetable" ]
+        { emoji = ""
+        , name = ""
+        , tags = MultiSelect.init []
         }
