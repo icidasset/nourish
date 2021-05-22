@@ -72,7 +72,11 @@ new context _ =
             [ Html.text "Name" ]
         , UI.Kit.textField
             [ A.id "ingredient_name"
-            , E.onInput (\name -> GotContextForNewIngredient { context | name = name })
+            , E.onInput
+                (\name ->
+                    GotContextForNewIngredient
+                        { context | name = name }
+                )
             , A.placeholder "Brocolli"
             , A.type_ "text"
             , A.value context.name
@@ -98,7 +102,11 @@ new context _ =
             )
             -- TODO: https://package.elm-lang.org/packages/BrianHicks/elm-string-graphemes/latest/String-Graphemes#length
             [ A.id "ingredient_emoji"
-            , E.onInput (\emoji -> GotContextForNewIngredient { context | emoji = emoji })
+            , E.onInput
+                (\emoji ->
+                    GotContextForNewIngredient
+                        { context | emoji = emoji }
+                )
             , A.placeholder "🥦"
             , A.type_ "text"
             , A.value context.emoji
@@ -116,7 +124,7 @@ new context _ =
             [ UI.Kit.multiSelect
                 { inputPlaceholder = "Type to find or create a tag"
                 , items = List.sort [ "Vegetable", "Legume", "Fruit" ]
-                , msg = \tags -> GotContextForNewIngredient { context | tags = tags }
+                , msg = \tags -> GotContextForNewIngredient { context | tags = MultiSelect.mapSelected List.sort tags }
                 , uid = "uid"
                 }
                 context.tags

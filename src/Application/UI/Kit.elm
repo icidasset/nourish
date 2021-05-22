@@ -126,6 +126,7 @@ multiSelect =
         , searchInput =
             [ "bg-white"
             , "block"
+            , "leading-relaxed"
             , "p-2"
             , "placeholder-gray-400"
             , "placeholder-opacity-60"
@@ -165,5 +166,10 @@ multiSelect =
         , selectedItemsContainer =
             [ "flex"
             , "mb-3"
+            ]
+        , selectedItemsEmptyContainer =
+            [ "flex"
+            , "mb-3"
+            , "-ml-2"
             ]
         }

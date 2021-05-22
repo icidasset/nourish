@@ -7,6 +7,7 @@ import Chunky exposing (..)
 import Html exposing (Html)
 import Html.Attributes as A
 import Html.Events as E
+import Html.Events.Extra as E
 import Material.Icons as Icons
 import Material.Icons.Types exposing (Coloring(..))
 
@@ -44,6 +45,11 @@ init val =
 -- 🛠
 
 
+mapSelected : (List String -> List String) -> State -> State
+mapSelected fn (State state) =
+    State { state | selected = fn state.selected }
+
+
 selected : State -> List String
 selected (State state) =
     state.selected
@@ -61,6 +67,7 @@ type alias Styles =
     , searchResult : List String
     , selectedItem : List String
     , selectedItemsContainer : List String
+    , selectedItemsEmptyContainer : List String
     }
 
 
@@ -93,7 +100,13 @@ view styles cfg (State stt) =
         []
         [ chunk
             Html.div
-            styles.selectedItemsContainer
+            (case stt.selected of
+                [] ->
+                    styles.selectedItemsEmptyContainer
+
+                _ ->
+                    styles.selectedItemsContainer
+            )
             []
             (List.append
                 (List.map
@@ -117,6 +130,10 @@ view styles cfg (State stt) =
         --
         , case stt.search of
             Just _ ->
+                let
+                    value =
+                        Maybe.withDefault "" stt.search
+                in
                 chunk
                     Html.div
                     styles.searchContainer
@@ -124,9 +141,10 @@ view styles cfg (State stt) =
                     [ chunk
                         Html.input
                         styles.searchInput
-                        [ A.type_ "text"
-                        , A.value (Maybe.withDefault "" stt.search)
+                        [ A.type_ "search"
+                        , A.value value
                         , A.placeholder cfg.inputPlaceholder
+                        , E.onEnter (onSelect cfg stt value True)
                         , E.onInput (onSearch cfg stt)
                         ]
                         []
@@ -142,7 +160,7 @@ view styles cfg (State stt) =
                                 (List.map
                                     (\result ->
                                         chunk
-                                            Html.div
+                                            Html.button
                                             styles.searchResult
                                             [ E.onClick (onSelect cfg stt result True) ]
                                             [ Html.text result ]
@@ -167,8 +185,14 @@ onSearch cfg stt s =
 
 
 onSelect cfg stt s v =
-    if v then
-        cfg.msg <| State { stt | selected = s :: stt.selected }
+    stt.selected
+        |> List.filter (String.toLower >> (/=) (String.toLower s))
+        |> (if v then
+                (::) s
 
-    else
-        cfg.msg <| State { stt | selected = List.filter ((/=) s) stt.selected }
+            else
+                identity
+           )
+        |> (\new -> { stt | selected = new })
+        |> State
+        |> cfg.msg

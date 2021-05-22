@@ -2,8 +2,8 @@ devDependencies:
   autoprefixer: 10.2.5_postcss@8.2.12
   postcss: 8.2.12
   tailwindcss: 2.1.2_d887a42ede92218908fd5c3cc0b71177
-  vite: 2.2.3
-  vite-plugin-elm: 2.1.3_vite@2.2.3
+  vite: 2.3.3
+  vite-plugin-elm: 2.2.0_vite@2.3.3
 lockfileVersion: 5.2
 packages:
   /@fullhuman/postcss-purgecss/3.1.3:
@@ -301,12 +301,12 @@ packages:
     hasBin: true
     resolution:
       integrity: sha512-h4Ta4hk7kITgKiXHLX3BZMpEXg9mFRIK8T/lOAiPG9WsOEPJMZUnvPiYmiiyOMgbNw4GYhlvAp6gsDjAkEflLw==
-  /esbuild/0.9.7:
+  /esbuild/0.11.23:
     dev: true
     hasBin: true
     requiresBuild: true
     resolution:
-      integrity: sha512-VtUf6aQ89VTmMLKrWHYG50uByMF4JQlVysb8dmg6cOgW8JnFCipmz7p+HNBl+RR3LLCuBxFGVauAe2wfnF9bLg==
+      integrity: sha512-iaiZZ9vUF5wJV8ob1tl+5aJTrwDczlvGP0JoMmnpC2B0ppiMCu8n8gmy5ZTGl5bcG081XBVn+U+jP+mPFm5T5Q==
   /escalade/3.1.1:
     dev: true
     engines:
@@ -941,19 +941,19 @@ packages:
     dev: true
     resolution:
       integrity: sha1-RQ1Nyfpw3nMnYvvS1KKJgUGaDM8=
-  /vite-plugin-elm/2.1.3_vite@2.2.3:
+  /vite-plugin-elm/2.2.0_vite@2.3.3:
     dependencies:
       elm-esm: 1.1.2
       node-elm-compiler: 5.0.6
-      vite: 2.2.3
+      vite: 2.3.3
     dev: true
     peerDependencies:
       vite: ^2.0.0
     resolution:
-      integrity: sha512-SGfm4wyn40qKNOtEhKAvnhKJTVB7AoMqxx/IesFSKZIMgAsukVIoNQIQJbHM2r2IqtCC8jBZee/6/qrIv7e+gQ==
-  /vite/2.2.3:
+      integrity: sha512-vNdwRUohokUkODhhVM9IXPb3R66P8DK/uLwbpFR03DHPSF5HYEYkOfO8MRq1S080QQ/utuwgdA/nH+WKR8j6Ew==
+  /vite/2.3.3:
     dependencies:
-      esbuild: 0.9.7
+      esbuild: 0.11.23
       postcss: 8.2.12
       resolve: 1.20.0
       rollup: 2.45.2
@@ -964,7 +964,7 @@ packages:
     optionalDependencies:
       fsevents: 2.3.2
     resolution:
-      integrity: sha512-PtjyBL4GtACM+uT5q5hi2+AlMBbb6YI2b2bam6QI8ZdZt4FezseF0yZHQx0G+b3po9jIJ/GS5N9gc5Yq9Rue7g==
+      integrity: sha512-eO1iwRbn3/BfkNVMNJDeANAFCZ5NobYOFPu7IqfY7DcI7I9nFGjJIZid0EViTmLDGwwSUPmRAq3cRBbO3+DsMA==
   /which/1.3.1:
     dependencies:
       isexe: 2.0.0
@@ -995,5 +995,5 @@ specifiers:
   autoprefixer: ^10.2.5
   postcss: ^8.2.12
   tailwindcss: ^2.1.2
-  vite: ^2.2.3
-  vite-plugin-elm: ^2.1.3
+  vite: ^2.3.3
+  vite-plugin-elm: ^2.2.0

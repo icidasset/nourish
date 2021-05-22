@@ -8,7 +8,6 @@ import Page exposing (Page(..))
 import Radix exposing (Model, Msg(..))
 import Return exposing (return)
 import Routing
-import Tailwind as T
 import Url exposing (Url)
 import View
 
