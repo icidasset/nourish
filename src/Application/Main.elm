@@ -60,6 +60,9 @@ update msg =
         -----------------------------------------
         -- Ingredients
         -----------------------------------------
+        GotContextForIngredientsIndex a ->
+            Ingredients.gotContextForIngredientsIndex a
+
         GotContextForNewIngredient a ->
             Ingredients.gotContextForNewIngredient a
 

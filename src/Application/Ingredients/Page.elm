@@ -8,8 +8,23 @@ import MultiSelect
 
 
 type Page
-    = Index
+    = Index IndexContext
     | New NewContext
+
+
+
+-- INDEX
+
+
+type alias IndexContext =
+    { filter : MultiSelect.State
+    }
+
+
+index : Page
+index =
+    Index
+        { filter = MultiSelect.init [] }
 
 
 

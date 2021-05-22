@@ -17,7 +17,9 @@ import Material.Icons.Types exposing (Coloring(..))
 
 
 type alias Config msg =
-    { inputPlaceholder : String
+    { addButton : List (Html msg)
+    , allowCreation : Bool
+    , inputPlaceholder : String
     , items : List String
     , msg : State -> msg
     , uid : String
@@ -122,8 +124,14 @@ view styles cfg (State stt) =
                 [ chunk
                     Html.button
                     styles.addButton
-                    [ E.onClick (onSearch cfg stt "") ]
-                    [ Icons.add_circle 18 Inherit ]
+                    (case stt.search of
+                        Just _ ->
+                            [ E.onClick (onHideSearch cfg stt) ]
+
+                        Nothing ->
+                            [ E.onClick (onSearch cfg stt "") ]
+                    )
+                    cfg.addButton
                 ]
             )
 
@@ -141,12 +149,19 @@ view styles cfg (State stt) =
                     [ chunk
                         Html.input
                         styles.searchInput
-                        [ A.type_ "search"
-                        , A.value value
-                        , A.placeholder cfg.inputPlaceholder
-                        , E.onEnter (onSelect cfg stt value True)
-                        , E.onInput (onSearch cfg stt)
-                        ]
+                        (List.append
+                            [ A.type_ "search"
+                            , A.value value
+                            , A.placeholder cfg.inputPlaceholder
+                            , E.onInput (onSearch cfg stt)
+                            ]
+                            (if cfg.allowCreation then
+                                [ E.onEnter (onSelect cfg stt value True) ]
+
+                             else
+                                []
+                            )
+                        )
                         []
                     , case searchResults of
                         [] ->
@@ -176,6 +191,12 @@ view styles cfg (State stt) =
 
 
 -- ㊙️
+
+
+onHideSearch cfg stt =
+    { stt | search = Nothing }
+        |> State
+        |> cfg.msg
 
 
 onSearch cfg stt s =

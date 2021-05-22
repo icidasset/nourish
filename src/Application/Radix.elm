@@ -29,6 +29,7 @@ type Msg
       -----------------------------------------
       -- Ingredients
       -----------------------------------------
+    | GotContextForIngredientsIndex Ingredients.Page.IndexContext
     | GotContextForNewIngredient Ingredients.Page.NewContext
       -----------------------------------------
       -- Routing

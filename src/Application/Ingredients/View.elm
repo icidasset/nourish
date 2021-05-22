@@ -15,8 +15,8 @@ import UI.Kit
 view : Page -> Model -> Html Msg
 view page =
     case page of
-        Index ->
-            index
+        Index context ->
+            index context
 
         New context ->
             new context
@@ -29,7 +29,7 @@ view page =
 navigation : Page -> Html Msg
 navigation page =
     case page of
-        Index ->
+        Index _ ->
             UI.Kit.bottomNavButton
                 [ A.href "/ingredients/new/" ]
                 Icons.add
@@ -46,12 +46,79 @@ navigation page =
 -- INDEX
 
 
-index _ =
+index context _ =
+    let
+        tags =
+            context.filter
+                |> MultiSelect.selected
+                |> List.map String.toLower
+    in
     UI.Kit.layout
         []
         [ UI.Kit.h1
             []
             [ Html.text "Ingredients" ]
+
+        --
+        , chunk
+            Html.div
+            [ "mt-6"
+            ]
+            []
+            [ UI.Kit.multiSelect
+                { addButton =
+                    [ Icons.filter_alt 18 Inherit ]
+                , allowCreation = False
+                , inputPlaceholder = "Search tags"
+                , items = List.sort [ "Vegetable", "Legume", "Fruit" ]
+                , msg =
+                    \filter ->
+                        GotContextForIngredientsIndex
+                            { context | filter = MultiSelect.mapSelected List.sort filter }
+                , uid = "selectTags"
+                }
+                context.filter
+            ]
+
+        --
+        , [ { emoji = Just "🥦"
+            , minerals = []
+            , name = "Brocolli"
+            , seasonality = []
+            , stores = []
+            , tags = [ "Vegetable" ]
+            , vitamins = []
+            }
+          ]
+            |> List.filter
+                (\ingredient ->
+                    isSubsequenceOf
+                        tags
+                        (List.map String.toLower ingredient.tags)
+                )
+            |> List.map
+                (\ingredient ->
+                    chunk
+                        Html.div
+                        [ "mb-2" ]
+                        []
+                        [ chunk
+                            Html.span
+                            [ "mr-2" ]
+                            []
+                            [ ingredient.emoji
+                                |> Maybe.withDefault "🤍"
+                                |> Html.text
+                            ]
+                        , Html.text
+                            ingredient.name
+                        ]
+                )
+            |> chunk
+                Html.div
+                [ "mt-8"
+                ]
+                []
         ]
 
 
@@ -122,10 +189,15 @@ new context _ =
             [ "mb-6" ]
             []
             [ UI.Kit.multiSelect
-                { inputPlaceholder = "Type to find or create a tag"
+                { addButton = [ Icons.add_circle 18 Inherit ]
+                , allowCreation = True
+                , inputPlaceholder = "Type to find or create a tag"
                 , items = List.sort [ "Vegetable", "Legume", "Fruit" ]
-                , msg = \tags -> GotContextForNewIngredient { context | tags = MultiSelect.mapSelected List.sort tags }
-                , uid = "uid"
+                , msg =
+                    \tags ->
+                        GotContextForNewIngredient
+                            { context | tags = MultiSelect.mapSelected List.sort tags }
+                , uid = "selectTags"
                 }
                 context.tags
             ]
@@ -139,3 +211,20 @@ new context _ =
                 [ Html.text "Add ingredient" ]
             ]
         ]
+
+
+isSubsequenceOf : List a -> List a -> Bool
+isSubsequenceOf subseq list =
+    case ( subseq, list ) of
+        ( [], _ ) ->
+            True
+
+        ( _, [] ) ->
+            False
+
+        ( x :: xs, y :: ys ) ->
+            if x == y then
+                isSubsequenceOf xs ys
+
+            else
+                isSubsequenceOf subseq ys

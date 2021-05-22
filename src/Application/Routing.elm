@@ -55,6 +55,6 @@ route =
         -----------------------------------------
         -- Ingredients
         -----------------------------------------
-        , map (Ingredients Ingredients.Index) (s "ingredients")
+        , map (Ingredients Ingredients.index) (s "ingredients")
         , map (Ingredients Ingredients.new) (s "ingredients" </> s "new")
         ]
