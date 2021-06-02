@@ -5,22 +5,25 @@ import Browser.Navigation as Nav
 import Ingredients.Page
 import Ingredients.State as Ingredients
 import Page exposing (Page(..))
-import Radix exposing (Model, Msg(..))
+import Ports
+import Radix exposing (..)
+import RemoteData exposing (RemoteData(..))
 import Return exposing (return)
 import Routing
+import Tag exposing (Tag(..))
 import Url exposing (Url)
+import UserData
 import View
+import Webnative exposing (DecodedResponse(..))
+import Webnative.Path as Path
+import Wnfs
 
 
 
 -- ⛩
 
 
-type alias Flags =
-    {}
-
-
-main : Program Flags Model Msg
+main : Program {} Model Msg
 main =
     Browser.application
         { init = init
@@ -36,15 +39,29 @@ main =
 -- 🌱
 
 
-init : Flags -> Url -> Nav.Key -> ( Model, Cmd Msg )
-init flags url navKey =
-    Tuple.pair
-        { ingredients = []
-        , page = Routing.fromUrl url
+init : {} -> Url -> Nav.Key -> ( Model, Cmd Msg )
+init _ url navKey =
+    Return.singleton
+        { page = Routing.fromUrl url
         , navKey = navKey
         , url = url
+        , userData = UserData.empty
         }
-        Cmd.none
+
+
+initPartTwo : Flags -> Manager
+initPartTwo flags model =
+    model.userData
+        |> (\u -> { u | userName = flags.authenticatedUsername })
+        |> (\u -> { model | userData = u })
+        |> Return.singleton
+        |> Return.command
+            ({ path = Path.file [ "ingredients.json" ]
+             , tag = Tag.toString LoadedIngredients
+             }
+                |> Wnfs.readUtf8 appBase
+                |> Ports.webnativeRequest
+            )
 
 
 
@@ -57,9 +74,18 @@ update msg =
         Bypassed ->
             Return.singleton
 
+        Initialised a ->
+            initPartTwo a
+
+        GotWebnativeResponse a ->
+            gotWebnativeResponse a
+
         -----------------------------------------
         -- Ingredients
         -----------------------------------------
+        AddIngredient a ->
+            Ingredients.add a
+
         GotContextForIngredientsIndex a ->
             Ingredients.gotContextForIngredientsIndex a
 
@@ -76,13 +102,30 @@ update msg =
             Routing.urlRequested a
 
 
+gotWebnativeResponse : Webnative.Response -> Manager
+gotWebnativeResponse response model =
+    case Webnative.decodeResponse Tag.fromString response of
+        Wnfs LoadedIngredients (Wnfs.Utf8Content json) ->
+            Ingredients.loadedIngredients { json = json } model
+
+        WnfsError (Wnfs.JavascriptError "Path does not exist") ->
+            Ingredients.loadedIngredients { json = "[]" } model
+
+        _ ->
+            -- TODO
+            Return.singleton model
+
+
 
 -- 📰
 
 
 subscriptions : Model -> Sub Msg
 subscriptions _ =
-    Sub.none
+    Sub.batch
+        [ Ports.initialised Initialised
+        , Ports.webnativeResponse GotWebnativeResponse
+        ]
 
 
 

@@ -16,6 +16,10 @@ gen := "src/Generated"
 @dev-build: clean translate-schemas
 
 
+@install-deps:
+	pnpm install
+
+
 
 # Pieces
 # ======

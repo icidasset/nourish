@@ -13,7 +13,7 @@ import Material.Icons.Types exposing (Coloring(..))
 
 
 
--- 🌳
+-- 🌱
 
 
 type alias Config msg =
