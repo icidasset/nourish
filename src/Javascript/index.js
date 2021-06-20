@@ -39,6 +39,8 @@ webnative.initialise({
   switch (state.scenario) {
 
     case wn.Scenario.AuthSucceeded:
+      if (state.fs) await copyOverTempFilesIfNeeded(state.fs)
+
     case wn.Scenario.Continuation:
       fileSystem = state.fs
       break;
@@ -82,6 +84,25 @@ const TMP_OPTS = {
       public: [ webnative.path.root() ]
     }
   }
+}
+
+
+async function copyOverTempFilesIfNeeded(userFs) {
+  const ingredientsPath = userFs.appPath("Ingredients.json")
+
+  // Check existance
+  const filesExist = await userFs.exists(ingredientsPath)
+  if (filesExist) return
+
+  // Load temp filesystem
+  const tempFs = await loadTemporaryFileSystem()
+  if (!tempFs) return
+
+  // Copy files
+  await usersFs.write(
+    ingredientsPath,
+    await tempFs.cat(ingredientsPath)
+  )
 }
 
 
