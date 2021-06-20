@@ -56,7 +56,7 @@ initPartTwo flags model =
         |> (\u -> { model | userData = u })
         |> Return.singleton
         |> Return.command
-            ({ path = Path.file [ "ingredients.json" ]
+            ({ path = Path.file [ "Ingredients.json" ]
              , tag = Tag.toString LoadedIngredients
              }
                 |> Wnfs.readUtf8 appBase
@@ -108,12 +108,23 @@ gotWebnativeResponse response model =
         Wnfs LoadedIngredients (Wnfs.Utf8Content json) ->
             Ingredients.loadedIngredients { json = json } model
 
+        Wnfs SavedIngredients _ ->
+            publish model
+
         WnfsError (Wnfs.JavascriptError "Path does not exist") ->
             Ingredients.loadedIngredients { json = "[]" } model
 
         _ ->
             -- TODO
             Return.singleton model
+
+
+publish : Manager
+publish model =
+    { tag = Tag.toString Untagged }
+        |> Wnfs.publish
+        |> Ports.webnativeRequest
+        |> return model
 
 
 

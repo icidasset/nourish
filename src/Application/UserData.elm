@@ -18,3 +18,17 @@ empty =
     { ingredients = Loading
     , userName = Nothing
     }
+
+
+
+-- INGREDIENTS
+
+
+addIngredient : UserData -> Ingredient -> UserData
+addIngredient userData ingredient =
+    { userData
+        | ingredients =
+            RemoteData.map
+                (\i -> i ++ [ ingredient ])
+                userData.ingredients
+    }

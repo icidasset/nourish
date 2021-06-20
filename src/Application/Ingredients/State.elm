@@ -1,25 +1,49 @@
 module Ingredients.State exposing (..)
 
 import Ingredient
-import Ingredients.Page
+import Ingredients.Page as Ingredients
+import Ingredients.Wnfs
 import Json.Decode as Decode
+import MultiSelect
 import Page exposing (Page(..))
+import Ports
 import Radix exposing (..)
 import RemoteData exposing (RemoteData(..))
-import Return
+import Return exposing (return)
+import String.Extra as String
+import UserData
 
 
-add : Ingredients.Page.NewContext -> Manager
-add context =
-    -- TODO
-    Return.singleton
+add : Ingredients.NewContext -> Manager
+add context model =
+    { emoji = String.nonBlank context.emoji
+    , minerals = []
+    , name = String.trim context.name
+    , seasonality = []
+    , stores = []
+    , tags = MultiSelect.selected context.tags
+    , vitamins = []
+    }
+        |> UserData.addIngredient model.userData
+        |> (\u ->
+                return
+                    { model
+                        | page = Ingredients Ingredients.index
+                        , userData = u
+                    }
+                    (u.ingredients
+                        |> RemoteData.withDefault []
+                        |> Ingredients.Wnfs.save
+                        |> Ports.webnativeRequest
+                    )
+           )
 
 
-gotContextForIngredientsIndex : Ingredients.Page.IndexContext -> Manager
+gotContextForIngredientsIndex : Ingredients.IndexContext -> Manager
 gotContextForIngredientsIndex indexContext model =
     (case model.page of
-        Ingredients (Ingredients.Page.Index _) ->
-            Ingredients (Ingredients.Page.Index indexContext)
+        Ingredients (Ingredients.Index _) ->
+            Ingredients (Ingredients.Index indexContext)
 
         p ->
             p
@@ -28,11 +52,11 @@ gotContextForIngredientsIndex indexContext model =
         |> Return.singleton
 
 
-gotContextForNewIngredient : Ingredients.Page.NewContext -> Manager
+gotContextForNewIngredient : Ingredients.NewContext -> Manager
 gotContextForNewIngredient newContext model =
     (case model.page of
-        Ingredients (Ingredients.Page.New _) ->
-            Ingredients (Ingredients.Page.New newContext)
+        Ingredients (Ingredients.New _) ->
+            Ingredients (Ingredients.New newContext)
 
         p ->
             p

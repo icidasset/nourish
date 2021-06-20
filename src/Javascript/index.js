@@ -49,6 +49,8 @@ webnative.initialise({
 
   }
 
+  window.fs = fileSystem
+
   app.ports.initialised.send({
     authenticatedUsername: await webnative.authenticatedUsername()
   })
@@ -88,10 +90,14 @@ async function loadTemporaryFileSystem() {
 
   const fs = cid
     ? await webnative.fs.fromCID(cid, TMP_OPTS)
-    : await webnative.fs.empty(TMP_OPTS)
+    : await webnative.fs.empty(TMP_OPTS);
+
+  fs.publish = async function() {
+    localStorage.setItem(TMP_KEY, await this.root.put())
+  }
 
   if (!cid) {
-    localStorage.setItem(TMP_KEY, await fs.root.put())
+    fs.publish()
   }
 
   return fs

@@ -160,6 +160,7 @@ new context _ =
                     { context | name = name }
             )
         , A.placeholder "Brocolli"
+        , A.required True
         , A.type_ "text"
         , A.value context.name
         ]
