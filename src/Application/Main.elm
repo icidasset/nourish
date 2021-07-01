@@ -7,6 +7,7 @@ import Ingredients.State as Ingredients
 import Page exposing (Page(..))
 import Ports
 import Radix exposing (..)
+import Random
 import RemoteData exposing (RemoteData(..))
 import Return exposing (return)
 import Routing
@@ -23,7 +24,7 @@ import Wnfs
 -- ⛩
 
 
-main : Program {} Model Msg
+main : Program Init Model Msg
 main =
     Browser.application
         { init = init
@@ -39,11 +40,26 @@ main =
 -- 🌱
 
 
-init : {} -> Url -> Nav.Key -> ( Model, Cmd Msg )
-init _ url navKey =
+init : Init -> Url -> Nav.Key -> ( Model, Cmd Msg )
+init { seeds } url navKey =
     Return.singleton
         { page = Routing.fromUrl url
         , navKey = navKey
+        , seeds =
+            case seeds of
+                [ a, b, c, d ] ->
+                    { seed1 = Random.initialSeed a
+                    , seed2 = Random.initialSeed b
+                    , seed3 = Random.initialSeed c
+                    , seed4 = Random.initialSeed d
+                    }
+
+                _ ->
+                    { seed1 = Random.initialSeed 0
+                    , seed2 = Random.initialSeed 0
+                    , seed3 = Random.initialSeed 0
+                    , seed4 = Random.initialSeed 0
+                    }
         , url = url
         , userData = UserData.empty
         }

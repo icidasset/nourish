@@ -29,7 +29,10 @@ view page model =
 
                     Failure error ->
                         -- TODO
-                        [ Html.text "Failed to load user data" ]
+                        [ Html.text "Failed to load user data."
+                        , Html.br [] []
+                        , Html.text error
+                        ]
 
                     Success ingredients ->
                         index context ingredients model

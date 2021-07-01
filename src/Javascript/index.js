@@ -9,7 +9,13 @@ const wn = webnative
 // App
 // ===
 
-const app = Elm.Main.init({})
+const app = Elm.Main.init({
+  flags: {
+    seeds: Array.from(
+      crypto.getRandomValues(new Uint32Array(4))
+    )
+  }
+})
 
 
 
@@ -87,6 +93,11 @@ const TMP_OPTS = {
 }
 
 
+// TODO: Test this function, it probably won't work.
+//       Root AES key will most likely be overriden
+//       when loading in a different filesystem.
+//       Hence making it impossible to have two active
+//       filesystems at the same time.
 async function copyOverTempFilesIfNeeded(userFs) {
   const ingredientsPath = userFs.appPath("Ingredients.json")
 

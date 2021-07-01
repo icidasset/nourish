@@ -7,6 +7,7 @@
     "default": {},
     "examples": [
         {
+            "uuid": "48e18bdc-6937-40d1-9fdd-d93edf47b08e",
             "name": "Mom's World Famous Banana Bread",
             "description": "This classic banana bread recipe comes from my mom -- the walnuts add a nice texture and flavor to the banana bread.",
             "cookTime": "PT1H",
@@ -31,12 +32,23 @@
         }
     ],
     "required": [
+        "uuid",
         "name",
         "description",
         "ingredients",
         "instructions"
     ],
     "properties": {
+        "uuid": {
+          "$id": "#/properties/uuid",
+          "type": "string",
+          "title": "UUID",
+          "description": "A uuid for this item.",
+          "default": "",
+          "examples": [
+            "48e18bdc-6937-40d1-9fdd-d93edf47b08e"
+          ]
+        },
         "name": {
             "$id": "#/properties/name",
             "type": "string",

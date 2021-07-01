@@ -5,8 +5,8 @@ devDependencies:
   autoprefixer: 10.2.5_postcss@8.2.12
   postcss: 8.2.12
   tailwindcss: 2.1.2_d887a42ede92218908fd5c3cc0b71177
-  vite: 2.3.4
-  vite-plugin-elm: 2.3.0_vite@2.3.4
+  vite: 2.3.8
+  vite-plugin-elm: 'link:../../Code/vite-plugin-elm'
 lockfileVersion: 5.2
 packages:
   /@fullhuman/postcss-purgecss/3.1.3:
@@ -430,18 +430,6 @@ packages:
   /concat-map/0.0.1:
     resolution:
       integrity: sha1-2Klr13/Wjfd5OnMDajug1UBdR3s=
-  /cross-spawn/6.0.5:
-    dependencies:
-      nice-try: 1.0.5
-      path-key: 2.0.1
-      semver: 5.7.1
-      shebang-command: 1.2.0
-      which: 1.3.1
-    dev: true
-    engines:
-      node: '>=4.8'
-    resolution:
-      integrity: sha512-eTVLrBSt7fjbDygz805pMnstIs2VTBNkRm0qxZd+M7A5XDdxVRWO5MxGBXZhjY4cqLYLdtrGqRf8mBPmzwSpWQ==
   /css-unit-converter/1.1.2:
     dev: true
     resolution:
@@ -529,13 +517,6 @@ packages:
     dev: false
     resolution:
       integrity: sha512-iLhC6ULemrljPZb+QutR5TQGB+pdW6KGD5RSegS+8sorOZT+rdQFbsQFJgvN3eRqNALqJer4oQ16YvJHlU8hzQ==
-  /elm-esm/1.1.2:
-    dependencies:
-      which: 2.0.2
-    dev: true
-    hasBin: true
-    resolution:
-      integrity: sha512-h4Ta4hk7kITgKiXHLX3BZMpEXg9mFRIK8T/lOAiPG9WsOEPJMZUnvPiYmiiyOMgbNw4GYhlvAp6gsDjAkEflLw==
   /err-code/2.0.3:
     dev: false
     resolution:
@@ -581,12 +562,12 @@ packages:
       node: '>= 0.4'
     resolution:
       integrity: sha512-QCOllgZJtaUo9miYBcLChTUaHNjJF3PYs1VidD7AwiEj1kYxKeQTctLAezAOH5ZKRH0g2IgPn6KwB4IT8iRpvA==
-  /esbuild/0.11.23:
+  /esbuild/0.12.9:
     dev: true
     hasBin: true
     requiresBuild: true
     resolution:
-      integrity: sha512-iaiZZ9vUF5wJV8ob1tl+5aJTrwDczlvGP0JoMmnpC2B0ppiMCu8n8gmy5ZTGl5bcG081XBVn+U+jP+mPFm5T5Q==
+      integrity: sha512-MWRhAbMOJ9RJygCrt778rz/qNYgA4ZVj6aXnNPxFjs7PmIpb0fuB9Gmg5uWrr6n++XKwwm/RmSz6RR5JL2Ocsw==
   /escalade/3.1.1:
     dev: true
     engines:
@@ -642,22 +623,6 @@ packages:
       node: '>=8'
     resolution:
       integrity: sha512-qOo9F+dMUmC2Lcb4BbVvnKJxTPjCm+RRpe4gDuGrzkL7mEVl/djYSu2OdQ2Pa302N4oqkSg9ir6jaLWJ2USVpQ==
-  /find-elm-dependencies/2.0.4:
-    dependencies:
-      firstline: 1.3.1
-      lodash: 4.17.21
-    dev: true
-    engines:
-      node: '>=4.0.0'
-    hasBin: true
-    resolution:
-      integrity: sha512-x/4w4fVmlD2X4PD9oQ+yh9EyaQef6OtEULdMGBTuWx0Nkppvo2Z/bAiQioW2n+GdRYKypME2b9OmYTw5tw5qDg==
-  /firstline/1.3.1:
-    dev: true
-    engines:
-      node: '>=6.4.0'
-    resolution:
-      integrity: sha512-ycwgqtoxujz1dm0kjkBFOPQMESxB9uKc/PlD951dQDIG+tBXRpYZC2UmJb0gDxopQ1ZX6oyRQN3goRczYu7Deg==
   /fission-bloom-filters/1.6.0:
     dependencies:
       is-buffer: 2.0.5
@@ -1030,10 +995,6 @@ packages:
     dev: false
     resolution:
       integrity: sha1-5HnICFjfDBsR3dppQPlgEfzaSpo=
-  /isexe/2.0.0:
-    dev: true
-    resolution:
-      integrity: sha1-6PvzdNxVb/iUehDcsFctYz8s+hA=
   /iso-random-stream/2.0.0:
     dependencies:
       events: 3.3.0
@@ -1172,13 +1133,6 @@ packages:
   /minimist/1.2.5:
     resolution:
       integrity: sha512-FM9nNUYrRBAELZQT3xeZQ7fmMOBg6nWNmJKTcgsJeaLstP/UODVpGsr5OhXhhXg6f+qtJ8uiZ+PUxkDWcgIXLw==
-  /mkdirp/0.5.5:
-    dependencies:
-      minimist: 1.2.5
-    dev: true
-    hasBin: true
-    resolution:
-      integrity: sha512-NKmAlESf6jMGym1++R0Ra7wvhV+wFW63FaSOFPwRahvea0gMUcGUhVeAg/0BC0wiv9ih5NYPB1Wn1UEI1/L+xQ==
   /modern-normalize/1.0.0:
     dev: true
     engines:
@@ -1281,16 +1235,19 @@ packages:
     hasBin: true
     resolution:
       integrity: sha512-/2ZUaJX2ANuLtTvqTlgqBQNJoQO398KyJgZloL0PZkC0dpysjncRUPsFe3DUPzz/y3h+u7C46np8RMuvF3jsSQ==
+  /nanoid/3.1.23:
+    dev: true
+    engines:
+      node: ^10 || ^12 || ^13.7 || ^14 || >=15.0.1
+    hasBin: true
+    resolution:
+      integrity: sha512-FiB0kzdP0FFVGDKlRLEQ1BgDzU87dy5NnzjeW9YZNt+/c3+q82EQDUwniSAUxp/F0gFNI1ZhKU1FqYsMuqZVnw==
   /native-fetch/3.0.0:
     dev: false
     peerDependencies:
       node-fetch: '*'
     resolution:
       integrity: sha512-G3Z7vx0IFb/FQ4JxvtqGABsOTIqRWvgQz6e+erkB+JJD6LrszQtMozEHI4EkmgZQvnGHrpLVzUWk7t4sJCIkVw==
-  /nice-try/1.0.5:
-    dev: true
-    resolution:
-      integrity: sha512-1nh45deeb5olNY7eX82BkPO7SSxR5SSYJiPTrTdFUVYwAl8CKMA5N9PjTYkHiRjisVcxcQ1HXdLhx2qxxJzLNQ==
   /noble-ed25519/1.2.1:
     dev: false
     resolution:
@@ -1299,17 +1256,6 @@ packages:
     dev: false
     resolution:
       integrity: sha512-Ntyt4AIXyaLIuMHF6IOoTakB3K+RWxwtsHNRxllEoA6vPwP9o4866g6YWDLUdnucilZhmkxiHwHr11gAENw+QA==
-  /node-elm-compiler/5.0.6:
-    dependencies:
-      cross-spawn: 6.0.5
-      find-elm-dependencies: 2.0.4
-      lodash: 4.17.21
-      temp: 0.9.4
-    dev: true
-    engines:
-      node: '>=4.0.0'
-    resolution:
-      integrity: sha512-DWTRQR8b54rvschcZRREdsz7K84lnS8A6YJu8du3QLQ8f204SJbyTaA6NzYYbfUG97OTRKRv/0KZl82cTfpLhA==
   /node-emoji/1.10.0:
     dependencies:
       lodash.toarray: 4.4.0
@@ -1399,12 +1345,6 @@ packages:
       node: '>=0.10.0'
     resolution:
       integrity: sha1-F0uSaHNVNP+8es5r9TpanhtcX18=
-  /path-key/2.0.1:
-    dev: true
-    engines:
-      node: '>=4'
-    resolution:
-      integrity: sha1-QRyttXTFoUDTpLGRDUDYDMn0C0A=
   /path-parse/1.0.6:
     dev: true
     resolution:
@@ -1505,6 +1445,16 @@ packages:
       node: ^10 || ^12 || >=14
     resolution:
       integrity: sha512-BJnGT5+0q2tzvs6oQfnY2NpEJ7rIXNfBnZtQOKCIsweeWXBXeDd5k31UgTdS3d/c02ouspufn37mTaHWkJyzMQ==
+  /postcss/8.3.5:
+    dependencies:
+      colorette: 1.2.2
+      nanoid: 3.1.23
+      source-map-js: 0.6.2
+    dev: true
+    engines:
+      node: ^10 || ^12 || >=14
+    resolution:
+      integrity: sha512-NxTuJocUhYGsMiMFHDUkmjSKT3EdH4/WbGF6GCi1NDGk+vbcUTun4fpbOqaPtD8IIsztA2ilZm2DhYCuyN58gA==
   /pretty-hrtime/1.0.3:
     dev: true
     engines:
@@ -1619,13 +1569,6 @@ packages:
       node: '>=0.10.0'
     resolution:
       integrity: sha512-U9nH88a3fc/ekCF1l0/UP1IosiuIjyTh7hBvXVMHYgVcfGvt897Xguj2UOLDeI5BG2m7/uwyaLVT6fbtCwTyzw==
-  /rimraf/2.6.3:
-    dependencies:
-      glob: 7.1.6
-    dev: true
-    hasBin: true
-    resolution:
-      integrity: sha512-mwqeW5XsA2qAejG46gYdENaxXjx9onRNCfn7L0duuP4hCuTIi/QO7PDK07KJfp1d+izWPrzEJDcSqBa0OZQriA==
   /rollup/2.45.2:
     dev: true
     engines:
@@ -1673,25 +1616,6 @@ packages:
     dev: false
     resolution:
       integrity: sha512-8OwmbklUNzwezjGInmZ+2clQmExQPvomqjL7LFqOYqtmuxRgQYqOD3mHaU+MvZn5FLUeVxVfQjwLZW/n/JFuqg==
-  /semver/5.7.1:
-    dev: true
-    hasBin: true
-    resolution:
-      integrity: sha512-sauaDf/PZdVgrLTNYHRtpXa1iRiKcaebiKQ1BJdpQlWH2lCvexQdX55snPFyK7QzpudqbCI0qXFfOasHdyNDGQ==
-  /shebang-command/1.2.0:
-    dependencies:
-      shebang-regex: 1.0.0
-    dev: true
-    engines:
-      node: '>=0.10.0'
-    resolution:
-      integrity: sha1-RKrGW2lbAzmJaMOfNj/uXer98eo=
-  /shebang-regex/1.0.0:
-    dev: true
-    engines:
-      node: '>=0.10.0'
-    resolution:
-      integrity: sha1-2kL0l0DAtC2yypcoVxyxkMmO/qM=
   /signed-varint/2.0.1:
     dependencies:
       varint: 5.0.2
@@ -1704,6 +1628,12 @@ packages:
     dev: true
     resolution:
       integrity: sha1-pNprY1/8zMoz9w0Xy5JZLeleVXo=
+  /source-map-js/0.6.2:
+    dev: true
+    engines:
+      node: '>=0.10.0'
+    resolution:
+      integrity: sha512-/3GptzWzu0+0MBQFrDKzw/DvvMTUORvgY6k6jd/VS6iCR4RDTKWH6v6WPwQoUO8667uQEf9Oe38DxAYWY5F/Ug==
   /source-map/0.6.1:
     dev: true
     engines:
@@ -1790,15 +1720,6 @@ packages:
       postcss: ^8.0.9
     resolution:
       integrity: sha512-T5t+wwd+/hsOyRw2HJuFuv0LTUm3MUdHm2DJ94GPVgzqwPPFa9XxX0KlwLWupUuiOUj6uiKURCzYPHFcuPch/w==
-  /temp/0.9.4:
-    dependencies:
-      mkdirp: 0.5.5
-      rimraf: 2.6.3
-    dev: true
-    engines:
-      node: '>=6.0.0'
-    resolution:
-      integrity: sha512-yYrrsWnrXMcdsnu/7YMYAofM1ktpL5By7vZhf15CrXijWWrEYZks5AXBudalfSWJLlnen/QUJUB5aoB0kqZUGA==
   /throttle-debounce/2.3.0:
     dev: false
     engines:
@@ -1873,20 +1794,10 @@ packages:
     dev: false
     resolution:
       integrity: sha512-cXEIW6cfr15lFv563k4GuVuW/fiwjknytD37jIOLSdSWuOI6WnO/oKwmP2FQTU2l01LP8/M5TSAJpzUaGe3uWg==
-  /vite-plugin-elm/2.3.0_vite@2.3.4:
+  /vite/2.3.8:
     dependencies:
-      elm-esm: 1.1.2
-      node-elm-compiler: 5.0.6
-      vite: 2.3.4
-    dev: true
-    peerDependencies:
-      vite: ^2.0.0
-    resolution:
-      integrity: sha512-TXtggp8d795rI4fTIsvKJrPdRO2jaUO23X/V9t2lzs8lhFGIIflaO3v1TpHIiZyELmGrJ0AUV1C/qXFFEuU+xg==
-  /vite/2.3.4:
-    dependencies:
-      esbuild: 0.11.23
-      postcss: 8.2.12
+      esbuild: 0.12.9
+      postcss: 8.3.5
       resolve: 1.20.0
       rollup: 2.45.2
     dev: true
@@ -1896,7 +1807,7 @@ packages:
     optionalDependencies:
       fsevents: 2.3.2
     resolution:
-      integrity: sha512-7orxrF65+Q5n/sMCnO91S8OS0gkPJ7g+y3bLlc7CPCXVswK8to1T8YycCk9SZh+AcIc0TuN6YajWTBFS5atMNA==
+      integrity: sha512-QiEx+iqNnJntSgSF2fWRQvRey9pORIrtNJzNyBJXwc+BdzWs83FQolX84cTBo393cfhObrtWa6180dAa4NLDiQ==
   /web-encoding/1.1.5:
     dependencies:
       util: 0.12.3
@@ -1957,22 +1868,6 @@ packages:
       node: '>= 0.4'
     resolution:
       integrity: sha512-49E0SpUe90cjpoc7BOJwyPHRqSAd12c10Qm2amdEZrJPCY2NDxaW01zHITrem+rnETY3dwrbH3UUrUwagfCYDA==
-  /which/1.3.1:
-    dependencies:
-      isexe: 2.0.0
-    dev: true
-    hasBin: true
-    resolution:
-      integrity: sha512-HxJdYWq1MTIQbJ3nw0cqssHoTNU267KlrDuGZ1WYlxDStUtKUhOaJmh112/TZmHxxUfuJqPXSOm7tDyas0OSIQ==
-  /which/2.0.2:
-    dependencies:
-      isexe: 2.0.0
-    dev: true
-    engines:
-      node: '>= 8'
-    hasBin: true
-    resolution:
-      integrity: sha512-BLI3Tl1TW3Pvl70l3yq3Y64i+awpwXqsGBYWkkqMtnbXgrMD+yj7rhW0kuEDxzJaYXGjEW5ogapKNMEKNMjibA==
   /wrappy/1.0.2:
     dev: true
     resolution:
@@ -2018,7 +1913,7 @@ specifiers:
   autoprefixer: ^10.2.5
   postcss: ^8.2.12
   tailwindcss: ^2.1.2
-  vite: ^2.3.4
-  vite-plugin-elm: ^2.3.0
+  vite: ^2.3.8
+  vite-plugin-elm: 'file:../../Code/vite-plugin-elm'
   webnative: ^0.24.1
   webnative-elm: ^6.0.0

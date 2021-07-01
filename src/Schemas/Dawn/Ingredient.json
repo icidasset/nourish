@@ -7,6 +7,7 @@
     "default": {},
     "examples": [
         {
+            "uuid": "31f39775-58fe-44d6-a9a6-74e76c06ddc2",
             "name": "Broccoli",
             "emoji": "🥦",
             "minerals": [
@@ -36,6 +37,7 @@
         }
     ],
     "required": [
+        "uuid",
         "name",
         "minerals",
         "seasonality",
@@ -44,6 +46,16 @@
         "vitamins"
     ],
     "properties": {
+        "uuid": {
+          "$id": "#/properties/uuid",
+          "type": "string",
+          "title": "UUID",
+          "description": "A uuid for this item.",
+          "default": "",
+          "examples": [
+            "31f39775-58fe-44d6-a9a6-74e76c06ddc2"
+          ]
+        },
         "name": {
             "$id": "#/properties/name",
             "type": "string",

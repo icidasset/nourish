@@ -4,6 +4,7 @@ import Ingredient
 import Ingredients.Page as Ingredients
 import Ingredients.Wnfs
 import Json.Decode as Decode
+import Json.Decode.Ext as Decode
 import MultiSelect
 import Page exposing (Page(..))
 import Ports
@@ -11,12 +12,20 @@ import Radix exposing (..)
 import RemoteData exposing (RemoteData(..))
 import Return exposing (return)
 import String.Extra as String
+import UUID
 import UserData
 
 
 add : Ingredients.NewContext -> Manager
 add context model =
-    { emoji = String.nonBlank context.emoji
+    let
+        ( uuid, newSeeds ) =
+            UUID.step model.seeds
+    in
+    { uuid = UUID.toString uuid
+
+    --
+    , emoji = String.nonBlank context.emoji
     , minerals = []
     , name = String.trim context.name
     , seasonality = []
@@ -29,6 +38,7 @@ add context model =
                 return
                     { model
                         | page = Ingredients Ingredients.index
+                        , seeds = newSeeds
                         , userData = u
                     }
                     (u.ingredients
@@ -67,13 +77,15 @@ gotContextForNewIngredient newContext model =
 
 loadedIngredients : { json : String } -> Manager
 loadedIngredients { json } model =
-    case Decode.decodeString (Decode.list Ingredient.ingredient) json of
+    case Decode.decodeString (Decode.listIgnore Ingredient.ingredient) json of
         Ok ingredients ->
             model.userData
                 |> (\u -> { u | ingredients = Success ingredients })
                 |> (\u -> { model | userData = u })
                 |> Return.singleton
 
-        Err _ ->
-            -- TODO
-            Return.singleton model
+        Err err ->
+            model.userData
+                |> (\u -> { u | ingredients = Failure (Decode.errorToString err) })
+                |> (\u -> { model | userData = u })
+                |> Return.singleton

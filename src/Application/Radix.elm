@@ -4,6 +4,7 @@ import Browser
 import Browser.Navigation as Nav
 import Ingredients.Page
 import Page exposing (Page)
+import UUID
 import Url exposing (Url)
 import UserData exposing (UserData)
 import Webnative
@@ -14,6 +15,11 @@ import Wnfs
 -- 🌱
 
 
+type alias Init =
+    { seeds : List Int
+    }
+
+
 type alias Flags =
     { authenticatedUsername : Maybe String
     }
@@ -22,6 +28,7 @@ type alias Flags =
 type alias Model =
     { navKey : Nav.Key
     , page : Page
+    , seeds : UUID.Seeds
     , url : Url
     , userData : UserData
     }
