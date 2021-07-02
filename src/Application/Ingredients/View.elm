@@ -127,8 +127,8 @@ ingredientsList context ingredients =
                         [ "mr-2" ]
                         []
                         [ ingredient.emoji
-                            |> Maybe.withDefault "🤍"
-                            |> Html.text
+                            |> Maybe.map Html.text
+                            |> Maybe.withDefault defaultEmoji
                         ]
                     , Html.text
                         ingredient.name
@@ -140,6 +140,14 @@ ingredientsList context ingredients =
             ]
             []
     ]
+
+
+defaultEmoji =
+    chunk
+        Html.span
+        [ "opacity-20" ]
+        []
+        [ Html.text "❤" ]
 
 
 

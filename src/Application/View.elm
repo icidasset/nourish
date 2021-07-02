@@ -20,6 +20,11 @@ view model =
         , "min-h-screen"
         , "relative"
         , "text-gray-700"
+
+        -- Dark mode
+        ------------
+        , "dark:bg-gray-900"
+        , "dark:text-gray-300"
         ]
         [ A.style "text-rendering" "geometricPrecision" ]
         [ case model.page of
@@ -66,6 +71,10 @@ mainNavigation page =
         , "py-5"
         , "text-gray-500"
         , "text-opacity-80"
+
+        -- Dark mode
+        ------------
+        , "dark:bg-gray-900"
         ]
         []
         [ link
@@ -98,6 +107,7 @@ link isActive =
         Html.a
         [ "inline-block"
         , "text-opacity-80"
+        , "dark:text-opacity-80"
 
         --
         , if isActive then
@@ -105,4 +115,11 @@ link isActive =
 
           else
             "text-inherit"
+
+        --
+        , if isActive then
+            "dark:text-green-700"
+
+          else
+            "dark:text-inherit"
         ]

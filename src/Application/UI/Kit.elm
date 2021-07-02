@@ -23,6 +23,13 @@ bottomNavButton attributes icon text =
         , "text-green-800"
         , "text-opacity-60"
         , "text-sm"
+
+        -- Dark mode
+        ------------
+        , "dark:bg-green-500"
+        , "dark:bg-opacity-10"
+        , "dark:text-green-300"
+        , "dark:text-opacity-40"
         ]
         attributes
         [ chunk
@@ -52,6 +59,13 @@ button =
         , "text-sm"
         , "text-white"
         , "w-full"
+
+        -- Dark mode
+        ------------
+        , "dark:bg-green-400"
+        , "dark:bg-opacity-40"
+        , "dark:text-green-100"
+        , "dark:text-opacity-70"
         ]
 
 
@@ -81,6 +95,10 @@ textFieldClasses =
     , "shadow"
     , "text-base"
     , "w-full"
+
+    -- Dark mode
+    ------------
+    , "dark:bg-gray-800"
     ]
 
 
@@ -136,6 +154,10 @@ multiSelect =
             , "text-sm"
             , "w-full"
             , "z-10"
+
+            -- Dark mode
+            ------------
+            , "dark:bg-gray-800"
             ]
         , searchResultsContainer =
             [ "flex"
@@ -143,6 +165,10 @@ multiSelect =
             , "mt-2"
             , "text-xs"
             , "text-white"
+
+            -- Dark mode
+            ------------
+            , "dark:text-gray-400"
             ]
         , searchResult =
             [ "bg-gray-400"
@@ -151,6 +177,11 @@ multiSelect =
             , "px-[5px]"
             , "py-1"
             , "rounded"
+
+            -- Dark mode
+            ------------
+            , "dark:bg-gray-600"
+            , "dark:bg-opacity-60"
             ]
         , selectedItem =
             [ "bg-gray-500"
@@ -162,6 +193,10 @@ multiSelect =
             , "rounded"
             , "text-sm"
             , "text-white"
+
+            -- Dark mode
+            ------------
+            , "dark:text-gray-300"
             ]
         , selectedItemsContainer =
             [ "flex"
