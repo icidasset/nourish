@@ -67,7 +67,7 @@ mainNavigation page =
         [ "bg-gray-100"
         , "flex"
         , "justify-between"
-        , "px-10"
+        , "px-8"
         , "py-5"
         , "text-gray-500"
         , "text-opacity-80"
@@ -99,6 +99,10 @@ mainNavigation page =
             False
             [ A.href "/menu/" ]
             [ Icons.calendar_view_week 20 Inherit ]
+        , link
+            False
+            [ A.href "/user/" ]
+            [ Icons.person 20 Inherit ]
         ]
 
 
