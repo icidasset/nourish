@@ -2,8 +2,8 @@
     "$schema": "http://json-schema.org/draft-07/schema",
     "$id": "http://example.com/example.json",
     "type": "object",
-    "title": "Recipe",
-    "description": "Schema for a recipe.",
+    "title": "Nourishment",
+    "description": "Schema for a nourishment.",
     "default": {},
     "examples": [
         {
@@ -34,9 +34,7 @@
     "required": [
         "uuid",
         "name",
-        "description",
-        "ingredients",
-        "instructions"
+        "ingredients"
     ],
     "properties": {
         "uuid": {
@@ -53,7 +51,7 @@
             "$id": "#/properties/name",
             "type": "string",
             "title": "Name",
-            "description": "The name of the recipe.",
+            "description": "The name of the nourishment.",
             "default": "",
             "examples": [
                 "Mom's World Famous Banana Bread"
@@ -63,7 +61,7 @@
             "$id": "#/properties/description",
             "type": "string",
             "title": "Description",
-            "description": "A description of the recipe.",
+            "description": "A description of the nourishment.",
             "default": "",
             "examples": [
                 "This classic banana bread recipe comes from my mom -- the walnuts add a nice texture and flavor to the banana bread."
@@ -93,7 +91,7 @@
             "$id": "#/properties/ingredients",
             "type": "array",
             "title": "Ingredients",
-            "description": "The ingredients for the recipe.",
+            "description": "The ingredients of the nourishment.",
             "default": [],
             "examples": [
                 [
@@ -115,7 +113,7 @@
                         "$id": "#/properties/ingredients/items/anyOf/0",
                         "type": "object",
                         "title": "Ingredient",
-                        "description": "A specific ingredient and how to use it in this recipe.",
+                        "description": "A specific ingredient and how it is used in this nourishment.",
                         "default": {},
                         "examples": [
                             {
@@ -142,7 +140,7 @@
                                 "$id": "#/properties/ingredients/items/anyOf/0/properties/description",
                                 "type": "string",
                                 "title": "Description",
-                                "description": "The amount and state of the ingredient to be used in the recipe.",
+                                "description": "The amount and state of the ingredient that is used in the nourishment.",
                                 "default": "",
                                 "examples": [
                                     "3 or 4 ripe bananas, smashed"
@@ -158,7 +156,7 @@
             "$id": "#/properties/instructions",
             "type": "string",
             "title": "Instructions",
-            "description": "Instructions to make this recipe, written in the Markdown format.",
+            "description": "Optional instructions, in case this is a recipe. Written in the Markdown format.",
             "default": "",
             "examples": [
                 "Preheat the oven to 350 degrees. Mix in the ingredients in a bowl. Add the flour last. Pour the mixture into a loaf pan and bake for one hour."
@@ -168,7 +166,7 @@
             "$id": "#/properties/yields",
             "type": "string",
             "title": "Yields",
-            "description": "The nourishment resulting from this recipe.",
+            "description": "In case this is a recipe, what nourishment does this recipe yield.",
             "default": "",
             "examples": [
                 "1 loaf"
@@ -178,7 +176,7 @@
             "$id": "#/properties/image",
             "type": "string",
             "title": "Image",
-            "description": "Image URL for the recipe.",
+            "description": "Image URL for the nourishment.",
             "default": "",
             "examples": [
                 "bananabread.jpg"
