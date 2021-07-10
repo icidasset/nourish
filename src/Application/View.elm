@@ -89,11 +89,11 @@ mainNavigation page =
             [ Icons.park 20 Inherit ]
         , link
             False
-            [ A.href "/store/" ]
+            [ A.href "/stores/" ]
             [ Icons.store 20 Inherit ]
         , link
             False
-            [ A.href "/recipes/" ]
+            [ A.href "/foods/" ]
             [ Icons.local_dining 20 Inherit ]
         , link
             False
