@@ -1,0 +1,53 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema",
+    "$id": "http://example.com/example.json",
+    "type": "object",
+    "title": "Scheduled",
+    "description": "Schema for a scheduled nourishment.",
+    "default": {},
+    "examples": [
+        {
+            "uuid": "f1c851e4-2235-45e9-a443-13932389534d",
+            "nourishment": "Mom's World Famous Banana Bread",
+            "scheduledAt": "2021-07-03"
+        }
+    ],
+    "required": [
+        "uuid",
+        "nourishment",
+        "scheduledAt"
+    ],
+    "properties": {
+        "uuid": {
+          "$id": "#/properties/uuid",
+          "type": "string",
+          "title": "UUID",
+          "description": "A uuid for this item.",
+          "default": "",
+          "examples": [
+            "f1c851e4-2235-45e9-a443-13932389534d"
+          ]
+        },
+        "nourishment": {
+          "$id": "#/properties/nourishment",
+          "type": "string",
+          "title": "Nourishment",
+          "description": "The scheduled nourishment.",
+          "default": "",
+          "examples": [
+            "Mom's World Famous Banana Bread"
+          ]
+        },
+        "scheduledAt": {
+          "$id": "#/properties/scheduledAt",
+          "type": "string",
+          "title": "Scheduled at",
+          "description": "Date this item was scheduled at in the ISO8601 format.",
+          "default": "",
+          "examples": [
+            "2021-07-03"
+          ]
+        },
+    },
+    "additionalProperties": true
+}
