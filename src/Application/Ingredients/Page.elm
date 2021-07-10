@@ -1,5 +1,6 @@
 module Ingredients.Page exposing (..)
 
+import Ingredient exposing (Ingredient)
 import MultiSelect
 
 
@@ -8,8 +9,23 @@ import MultiSelect
 
 
 type Page
-    = Index IndexContext
+    = Detail DetailContext
+    | Index IndexContext
     | New NewContext
+
+
+
+-- DETAIL
+
+
+type alias DetailContext =
+    { uuid : String
+    }
+
+
+detail : DetailContext -> Page
+detail =
+    Detail
 
 
 

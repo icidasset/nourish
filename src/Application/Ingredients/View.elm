@@ -11,6 +11,8 @@ import MultiSelect
 import Radix exposing (..)
 import RemoteData exposing (RemoteData(..))
 import UI.Kit
+import Url
+import UserData
 
 
 view : Page -> Model -> Html Msg
@@ -18,6 +20,9 @@ view page model =
     UI.Kit.layout
         []
         (case page of
+            Detail context ->
+                detail context model
+
             Index context ->
                 case model.userData.ingredients of
                     NotAsked ->
@@ -55,11 +60,33 @@ navigation page =
                 Icons.add
                 "Add ingredient"
 
-        New _ ->
+        _ ->
             UI.Kit.bottomNavButton
                 [ A.href "../" ]
                 Icons.arrow_back
                 "Back to list"
+
+
+
+-- DETAIL
+
+
+detail context model =
+    case UserData.findIngredient context model.userData of
+        Just ingredient ->
+            [ UI.Kit.h1
+                []
+                [ Html.text ingredient.name ]
+
+            --
+            , UI.Kit.button
+                [ E.onClick (RemoveIngredient { uuid = context.uuid }) ]
+                [ Html.text "Remove" ]
+            ]
+
+        Nothing ->
+            -- TODO
+            []
 
 
 
@@ -123,15 +150,20 @@ ingredientsList context ingredients =
                     [ "mb-2" ]
                     []
                     [ chunk
-                        Html.span
-                        [ "mr-2" ]
+                        Html.a
                         []
-                        [ ingredient.emoji
-                            |> Maybe.map Html.text
-                            |> Maybe.withDefault defaultEmoji
+                        [ A.href (Url.percentEncode ingredient.uuid ++ "/") ]
+                        [ chunk
+                            Html.span
+                            [ "mr-2" ]
+                            []
+                            [ ingredient.emoji
+                                |> Maybe.map Html.text
+                                |> Maybe.withDefault defaultEmoji
+                            ]
+                        , Html.text
+                            ingredient.name
                         ]
-                    , Html.text
-                        ingredient.name
                     ]
             )
         |> chunk

@@ -67,6 +67,7 @@ type Msg
     | AddIngredient Ingredients.Page.NewContext
     | GotContextForIngredientsIndex Ingredients.Page.IndexContext
     | GotContextForNewIngredient Ingredients.Page.NewContext
+    | RemoveIngredient { uuid : String }
       -----------------------------------------
       -- Routing
       -----------------------------------------

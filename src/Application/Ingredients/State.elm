@@ -89,3 +89,21 @@ loadedIngredients { json } model =
                 |> (\u -> { u | ingredients = Failure (Decode.errorToString err) })
                 |> (\u -> { model | userData = u })
                 |> Return.singleton
+
+
+remove : { uuid : String } -> Manager
+remove args model =
+    args
+        |> UserData.removeIngredient model.userData
+        |> (\u ->
+                return
+                    { model
+                        | page = Ingredients Ingredients.index
+                        , userData = u
+                    }
+                    (u.ingredients
+                        |> RemoteData.withDefault []
+                        |> Ingredients.Wnfs.save
+                        |> Ports.webnativeRequest
+                    )
+           )

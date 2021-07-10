@@ -57,4 +57,7 @@ route =
         -----------------------------------------
         , map (Ingredients Ingredients.index) (s "ingredients")
         , map (Ingredients Ingredients.new) (s "ingredients" </> s "new")
+        , map
+            (\uuid -> Ingredients <| Ingredients.detail <| { uuid = uuid })
+            (s "ingredients" </> string)
         ]

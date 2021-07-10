@@ -108,6 +108,9 @@ update msg =
         GotContextForNewIngredient a ->
             Ingredients.gotContextForNewIngredient a
 
+        RemoveIngredient a ->
+            Ingredients.remove a
+
         -----------------------------------------
         -- Routing
         -----------------------------------------
