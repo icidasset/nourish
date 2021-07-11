@@ -3,6 +3,7 @@ module Routing exposing (..)
 import Browser
 import Browser.Navigation as Nav
 import Ingredients.Page as Ingredients
+import Nourishments.Page as Nourishments
 import Page exposing (Page(..))
 import Radix
 import Return exposing (return)
@@ -58,6 +59,15 @@ route =
         , map (Ingredients Ingredients.index) (s "ingredients")
         , map (Ingredients Ingredients.new) (s "ingredients" </> s "new")
         , map
-            (\uuid -> Ingredients <| Ingredients.detail <| { uuid = uuid })
+            (\uuid -> Ingredients <| Ingredients.detail { uuid = uuid })
             (s "ingredients" </> string)
+
+        -----------------------------------------
+        -- Nourishments
+        -----------------------------------------
+        , map (Nourishments Nourishments.index) (s "foods")
+        , map (Nourishments Nourishments.new) (s "foods" </> s "new")
+        , map
+            (\uuid -> Nourishments <| Nourishments.detail { uuid = uuid })
+            (s "foods" </> string)
         ]

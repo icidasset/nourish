@@ -1,14 +1,14 @@
-module Ingredients.View exposing (navigation, view)
+module Nourishments.View exposing (navigation, view)
 
 import Chunky exposing (..)
 import Html exposing (Html)
 import Html.Attributes as A
 import Html.Events as E
-import Ingredients.Page exposing (Page(..))
 import List.Ext as List
 import Material.Icons as Icons
 import Material.Icons.Types exposing (Coloring(..))
 import MultiSelect
+import Nourishments.Page exposing (Page(..))
 import Radix exposing (..)
 import RemoteData exposing (RemoteData(..))
 import UI.Kit
@@ -25,7 +25,7 @@ view page model =
                 detail context model
 
             Index context ->
-                case model.userData.ingredients of
+                case model.userData.nourishments of
                     NotAsked ->
                         []
 
@@ -40,8 +40,8 @@ view page model =
                         , Html.text error
                         ]
 
-                    Success ingredients ->
-                        index context ingredients model
+                    Success nourishments ->
+                        index context nourishments model
 
             New context ->
                 new context model
@@ -57,9 +57,9 @@ navigation page =
     case page of
         Index _ ->
             UI.Kit.bottomNavButton
-                [ A.href "/ingredients/new/" ]
+                [ A.href "/nourishments/new/" ]
                 Icons.add
-                "Add ingredient"
+                "Add food"
 
         _ ->
             UI.Kit.bottomNavButton
@@ -73,16 +73,16 @@ navigation page =
 
 
 detail context model =
-    case UserData.findIngredient context model.userData of
-        Just ingredient ->
+    case UserData.findNourishment context model.userData of
+        Just nourishment ->
             [ UI.Kit.h1
                 []
-                [ Html.text ingredient.name ]
+                [ Html.text nourishment.name ]
 
             --
-            , UI.Kit.button
-                [ E.onClick (RemoveIngredient { uuid = context.uuid }) ]
-                [ Html.text "Remove" ]
+            -- , UI.Kit.button
+            --     [ E.onClick (RemoveNourishment { uuid = context.uuid }) ]
+            --     [ Html.text "Remove" ]
             ]
 
         Nothing ->
@@ -94,93 +94,86 @@ detail context model =
 -- INDEX
 
 
-index context ingredients _ =
-    case ingredients of
+index context nourishments _ =
+    case nourishments of
         [] ->
             indexHeader :: []
 
         _ ->
-            indexHeader :: ingredientsList context ingredients
+            indexHeader :: nourishmentsList context nourishments
 
 
 indexHeader =
     UI.Kit.h1
         []
-        [ Html.text "Ingredients" ]
+        [ Html.text "Food" ]
 
 
-ingredientsList context ingredients =
+nourishmentsList context nourishments =
     let
         tags =
             context.filter
                 |> MultiSelect.selected
                 |> List.map String.toLower
     in
-    [ chunk
-        Html.div
-        [ "mt-6"
-        ]
-        []
-        [ UI.Kit.multiSelect
-            { addButton =
-                [ Icons.filter_alt 18 Inherit ]
-            , allowCreation = False
-            , inputPlaceholder = "Search tags"
-            , items = List.sort [ "Vegetable", "Legume", "Fruit" ]
-            , msg =
-                \filter ->
-                    GotContextForIngredientsIndex
-                        { context | filter = MultiSelect.mapSelected List.sort filter }
-            , uid = "selectTags"
-            }
-            context.filter
-        ]
-
+    -- [ chunk
+    --     Html.div
+    --     [ "mt-6"
+    --     ]
+    --     []
+    --     [ UI.Kit.multiSelect
+    --         { addButton =
+    --             [ Icons.filter_alt 18 Inherit ]
+    --         , allowCreation = False
+    --         , inputPlaceholder = "Search tags"
+    --         , items = List.sort [ "Vegetable", "Legume", "Fruit" ]
+    --         , msg =
+    --             \filter ->
+    --                 GotContextForIngredientsIndex
+    --                     { context | filter = MultiSelect.mapSelected List.sort filter }
+    --         , uid = "selectTags"
+    --         }
+    --         context.filter
+    --     ]
     --
-    , ingredients
-        |> List.filter
-            (\ingredient ->
-                List.isSubsequenceOf
-                    tags
-                    (List.map String.toLower ingredient.tags)
-            )
-        |> List.map
-            (\ingredient ->
-                chunk
-                    Html.div
-                    [ "mb-2" ]
-                    []
-                    [ chunk
-                        Html.a
-                        []
-                        [ A.href (Url.percentEncode ingredient.uuid ++ "/") ]
-                        [ chunk
-                            Html.span
-                            [ "mr-2" ]
-                            []
-                            [ ingredient.emoji
-                                |> Maybe.map Html.text
-                                |> Maybe.withDefault defaultEmoji
-                            ]
-                        , Html.text
-                            ingredient.name
-                        ]
-                    ]
-            )
-        |> chunk
-            Html.div
-            [ "mt-8"
-            ]
-            []
-    ]
-
-
-defaultEmoji =
-    chunk
-        Html.span
-        [ "opacity-20" ]
-        []
-        [ Html.text "❤" ]
+    -- --
+    -- , nourishments
+    --     |> List.filter
+    --         (\ingredient ->
+    --             List.isSubsequenceOf
+    --                 tags
+    --                 (List.map String.toLower ingredient.tags)
+    --         )
+    --     |> List.map
+    --         (\ingredient ->
+    --             chunk
+    --                 Html.div
+    --                 [ "mb-2" ]
+    --                 []
+    --                 [ chunk
+    --                     Html.a
+    --                     []
+    --                     [ A.href (Url.percentEncode ingredient.uuid ++ "/") ]
+    --                     [ chunk
+    --                         Html.span
+    --                         [ "mr-2" ]
+    --                         []
+    --                         [ ingredient.emoji
+    --                             |> Maybe.map Html.text
+    --                             |> Maybe.withDefault defaultEmoji
+    --                         ]
+    --                     , Html.text
+    --                         ingredient.name
+    --                     ]
+    --                 ]
+    --         )
+    --     |> chunk
+    --         Html.div
+    --         [ "mt-8"
+    --         ]
+    --         []
+    -- ]
+    []
 
 
 
@@ -190,7 +183,7 @@ defaultEmoji =
 new context _ =
     [ UI.Kit.h1
         []
-        [ Html.text "Add a new ingredient" ]
+        [ Html.text "Add a new food" ]
 
     --
     , UI.Kit.label
@@ -242,7 +235,7 @@ new context _ =
 
     --
     , UI.Kit.label
-        [ A.for "ingredient_tags" ]
+        [ A.for "food_tags" ]
         [ Html.text "Tags" ]
     , chunk
         Html.div
@@ -252,11 +245,12 @@ new context _ =
             { addButton = [ Icons.add_circle 18 Inherit ]
             , allowCreation = True
             , inputPlaceholder = "Type to find or create a tag"
-            , items = List.sort [ "Vegetable", "Legume", "Fruit" ]
+            , items = List.sort [ "Breakfast", "Dinner", "Lunch", "Supper" ]
             , msg =
-                \tags ->
-                    GotContextForNewIngredient
-                        { context | tags = MultiSelect.mapSelected List.sort tags }
+                -- \tags ->
+                --     GotContextForNewIngredient
+                --         { context | tags = MultiSelect.mapSelected List.sort tags }
+                always Bypassed
             , uid = "selectTags"
             }
             context.tags
@@ -268,6 +262,6 @@ new context _ =
         [ Icons.add 20 Inherit
         , Html.span
             [ A.class "ml-2" ]
-            [ Html.text "Add ingredient" ]
+            [ Html.text "Add food" ]
         ]
     ]

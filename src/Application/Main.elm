@@ -4,6 +4,7 @@ import Browser
 import Browser.Navigation as Nav
 import Ingredients.Page
 import Ingredients.State as Ingredients
+import Nourishments.State as Nourishments
 import Page exposing (Page(..))
 import Ports
 import Radix exposing (..)
@@ -72,10 +73,17 @@ initPartTwo flags model =
         |> (\u -> { model | userData = u })
         |> Return.singleton
         |> Return.command
-            ({ path = Path.file [ "Ingredients.json" ]
-             , tag = Tag.toString LoadedIngredients
+            ({ path = UserData.ingredientsPath
+             , tag = Tag.toString EnsureIngredients
              }
-                |> Wnfs.readUtf8 appBase
+                |> Wnfs.exists appBase
+                |> Ports.webnativeRequest
+            )
+        |> Return.command
+            ({ path = UserData.nourishmentsPath
+             , tag = Tag.toString EnsureNourishments
+             }
+                |> Wnfs.exists appBase
                 |> Ports.webnativeRequest
             )
 
@@ -124,15 +132,46 @@ update msg =
 gotWebnativeResponse : Webnative.Response -> Manager
 gotWebnativeResponse response model =
     case Webnative.decodeResponse Tag.fromString response of
+        -----------------------------------------
+        -- Ingredients
+        -----------------------------------------
+        Wnfs EnsureIngredients (Wnfs.Boolean False) ->
+            Ingredients.loaded { json = "[]" } model
+
+        Wnfs EnsureIngredients (Wnfs.Boolean True) ->
+            { path = UserData.ingredientsPath
+            , tag = Tag.toString LoadedIngredients
+            }
+                |> Wnfs.readUtf8 appBase
+                |> Ports.webnativeRequest
+                |> return model
+
         Wnfs LoadedIngredients (Wnfs.Utf8Content json) ->
-            Ingredients.loadedIngredients { json = json } model
+            Ingredients.loaded { json = json } model
 
         Wnfs SavedIngredients _ ->
             publish model
 
-        WnfsError (Wnfs.JavascriptError "Path does not exist") ->
-            Ingredients.loadedIngredients { json = "[]" } model
+        -----------------------------------------
+        -- Nourishments
+        -----------------------------------------
+        Wnfs EnsureNourishments (Wnfs.Boolean False) ->
+            Nourishments.loaded { json = "[]" } model
 
+        Wnfs EnsureNourishments (Wnfs.Boolean True) ->
+            { path = UserData.nourishmentsPath
+            , tag = Tag.toString LoadedNourishments
+            }
+                |> Wnfs.readUtf8 appBase
+                |> Ports.webnativeRequest
+                |> return model
+
+        Wnfs LoadedNourishments (Wnfs.Utf8Content json) ->
+            Nourishments.loaded { json = json } model
+
+        -----------------------------------------
+        -- 🐚
+        -----------------------------------------
         _ ->
             -- TODO
             Return.singleton model

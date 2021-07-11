@@ -69,6 +69,13 @@ type Msg
     | GotContextForNewIngredient Ingredients.Page.NewContext
     | RemoveIngredient { uuid : String }
       -----------------------------------------
+      -- Nourishments
+      -----------------------------------------
+      -- | AddNourishment Nourishments.Page.NewContext
+      -- | GotContextForNourishmentsIndex Nourishments.Page.IndexContext
+      -- | GotContextForNewNourishment Nourishments.Page.NewContext
+      -- | RemoveNourishment { uuid : String }
+      -----------------------------------------
       -- Routing
       -----------------------------------------
     | UrlChanged Url

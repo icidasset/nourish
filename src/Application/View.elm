@@ -7,6 +7,7 @@ import Html.Attributes as A
 import Ingredients.View as Ingredients
 import Material.Icons as Icons
 import Material.Icons.Types exposing (Coloring(..))
+import Nourishments.View as Nourishments
 import Page exposing (Page(..))
 import Radix exposing (Model, Msg(..))
 
@@ -35,6 +36,9 @@ view model =
             Ingredients page ->
                 Ingredients.view page model
 
+            Nourishments page ->
+                Nourishments.view page model
+
         --
         , navigation model.page
         ]
@@ -55,6 +59,9 @@ navigation page =
 
             Ingredients ingredientsPage ->
                 Ingredients.navigation ingredientsPage
+
+            Nourishments nourishmentsPage ->
+                Nourishments.navigation nourishmentsPage
 
         --
         , mainNavigation page

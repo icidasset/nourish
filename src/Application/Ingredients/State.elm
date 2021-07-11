@@ -22,18 +22,19 @@ add context model =
         ( uuid, newSeeds ) =
             UUID.step model.seeds
     in
-    { uuid = UUID.toString uuid
+    model.userData
+        |> UserData.addIngredient
+            { uuid = UUID.toString uuid
 
-    --
-    , emoji = String.nonBlank context.emoji
-    , minerals = []
-    , name = String.trim context.name
-    , seasonality = []
-    , stores = []
-    , tags = MultiSelect.selected context.tags
-    , vitamins = []
-    }
-        |> UserData.addIngredient model.userData
+            --
+            , emoji = String.nonBlank context.emoji
+            , minerals = []
+            , name = String.trim context.name
+            , seasonality = []
+            , stores = []
+            , tags = MultiSelect.selected context.tags
+            , vitamins = []
+            }
         |> (\u ->
                 return
                     { model
@@ -75,8 +76,8 @@ gotContextForNewIngredient newContext model =
         |> Return.singleton
 
 
-loadedIngredients : { json : String } -> Manager
-loadedIngredients { json } model =
+loaded : { json : String } -> Manager
+loaded { json } model =
     case Decode.decodeString (Decode.listIgnore Ingredient.ingredient) json of
         Ok ingredients ->
             model.userData
@@ -93,8 +94,8 @@ loadedIngredients { json } model =
 
 remove : { uuid : String } -> Manager
 remove args model =
-    args
-        |> UserData.removeIngredient model.userData
+    model.userData
+        |> UserData.removeIngredient args
         |> (\u ->
                 return
                     { model
