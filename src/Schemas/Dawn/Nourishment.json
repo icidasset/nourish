@@ -26,15 +26,19 @@
                     "description": "3/4 cup of sugar"
                 }
             ],
+            "image": "bananabread.jpg",
             "instructions": "Preheat the oven to 350 degrees. Mix in the ingredients in a bowl. Add the flour last. Pour the mixture into a loaf pan and bake for one hour.",
-            "yields": "1 loaf",
-            "image": "bananabread.jpg"
+            "tags": [
+              "Breakfast"
+            ],
+            "yields": "1 loaf"
         }
     ],
     "required": [
         "uuid",
         "name",
-        "ingredients"
+        "ingredients",
+        "tags"
     ],
     "properties": {
         "uuid": {
@@ -152,6 +156,16 @@
                 ]
             }
         },
+        "image": {
+            "$id": "#/properties/image",
+            "type": "string",
+            "title": "Image",
+            "description": "Image URL for the nourishment.",
+            "default": "",
+            "examples": [
+                "bananabread.jpg"
+            ]
+        },
         "instructions": {
             "$id": "#/properties/instructions",
             "type": "string",
@@ -162,6 +176,34 @@
                 "Preheat the oven to 350 degrees. Mix in the ingredients in a bowl. Add the flour last. Pour the mixture into a loaf pan and bake for one hour."
             ]
         },
+        "tags": {
+            "$id": "#/properties/tags",
+            "type": "array",
+            "title": "Tags",
+            "description": "Additional tags for this nourishment.",
+            "default": [],
+            "examples": [
+                [
+                    "Breakfast"
+                ]
+            ],
+            "additionalItems": true,
+            "items": {
+                "$id": "#/properties/tags/items",
+                "anyOf": [
+                    {
+                        "$id": "#/properties/tags/items/anyOf/0",
+                        "type": "string",
+                        "title": "Tag",
+                        "description": "The name of the tag.",
+                        "default": "",
+                        "examples": [
+                            "Breakfast"
+                        ]
+                    }
+                ]
+            }
+        },
         "yields": {
             "$id": "#/properties/yields",
             "type": "string",
@@ -170,16 +212,6 @@
             "default": "",
             "examples": [
                 "1 loaf"
-            ]
-        },
-        "image": {
-            "$id": "#/properties/image",
-            "type": "string",
-            "title": "Image",
-            "description": "Image URL for the nourishment.",
-            "default": "",
-            "examples": [
-                "bananabread.jpg"
             ]
         }
     },
