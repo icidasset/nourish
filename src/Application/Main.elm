@@ -120,6 +120,21 @@ update msg =
             Ingredients.remove a
 
         -----------------------------------------
+        -- Nourishments
+        -----------------------------------------
+        AddNourishment a ->
+            Nourishments.add a
+
+        GotContextForNourishmentsIndex a ->
+            Nourishments.gotContextForNourishmentsIndex a
+
+        GotContextForNewNourishment a ->
+            Nourishments.gotContextForNewNourishment a
+
+        RemoveNourishment a ->
+            Nourishments.remove a
+
+        -----------------------------------------
         -- Routing
         -----------------------------------------
         UrlChanged a ->
@@ -168,6 +183,9 @@ gotWebnativeResponse response model =
 
         Wnfs LoadedNourishments (Wnfs.Utf8Content json) ->
             Nourishments.loaded { json = json } model
+
+        Wnfs SavedNourishments _ ->
+            publish model
 
         -----------------------------------------
         -- 🐚

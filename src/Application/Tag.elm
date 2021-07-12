@@ -14,6 +14,7 @@ type
       -----------------------------------------
     | EnsureNourishments
     | LoadedNourishments
+    | SavedNourishments
       -----------------------------------------
       -- 🐚
       -----------------------------------------
@@ -43,6 +44,9 @@ fromString string =
 
         "LoadedNourishments" ->
             Ok LoadedNourishments
+
+        "SavedNourishments" ->
+            Ok SavedNourishments
 
         -----------------------------------------
         -- 🐚
@@ -77,6 +81,9 @@ toString tag =
 
         LoadedNourishments ->
             "LoadedNourishments"
+
+        SavedNourishments ->
+            "SavedNourishments"
 
         -----------------------------------------
         -- 🐚

@@ -3,6 +3,7 @@ module Radix exposing (..)
 import Browser
 import Browser.Navigation as Nav
 import Ingredients.Page
+import Nourishments.Page
 import Page exposing (Page)
 import UUID
 import Url exposing (Url)
@@ -71,10 +72,10 @@ type Msg
       -----------------------------------------
       -- Nourishments
       -----------------------------------------
-      -- | AddNourishment Nourishments.Page.NewContext
-      -- | GotContextForNourishmentsIndex Nourishments.Page.IndexContext
-      -- | GotContextForNewNourishment Nourishments.Page.NewContext
-      -- | RemoveNourishment { uuid : String }
+    | AddNourishment Nourishments.Page.NewContext
+    | GotContextForNourishmentsIndex Nourishments.Page.IndexContext
+    | GotContextForNewNourishment Nourishments.Page.NewContext
+    | RemoveNourishment { uuid : String }
       -----------------------------------------
       -- Routing
       -----------------------------------------

@@ -11,6 +11,7 @@ import Ports
 import Radix exposing (..)
 import RemoteData exposing (RemoteData(..))
 import Return exposing (return)
+import Routing
 import String.Extra as String
 import UUID
 import UserData
@@ -38,8 +39,7 @@ add context model =
         |> (\u ->
                 return
                     { model
-                        | page = Ingredients Ingredients.index
-                        , seeds = newSeeds
+                        | seeds = newSeeds
                         , userData = u
                     }
                     (u.ingredients
@@ -48,6 +48,11 @@ add context model =
                         |> Ports.webnativeRequest
                     )
            )
+        |> Return.command
+            (Routing.goToPage
+                (Page.Ingredients Ingredients.index)
+                model.navKey
+            )
 
 
 gotContextForIngredientsIndex : Ingredients.IndexContext -> Manager
@@ -98,13 +103,15 @@ remove args model =
         |> UserData.removeIngredient args
         |> (\u ->
                 return
-                    { model
-                        | page = Ingredients Ingredients.index
-                        , userData = u
-                    }
+                    { model | userData = u }
                     (u.ingredients
                         |> RemoteData.withDefault []
                         |> Ingredients.Wnfs.save
                         |> Ports.webnativeRequest
                     )
            )
+        |> Return.command
+            (Routing.goToPage
+                (Page.Ingredients Ingredients.index)
+                model.navKey
+            )

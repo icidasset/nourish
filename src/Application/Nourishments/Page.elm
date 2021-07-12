@@ -48,8 +48,8 @@ index =
 
 
 type alias NewContext =
-    { emoji : String
-    , name : String
+    { name : String
+    , ingredients : MultiSelect.State
     , tags : MultiSelect.State
     }
 
@@ -57,7 +57,7 @@ type alias NewContext =
 new : Page
 new =
     New
-        { emoji = ""
-        , name = ""
+        { name = ""
+        , ingredients = MultiSelect.init []
         , tags = MultiSelect.init []
         }

@@ -21,6 +21,13 @@ fromUrl url =
     Maybe.withDefault Index (Url.parse route url)
 
 
+goToPage : Page -> Nav.Key -> Cmd msg
+goToPage page navKey =
+    page
+        |> Page.toString
+        |> Nav.pushUrl navKey
+
+
 
 -- 📣
 
