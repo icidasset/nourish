@@ -4,6 +4,7 @@ import Chunky exposing (..)
 import Html exposing (Html)
 import Html.Attributes as A
 import Html.Events as E
+import Html.Extra as Html
 import Ingredients.Page exposing (Page(..))
 import List.Ext as List
 import Material.Icons as Icons
@@ -193,62 +194,63 @@ new context _ =
         [ Html.text "Add a new ingredient" ]
 
     --
-    , UI.Kit.label
-        [ A.for "ingredient_name" ]
-        [ Html.text "Name" ]
-    , UI.Kit.textField
-        [ A.id "ingredient_name"
-        , E.onInput
-            (\name ->
-                GotContextForNewIngredient
-                    { context | name = name }
-            )
-        , A.placeholder "Brocolli"
-        , A.required True
-        , A.type_ "text"
-        , A.value context.name
+    , UI.Kit.formField
+        [ UI.Kit.label
+            [ A.for "ingredient_name" ]
+            [ Html.text "Name" ]
+        , UI.Kit.textField
+            [ A.id "ingredient_name"
+            , E.onInput
+                (\name ->
+                    GotContextForNewIngredient
+                        { context | name = name }
+                )
+            , A.placeholder "Brocolli"
+            , A.required True
+            , A.type_ "text"
+            , A.value context.name
+            ]
+            []
         ]
-        []
 
     --
-    , UI.Kit.label
-        [ A.for "ingredient_emoji" ]
-        [ Html.text "Emoji" ]
-    , chunk
-        Html.input
-        (List.map
-            (\c ->
-                case c of
-                    "placeholder-opacity-60" ->
-                        "placeholder-opacity-30"
+    , UI.Kit.formField
+        [ UI.Kit.label
+            [ A.for "ingredient_emoji" ]
+            [ Html.text "Emoji" ]
+        , chunk
+            Html.input
+            (List.map
+                (\c ->
+                    case c of
+                        "placeholder-opacity-60" ->
+                            "placeholder-opacity-30"
 
-                    _ ->
-                        c
+                        _ ->
+                            c
+                )
+                UI.Kit.textFieldClasses
             )
-            UI.Kit.textFieldClasses
-        )
-        -- TODO: https://package.elm-lang.org/packages/BrianHicks/elm-string-graphemes/latest/String-Graphemes#length
-        [ A.id "ingredient_emoji"
-        , E.onInput
-            (\emoji ->
-                GotContextForNewIngredient
-                    { context | emoji = emoji }
-            )
-        , A.placeholder "🥦"
-        , A.type_ "text"
-        , A.value context.emoji
+            -- TODO: https://package.elm-lang.org/packages/BrianHicks/elm-string-graphemes/latest/String-Graphemes#length
+            [ A.id "ingredient_emoji"
+            , E.onInput
+                (\emoji ->
+                    GotContextForNewIngredient
+                        { context | emoji = emoji }
+                )
+            , A.placeholder "🥦"
+            , A.type_ "text"
+            , A.value context.emoji
+            ]
+            []
         ]
-        []
 
     --
-    , UI.Kit.label
-        [ A.for "ingredient_tags" ]
-        [ Html.text "Tags" ]
-    , chunk
-        Html.div
-        [ "mb-6" ]
-        []
-        [ UI.Kit.multiSelect
+    , UI.Kit.formField
+        [ UI.Kit.label
+            [ A.for "ingredient_tags" ]
+            [ Html.text "Tags" ]
+        , UI.Kit.multiSelect
             { addButton = [ Icons.add_circle 18 Inherit ]
             , allowCreation = True
             , inputPlaceholder = "Type to find or create a tag"

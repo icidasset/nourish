@@ -69,6 +69,13 @@ button =
         ]
 
 
+formField =
+    chunk
+        Html.div
+        [ "mb-6" ]
+        []
+
+
 h1 =
     chunk
         Html.h1
@@ -76,30 +83,6 @@ h1 =
         , "mb-6"
         , "text-3xl"
         ]
-
-
-textField =
-    chunk
-        Html.input
-        textFieldClasses
-
-
-textFieldClasses =
-    [ "bg-white"
-    , "block"
-    , "mb-6"
-    , "p-3"
-    , "placeholder-gray-400"
-    , "placeholder-opacity-60"
-    , "rounded"
-    , "shadow"
-    , "text-base"
-    , "w-full"
-
-    -- Dark mode
-    ------------
-    , "dark:bg-gray-800"
-    ]
 
 
 label =
@@ -119,7 +102,45 @@ label =
 layout =
     chunk
         Html.div
-        [ "p-5" ]
+        [ "px-5", "pb-40", "pt-5" ]
+
+
+paragraph =
+    chunk
+        Html.p
+        [ "mb-6" ]
+
+
+textArea =
+    chunk
+        Html.textarea
+        (List.append
+            textFieldClasses
+            [ "resize-none" ]
+        )
+
+
+textField =
+    chunk
+        Html.input
+        textFieldClasses
+
+
+textFieldClasses =
+    [ "bg-white"
+    , "block"
+    , "p-3"
+    , "placeholder-gray-400"
+    , "placeholder-opacity-60"
+    , "rounded"
+    , "shadow"
+    , "text-base"
+    , "w-full"
+
+    -- Dark mode
+    ------------
+    , "dark:bg-gray-800"
+    ]
 
 
 

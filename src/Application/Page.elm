@@ -42,10 +42,10 @@ toString page =
         -- Nourishments
         -----------------------------------------
         Nourishments (Nourishments.Detail { uuid }) ->
-            "/ingredients/" ++ Url.percentEncode uuid ++ "/"
+            "/foods/" ++ Url.percentEncode uuid ++ "/"
 
         Nourishments (Nourishments.Index _) ->
-            "/ingredients/"
+            "/foods/"
 
         Nourishments (Nourishments.New _) ->
-            "/ingredients/new/"
+            "/foods/new/"

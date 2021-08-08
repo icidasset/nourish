@@ -28,6 +28,7 @@ add context model =
             { uuid = UUID.toString uuid
 
             --
+            , description = context.description
             , ingredients =
                 context.ingredients
                     |> MultiSelect.selected
@@ -37,14 +38,13 @@ add context model =
                             , description = ""
                             }
                         )
+            , instructions = context.instructions
             , name = String.trim context.name
             , tags = MultiSelect.selected context.tags
 
             -- TODO
             , cookTime = Nothing
-            , description = Nothing
             , image = Nothing
-            , instructions = Nothing
             , prepTime = Nothing
             , yields = Nothing
             }

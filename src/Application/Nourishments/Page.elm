@@ -48,8 +48,10 @@ index =
 
 
 type alias NewContext =
-    { name : String
+    { description : Maybe String
+    , name : String
     , ingredients : MultiSelect.State
+    , instructions : Maybe String
     , tags : MultiSelect.State
     }
 
@@ -57,7 +59,9 @@ type alias NewContext =
 new : Page
 new =
     New
-        { name = ""
+        { description = Nothing
+        , name = ""
         , ingredients = MultiSelect.init []
+        , instructions = Nothing
         , tags = MultiSelect.init []
         }

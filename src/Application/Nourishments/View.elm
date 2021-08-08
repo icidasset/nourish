@@ -4,6 +4,7 @@ import Chunky exposing (..)
 import Html exposing (Html)
 import Html.Attributes as A
 import Html.Events as E
+import Html.Extra as Html
 import List.Ext as List
 import Material.Icons as Icons
 import Material.Icons.Types exposing (Coloring(..))
@@ -78,6 +79,53 @@ detail context model =
             [ UI.Kit.h1
                 []
                 [ Html.text nourishment.name ]
+
+            --
+            , case nourishment.description of
+                Just description ->
+                    UI.Kit.paragraph
+                        []
+                        [ Html.text description ]
+
+                Nothing ->
+                    Html.nothing
+
+            --
+            , UI.Kit.label
+                []
+                [ Html.text "Ingredients" ]
+            , chunk
+                Html.ul
+                [ "list-disc"
+                , "list-inside"
+                , "mb-5"
+                ]
+                []
+                (List.map
+                    (\ingredient ->
+                        Html.li
+                            []
+                            [ Html.text ingredient.name
+                            ]
+                    )
+                    nourishment.ingredients
+                )
+
+            --
+            , case nourishment.instructions of
+                Just instructions ->
+                    Html.div
+                        []
+                        [ UI.Kit.label
+                            []
+                            [ Html.text "Instructions" ]
+                        , UI.Kit.paragraph
+                            []
+                            [ Html.text instructions ]
+                        ]
+
+                Nothing ->
+                    Html.nothing
 
             --
             , UI.Kit.button
@@ -163,8 +211,7 @@ nourishmentsList context nourishments =
             )
         |> chunk
             Html.div
-            [ "mt-8"
-            ]
+            [ "mt-8" ]
             []
     ]
 
@@ -179,32 +226,49 @@ new context model =
         [ Html.text "Add a new food" ]
 
     --
-    , UI.Kit.label
-        [ A.for "nourishment_name" ]
-        [ Html.text "Name" ]
-    , UI.Kit.textField
-        [ A.id "nourishment_name"
-        , E.onInput
-            (\name ->
-                GotContextForNewNourishment
-                    { context | name = name }
-            )
-        , A.placeholder "Soup"
-        , A.required True
-        , A.type_ "text"
-        , A.value context.name
+    , UI.Kit.formField
+        [ UI.Kit.label
+            [ A.for "nourishment_name" ]
+            [ Html.text "Name" ]
+        , UI.Kit.textField
+            [ A.id "nourishment_name"
+            , E.onInput
+                (\name ->
+                    GotContextForNewNourishment
+                        { context | name = name }
+                )
+            , A.placeholder "Soup"
+            , A.required True
+            , A.type_ "text"
+            , A.value context.name
+            ]
+            []
         ]
-        []
 
     --
-    , UI.Kit.label
-        [ A.for "nourishment_ingredients" ]
-        [ Html.text "Ingredients" ]
-    , chunk
-        Html.div
-        [ "mb-6" ]
-        []
-        [ UI.Kit.multiSelect
+    , UI.Kit.formField
+        [ UI.Kit.label
+            [ A.for "nourishment_description" ]
+            [ Html.text "Description" ]
+        , UI.Kit.textArea
+            [ A.id "nourishment_description"
+            , A.rows 3
+            , A.value (Maybe.withDefault "" context.description)
+            , E.onInput
+                (\description ->
+                    GotContextForNewNourishment
+                        { context | description = Just description }
+                )
+            ]
+            []
+        ]
+
+    --
+    , UI.Kit.formField
+        [ UI.Kit.label
+            [ A.for "nourishment_ingredients" ]
+            [ Html.text "Ingredients" ]
+        , UI.Kit.multiSelect
             { addButton = [ Icons.add_circle 18 Inherit ]
             , allowCreation = False -- TODO: Allow creation as well
             , inputPlaceholder = "Type to find an ingredient"
@@ -222,14 +286,11 @@ new context model =
         ]
 
     --
-    , UI.Kit.label
-        [ A.for "nourishment_tags" ]
-        [ Html.text "Tags" ]
-    , chunk
-        Html.div
-        [ "mb-6" ]
-        []
-        [ UI.Kit.multiSelect
+    , UI.Kit.formField
+        [ UI.Kit.label
+            [ A.for "nourishment_tags" ]
+            [ Html.text "Tags" ]
+        , UI.Kit.multiSelect
             { addButton = [ Icons.add_circle 18 Inherit ]
             , allowCreation = True
             , inputPlaceholder = "Type to find or create a tag"
@@ -241,6 +302,24 @@ new context model =
             , uid = "selectTags"
             }
             context.tags
+        ]
+
+    --
+    , UI.Kit.formField
+        [ UI.Kit.label
+            [ A.for "nourishment_instructions" ]
+            [ Html.text "Instructions" ]
+        , UI.Kit.textArea
+            [ A.id "nourishment_instructions"
+            , A.rows 3
+            , A.value (Maybe.withDefault "" context.instructions)
+            , E.onInput
+                (\instructions ->
+                    GotContextForNewNourishment
+                        { context | instructions = Just instructions }
+                )
+            ]
+            []
         ]
 
     --
