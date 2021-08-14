@@ -108,7 +108,9 @@ layout =
 paragraph =
     chunk
         Html.p
-        [ "mb-6" ]
+        [ "mb-6"
+        , "text-sm"
+        ]
 
 
 textArea =

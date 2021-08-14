@@ -34,6 +34,7 @@ webnativeElm.setup({
 
 
 webnative.initialise({
+  loadFileSystem: false,
   permissions: {
     app: {
       name: "Nourish",
@@ -45,7 +46,7 @@ webnative.initialise({
   switch (state.scenario) {
 
     case wn.Scenario.AuthSucceeded:
-      if (state.fs) await copyOverTempFilesIfNeeded(state.fs)
+      fileSystem = await copyOverTempFilesIfNeeded(state.permissions)
 
     case wn.Scenario.Continuation:
       fileSystem = state.fs
@@ -93,27 +94,36 @@ const TMP_OPTS = {
 }
 
 
-// TODO: Test this function, it probably won't work.
-//       Root AES key will most likely be overriden
-//       when loading in a different filesystem.
-//       Hence making it impossible to have two active
-//       filesystems at the same time.
-async function copyOverTempFilesIfNeeded(userFs) {
-  const ingredientsPath = userFs.appPath("Ingredients.json")
+async function copyOverTempFilesIfNeeded(permissions) {
+  const tempFs = await loadTemporaryFileSystem()
+  if (!tempFs) return webnative.loadFileSystem(permissions)
+
+  // Get all data from the temporary filesystem
+  const ingredientsPath = tempFs.appPath("Ingredients.json")
+  const nourishmentsPath = tempFs.appPath("Nourishments.json")
+
+  const ingredients = await tempFs.cat(ingredientsPath)
+  const nourishments = await tempFs.cat(nourishmentsPath)
+
+  // Load user's filesystem
+  const userFs = await webnative.loadFileSystem(permissions)
 
   // Check existance
-  const filesExist = await userFs.exists(ingredientsPath)
-  if (filesExist) return
+  const filesExist =
+    await userFs.exists(ingredientsPath) ||
+    await userFs.exists(nourishmentsPath)
 
-  // Load temp filesystem
-  const tempFs = await loadTemporaryFileSystem()
-  if (!tempFs) return
+  if (filesExist) return userFs
 
   // Copy files
-  await usersFs.write(
-    ingredientsPath,
-    await tempFs.cat(ingredientsPath)
-  )
+  await usersFs.write(ingredientsPath, ingredients)
+  await usersFs.write(nourishmentsPath, nourishments)
+
+  // Remove temporary filesystem
+  removeTemporaryFileSystem()
+
+  // Fin
+  return userFs
 }
 
 
@@ -133,4 +143,9 @@ async function loadTemporaryFileSystem() {
   }
 
   return fs
+}
+
+
+async function removeTemporaryFileSystem() {
+  localStorage.removeItem(TMP_KEY)
 }
