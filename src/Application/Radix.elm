@@ -29,6 +29,7 @@ type alias Flags =
 type alias Model =
     { navKey : Nav.Key
     , page : Page
+    , preparing : Bool
     , seeds : UUID.Seeds
     , url : Url
     , userData : UserData
@@ -79,6 +80,7 @@ type Msg
       -----------------------------------------
       -- Routing
       -----------------------------------------
+    | SignIn
     | UrlChanged Url
     | UrlRequested Browser.UrlRequest
 

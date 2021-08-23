@@ -1,5 +1,6 @@
 const colors = require("tailwindcss/colors")
 const plugin = require("tailwindcss/plugin")
+const kit = require("@fission-suite/kit")
 
 
 module.exports = {
@@ -9,7 +10,8 @@ module.exports = {
 
   purge: [
     "src/Application/**/*.elm",
-    "src/Library/**/*.elm"
+    "src/Library/**/*.elm",
+    ...kit.tailwindPurgeList()
   ],
 
 

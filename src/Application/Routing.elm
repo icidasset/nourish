@@ -5,11 +5,13 @@ import Browser.Navigation as Nav
 import Ingredients.Page as Ingredients
 import Nourishments.Page as Nourishments
 import Page exposing (Page(..))
-import Radix
+import Ports
+import Radix exposing (permissions)
 import Return exposing (return)
 import Url exposing (Url)
 import Url.Parser as Url exposing (..)
 import Url.Parser.Query as Query
+import Webnative exposing (RedirectTo(..))
 
 
 
@@ -30,6 +32,14 @@ goToPage page navKey =
 
 
 -- 📣
+
+
+signIn : Radix.Manager
+signIn model =
+    permissions
+        |> Webnative.redirectToLobby CurrentUrl
+        |> Ports.webnativeRequest
+        |> return model
 
 
 urlChanged : Url -> Radix.Manager

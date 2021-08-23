@@ -1,5 +1,6 @@
 import * as webnative from "webnative"
 import * as webnativeElm from "webnative-elm"
+import { appDataPath } from "webnative/dist/ucan/permissions.js"
 
 import { Elm } from "../Application/Main.elm"
 
@@ -25,6 +26,12 @@ const app = Elm.Main.init({
 let fileSystem
 
 
+const APP_PERMISSIONS = {
+  name: "Nourish",
+  creator: "icidasset"
+}
+
+
 webnativeElm.setup({
   app,
   webnative,
@@ -36,10 +43,7 @@ webnativeElm.setup({
 webnative.initialise({
   loadFileSystem: false,
   permissions: {
-    app: {
-      name: "Nourish",
-      creator: "icidasset"
-    }
+    app: APP_PERMISSIONS
   }
 
 }).then(async state => {
@@ -49,7 +53,7 @@ webnative.initialise({
       fileSystem = await copyOverTempFilesIfNeeded(state.permissions)
 
     case wn.Scenario.Continuation:
-      fileSystem = state.fs
+      fileSystem = await webnative.loadFileSystem(state.permissions)
       break;
 
     default:
@@ -65,6 +69,8 @@ webnative.initialise({
   })
 
 }).catch(err => {
+  console.error(err)
+
   switch (err) {
     case wn.InitialisationError.InsecureContext:
       console.error("Please load the app on HTTPS")
@@ -97,13 +103,22 @@ const TMP_OPTS = {
 async function copyOverTempFilesIfNeeded(permissions) {
   const tempFs = await loadTemporaryFileSystem()
   if (!tempFs) return webnative.loadFileSystem(permissions)
+  console.log("🚀 Copying over temporary data")
 
   // Get all data from the temporary filesystem
-  const ingredientsPath = tempFs.appPath("Ingredients.json")
-  const nourishmentsPath = tempFs.appPath("Nourishments.json")
+  const base = appDataPath(APP_PERMISSIONS)
+  const ingredientsPath = webnative.path.combine(
+    base,
+    webnative.path.file("Ingredients.json")
+  )
 
-  const ingredients = await tempFs.cat(ingredientsPath)
-  const nourishments = await tempFs.cat(nourishmentsPath)
+  const nourishmentsPath = webnative.path.combine(
+    base,
+    webnative.path.file("Nourishments.json")
+  )
+
+  const ingredients = await tempFs.cat(ingredientsPath).catch(_ => "[]")
+  const nourishments = await tempFs.cat(nourishmentsPath).catch(_ => "[]")
 
   // Load user's filesystem
   const userFs = await webnative.loadFileSystem(permissions)
@@ -116,13 +131,15 @@ async function copyOverTempFilesIfNeeded(permissions) {
   if (filesExist) return userFs
 
   // Copy files
-  await usersFs.write(ingredientsPath, ingredients)
-  await usersFs.write(nourishmentsPath, nourishments)
+  await userFs.write(ingredientsPath, ingredients)
+  await userFs.write(nourishmentsPath, nourishments)
+  await userFs.publish()
 
   // Remove temporary filesystem
   removeTemporaryFileSystem()
 
   // Fin
+  console.log("✅ Data copy succeeded")
   return userFs
 }
 
@@ -135,7 +152,9 @@ async function loadTemporaryFileSystem() {
     : await webnative.fs.empty(TMP_OPTS);
 
   fs.publish = async function() {
-    localStorage.setItem(TMP_KEY, await this.root.put())
+    const c = await this.root.put()
+    localStorage.setItem(TMP_KEY, c)
+    return c
   }
 
   if (!cid) {

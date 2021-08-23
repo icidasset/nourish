@@ -44,8 +44,9 @@ main =
 init : Init -> Url -> Nav.Key -> ( Model, Cmd Msg )
 init { seeds } url navKey =
     Return.singleton
-        { page = Routing.fromUrl url
-        , navKey = navKey
+        { navKey = navKey
+        , page = Routing.fromUrl url
+        , preparing = True
         , seeds =
             case seeds of
                 [ a, b, c, d ] ->
@@ -69,8 +70,9 @@ init { seeds } url navKey =
 initPartTwo : Flags -> Manager
 initPartTwo flags model =
     model.userData
+        |> Debug.log "Pt. Deux"
         |> (\u -> { u | userName = flags.authenticatedUsername })
-        |> (\u -> { model | userData = u })
+        |> (\u -> { model | preparing = False, userData = u })
         |> Return.singleton
         |> Return.command
             ({ path = UserData.ingredientsPath
@@ -137,6 +139,9 @@ update msg =
         -----------------------------------------
         -- Routing
         -----------------------------------------
+        SignIn ->
+            Routing.signIn
+
         UrlChanged a ->
             Routing.urlChanged a
 
@@ -146,7 +151,7 @@ update msg =
 
 gotWebnativeResponse : Webnative.Response -> Manager
 gotWebnativeResponse response model =
-    case Webnative.decodeResponse Tag.fromString response of
+    case Debug.log "" <| Webnative.decodeResponse Tag.fromString response of
         -----------------------------------------
         -- Ingredients
         -----------------------------------------
