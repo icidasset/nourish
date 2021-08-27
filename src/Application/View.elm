@@ -172,4 +172,5 @@ indexView model =
                 []
                 [ Html.text "Authenticated as "
                 , Html.text userName
+                , Html.text "."
                 ]

@@ -1,5 +1,6 @@
 module Nourishments.State exposing (..)
 
+import Ingredients.State as Ingredients
 import Json.Decode as Decode
 import Json.Decode.Ext as Decode
 import MultiSelect
@@ -22,6 +23,9 @@ add context model =
     let
         ( uuid, newSeeds ) =
             UUID.step model.seeds
+
+        ingredients =
+            MultiSelect.selected context.ingredients
     in
     model.userData
         |> UserData.addNourishment
@@ -30,14 +34,13 @@ add context model =
             --
             , description = context.description
             , ingredients =
-                context.ingredients
-                    |> MultiSelect.selected
-                    |> List.map
-                        (\name ->
-                            { name = name
-                            , description = ""
-                            }
-                        )
+                List.map
+                    (\name ->
+                        { name = name
+                        , description = ""
+                        }
+                    )
+                    ingredients
             , instructions = context.instructions
             , name = String.trim context.name
             , tags = MultiSelect.selected context.tags
@@ -60,6 +63,7 @@ add context model =
                         |> Ports.webnativeRequest
                     )
            )
+        |> Return.andThen (Ingredients.ensureExistence ingredients)
         |> Return.command
             (Routing.goToPage
                 (Page.Nourishments Nourishments.index)

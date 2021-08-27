@@ -55,6 +55,61 @@ add context model =
             )
 
 
+ensureExistence : List String -> Manager
+ensureExistence names model =
+    case model.userData.ingredients of
+        Success currentIngredients ->
+            names
+                |> List.foldl
+                    (\rawName ( acc, seeds, changed ) ->
+                        let
+                            name =
+                                String.trim rawName
+                        in
+                        if List.any (.name >> (==) name) acc then
+                            ( acc, seeds, changed )
+
+                        else
+                            let
+                                ( uuid, newSeeds ) =
+                                    UUID.step seeds
+
+                                newIngredient =
+                                    { uuid = UUID.toString uuid
+
+                                    --
+                                    , emoji = Nothing
+                                    , minerals = []
+                                    , name = name
+                                    , seasonality = []
+                                    , stores = []
+                                    , tags = []
+                                    , vitamins = []
+                                    }
+                            in
+                            ( acc ++ [ newIngredient ], newSeeds, True )
+                    )
+                    ( currentIngredients, model.seeds, False )
+                |> (\( newIngredients, newSeeds, changed ) ->
+                        if changed then
+                            model.userData
+                                |> UserData.mapIngredients (\_ -> newIngredients)
+                                |> (\u -> { model | seeds = newSeeds, userData = u })
+                                |> Return.singleton
+                                |> Return.command
+                                    (newIngredients
+                                        |> Ingredients.Wnfs.save
+                                        |> Ports.webnativeRequest
+                                    )
+
+                        else
+                            Return.singleton model
+                   )
+
+        _ ->
+            Return.singleton model
+
+
 gotContextForIngredientsIndex : Ingredients.IndexContext -> Manager
 gotContextForIngredientsIndex indexContext model =
     (case model.page of

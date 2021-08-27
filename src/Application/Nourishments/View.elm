@@ -270,17 +270,23 @@ new context model =
             [ Html.text "Ingredients" ]
         , UI.Kit.multiSelect
             { addButton = [ Icons.add_circle 18 Inherit ]
-            , allowCreation = False -- TODO: Allow creation as well
-            , inputPlaceholder = "Type to find an ingredient"
+            , allowCreation = True
+            , inputPlaceholder = "Type to find, or create, an ingredient"
             , items =
                 model.userData.ingredients
                     |> RemoteData.withDefault []
-                    |> List.map .name
+                    |> List.map
+                        (\i ->
+                            i.emoji
+                                |> Maybe.map (\e -> e ++ " ")
+                                |> Maybe.withDefault ""
+                                |> (\s -> s ++ i.name)
+                        )
             , msg =
                 \ingredients ->
                     GotContextForNewNourishment
                         { context | ingredients = ingredients }
-            , uid = "selectTags"
+            , uid = "selectIngredients"
             }
             context.ingredients
         ]
