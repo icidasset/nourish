@@ -42,7 +42,11 @@ findIngredient =
 
 
 removeIngredient =
-    withoutUuid >> mapIngredients
+    without >> mapIngredients
+
+
+replaceIngredient =
+    replace >> mapIngredients
 
 
 
@@ -70,7 +74,11 @@ findNourishment =
 
 
 removeNourishment =
-    withoutUuid >> mapNourishments
+    without >> mapNourishments
+
+
+replaceNourishment =
+    replace >> mapNourishments
 
 
 
@@ -90,7 +98,7 @@ addToList a list =
     list ++ [ a ]
 
 
-makeFinder : (UserData -> RemoteData String (List { a | uuid : String })) -> { uuid : String } -> UserData -> Maybe { a | uuid : String }
+makeFinder : (UserData -> RemoteData String (List { a | uuid : String })) -> { b | uuid : String } -> UserData -> Maybe { a | uuid : String }
 makeFinder getter { uuid } userData =
     userData
         |> getter
@@ -103,6 +111,18 @@ makeMapper getter setter fn userData =
     setter (RemoteData.map fn (getter userData)) userData
 
 
-withoutUuid : { uuid : String } -> List { a | uuid : String } -> List { a | uuid : String }
-withoutUuid { uuid } =
+replace : { uuid : String, unit : { a | uuid : String } } -> List { a | uuid : String } -> List { a | uuid : String }
+replace { unit, uuid } =
+    List.map
+        (\a ->
+            if a.uuid == uuid then
+                unit
+
+            else
+                a
+        )
+
+
+without : { uuid : String } -> List { a | uuid : String } -> List { a | uuid : String }
+without { uuid } =
     List.filter (.uuid >> (/=) uuid)

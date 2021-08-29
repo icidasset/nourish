@@ -32,6 +32,9 @@ toString page =
         Ingredients (Ingredients.Detail { uuid }) ->
             "/ingredients/" ++ Url.percentEncode uuid ++ "/"
 
+        Ingredients (Ingredients.Edit { uuid }) ->
+            "/ingredients/" ++ Url.percentEncode uuid ++ "/edit/"
+
         Ingredients (Ingredients.Index _) ->
             "/ingredients/"
 

@@ -78,6 +78,9 @@ route =
         , map
             (\uuid -> Ingredients <| Ingredients.detail { uuid = uuid })
             (s "ingredients" </> string)
+        , map
+            (\uuid -> Ingredients <| Ingredients.edit { uuid = uuid })
+            (s "ingredients" </> string </> s "edit")
 
         -----------------------------------------
         -- Nourishments

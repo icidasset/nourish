@@ -10,6 +10,7 @@ import MultiSelect
 
 type Page
     = Detail DetailContext
+    | Edit EditContext
     | Index IndexContext
     | New NewContext
 
@@ -26,6 +27,34 @@ type alias DetailContext =
 detail : DetailContext -> Page
 detail =
     Detail
+
+
+
+-- EDIT
+
+
+type alias EditContext =
+    { uuid : String
+    , ingredient : Maybe Ingredient
+
+    --
+    , emoji : Maybe String
+    , name : Maybe String
+    , tags : Maybe MultiSelect.State
+    }
+
+
+edit : { uuid : String } -> Page
+edit { uuid } =
+    Edit
+        { uuid = uuid
+        , ingredient = Nothing
+
+        --
+        , emoji = Nothing
+        , name = Nothing
+        , tags = Nothing
+        }
 
 
 

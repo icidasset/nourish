@@ -6,10 +6,12 @@ import Html.Attributes as A
 import Html.Events as E
 import Html.Extra as Html
 import Ingredients.Page exposing (Page(..))
-import List.Ext as List
+import List.Extra as List
 import Material.Icons as Icons
 import Material.Icons.Types exposing (Coloring(..))
+import Maybe.Extra as Maybe
 import MultiSelect
+import Page
 import Radix exposing (..)
 import RemoteData exposing (RemoteData(..))
 import UI.Kit
@@ -24,6 +26,9 @@ view page model =
         (case page of
             Detail context ->
                 detail context model
+
+            Edit context ->
+                edit context model
 
             Index context ->
                 case model.userData.ingredients of
@@ -56,6 +61,12 @@ view page model =
 navigation : Page -> Html Msg
 navigation page =
     case page of
+        Edit _ ->
+            UI.Kit.bottomNavButton
+                [ A.href "../../" ]
+                Icons.arrow_back
+                "Back to list"
+
         Index _ ->
             UI.Kit.bottomNavButton
                 [ A.href "/ingredients/new/" ]
@@ -81,14 +92,87 @@ detail context model =
                 [ Html.text ingredient.name ]
 
             --
+            , UI.Kit.buttonLink
+                [ { uuid = context.uuid }
+                    |> Ingredients.Page.edit
+                    |> Page.Ingredients
+                    |> Page.toString
+                    |> A.href
+                ]
+                [ Html.text "Edit" ]
+
+            --
             , UI.Kit.button
-                [ E.onClick (RemoveIngredient { uuid = context.uuid }) ]
+                [ E.onClick (RemoveIngredient { uuid = context.uuid })
+                , A.class "mt-3"
+                ]
                 [ Html.text "Remove" ]
             ]
 
         Nothing ->
             -- TODO
             []
+
+
+
+-- EDIT
+
+
+edit context model =
+    let
+        ingredient =
+            case context.ingredient of
+                Just i ->
+                    Just i
+
+                Nothing ->
+                    UserData.findIngredient context model.userData
+    in
+    [ UI.Kit.h1
+        []
+        [ Html.text "Edit ingredient" ]
+
+    --
+    , nameField
+        { onInput =
+            \name -> GotContextForIngredientEdit { context | name = Just name }
+        , value =
+            context.name
+                |> Maybe.orElse (Maybe.map .name ingredient)
+                |> Maybe.withDefault ""
+        }
+
+    --
+    , emojiField
+        { onInput =
+            \emoji -> GotContextForIngredientEdit { context | emoji = Just emoji }
+        , value =
+            context.emoji
+                |> Maybe.orElse (Maybe.andThen .emoji ingredient)
+                |> Maybe.withDefault ""
+        }
+
+    --
+    , tagsField
+        { msg =
+            \tags ->
+                GotContextForIngredientEdit
+                    { context | tags = Just (MultiSelect.mapSelected List.sort tags) }
+        , value =
+            context.tags
+                |> Maybe.orElse (Maybe.map (.tags >> MultiSelect.init) ingredient)
+                |> Maybe.withDefault (MultiSelect.init [])
+        }
+
+    --
+    , UI.Kit.button
+        [ E.onClick (EditIngredient context) ]
+        [ Icons.done 20 Inherit
+        , Html.span
+            [ A.class "ml-2" ]
+            [ Html.text "Save ingredient" ]
+        ]
+    ]
 
 
 
@@ -194,27 +278,46 @@ new context _ =
         [ Html.text "Add a new ingredient" ]
 
     --
-    , UI.Kit.formField
-        [ UI.Kit.label
-            [ A.for "ingredient_name" ]
-            [ Html.text "Name" ]
-        , UI.Kit.textField
-            [ A.id "ingredient_name"
-            , E.onInput
-                (\name ->
-                    GotContextForNewIngredient
-                        { context | name = name }
-                )
-            , A.placeholder "Brocolli"
-            , A.required True
-            , A.type_ "text"
-            , A.value context.name
-            ]
-            []
-        ]
+    , nameField
+        { onInput =
+            \name -> GotContextForNewIngredient { context | name = name }
+        , value = context.name
+        }
 
     --
-    , UI.Kit.formField
+    , emojiField
+        { onInput =
+            \emoji -> GotContextForNewIngredient { context | emoji = emoji }
+        , value = context.emoji
+        }
+
+    --
+    , tagsField
+        { msg =
+            \tags ->
+                GotContextForNewIngredient
+                    { context | tags = MultiSelect.mapSelected List.sort tags }
+        , value =
+            context.tags
+        }
+
+    --
+    , UI.Kit.button
+        [ E.onClick (AddIngredient context) ]
+        [ Icons.add 20 Inherit
+        , Html.span
+            [ A.class "ml-2" ]
+            [ Html.text "Add ingredient" ]
+        ]
+    ]
+
+
+
+-- FIELDS
+
+
+emojiField { onInput, value } =
+    UI.Kit.formField
         [ UI.Kit.label
             [ A.for "ingredient_emoji" ]
             [ Html.text "Emoji" ]
@@ -233,20 +336,34 @@ new context _ =
             )
             -- TODO: https://package.elm-lang.org/packages/BrianHicks/elm-string-graphemes/latest/String-Graphemes#length
             [ A.id "ingredient_emoji"
-            , E.onInput
-                (\emoji ->
-                    GotContextForNewIngredient
-                        { context | emoji = emoji }
-                )
+            , E.onInput onInput
             , A.placeholder "🥦"
             , A.type_ "text"
-            , A.value context.emoji
+            , A.value value
             ]
             []
         ]
 
-    --
-    , UI.Kit.formField
+
+nameField { onInput, value } =
+    UI.Kit.formField
+        [ UI.Kit.label
+            [ A.for "ingredient_name" ]
+            [ Html.text "Name" ]
+        , UI.Kit.textField
+            [ A.id "ingredient_name"
+            , E.onInput onInput
+            , A.placeholder "Brocolli"
+            , A.required True
+            , A.type_ "text"
+            , A.value value
+            ]
+            []
+        ]
+
+
+tagsField { msg, value } =
+    UI.Kit.formField
         [ UI.Kit.label
             [ A.for "ingredient_tags" ]
             [ Html.text "Tags" ]
@@ -255,21 +372,8 @@ new context _ =
             , allowCreation = True
             , inputPlaceholder = "Type to find or create a tag"
             , items = List.sort [ "Vegetable", "Legume", "Fruit" ]
-            , msg =
-                \tags ->
-                    GotContextForNewIngredient
-                        { context | tags = MultiSelect.mapSelected List.sort tags }
+            , msg = msg
             , uid = "selectTags"
             }
-            context.tags
+            value
         ]
-
-    --
-    , UI.Kit.button
-        [ E.onClick (AddIngredient context) ]
-        [ Icons.add 20 Inherit
-        , Html.span
-            [ A.class "ml-2" ]
-            [ Html.text "Add ingredient" ]
-        ]
-    ]

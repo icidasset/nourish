@@ -67,6 +67,8 @@ type Msg
       -- Ingredients
       -----------------------------------------
     | AddIngredient Ingredients.Page.NewContext
+    | EditIngredient Ingredients.Page.EditContext
+    | GotContextForIngredientEdit Ingredients.Page.EditContext
     | GotContextForIngredientsIndex Ingredients.Page.IndexContext
     | GotContextForNewIngredient Ingredients.Page.NewContext
     | RemoveIngredient { uuid : String }

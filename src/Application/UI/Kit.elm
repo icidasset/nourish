@@ -49,24 +49,34 @@ bottomNavButton attributes icon text =
 button =
     chunk
         Html.button
-        [ "bg-green-600"
-        , "bg-opacity-60"
-        , "flex"
-        , "items-center"
-        , "justify-center"
-        , "p-4"
-        , "rounded"
-        , "text-sm"
-        , "text-white"
-        , "w-full"
+        buttonClasses
 
-        -- Dark mode
-        ------------
-        , "dark:bg-green-400"
-        , "dark:bg-opacity-40"
-        , "dark:text-green-100"
-        , "dark:text-opacity-70"
-        ]
+
+buttonLink =
+    chunk
+        Html.a
+        buttonClasses
+
+
+buttonClasses =
+    [ "bg-green-600"
+    , "bg-opacity-60"
+    , "flex"
+    , "items-center"
+    , "justify-center"
+    , "p-4"
+    , "rounded"
+    , "text-sm"
+    , "text-white"
+    , "w-full"
+
+    -- Dark mode
+    ------------
+    , "dark:bg-green-400"
+    , "dark:bg-opacity-40"
+    , "dark:text-green-100"
+    , "dark:text-opacity-70"
+    ]
 
 
 formField =

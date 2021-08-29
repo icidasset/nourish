@@ -5,6 +5,7 @@ import Ingredients.Page as Ingredients
 import Ingredients.Wnfs
 import Json.Decode as Decode
 import Json.Decode.Ext as Decode
+import Maybe.Extra as Maybe
 import MultiSelect
 import Page exposing (Page(..))
 import Ports
@@ -53,6 +54,39 @@ add context model =
                 (Page.Ingredients Ingredients.index)
                 model.navKey
             )
+
+
+edit : Ingredients.EditContext -> Manager
+edit ({ uuid } as context) model =
+    case UserData.findIngredient { uuid = uuid } model.userData of
+        Just ingredient ->
+            model.userData
+                |> UserData.replaceIngredient
+                    { unit =
+                        { ingredient
+                            | name = Maybe.withDefault ingredient.name context.name
+                            , emoji = Maybe.or context.emoji ingredient.emoji
+                            , tags = Maybe.withDefault ingredient.tags (Maybe.map MultiSelect.selected context.tags)
+                        }
+                    , uuid = uuid
+                    }
+                |> (\u ->
+                        return
+                            { model | userData = u }
+                            (u.ingredients
+                                |> RemoteData.withDefault []
+                                |> Ingredients.Wnfs.save
+                                |> Ports.webnativeRequest
+                            )
+                   )
+                |> Return.command
+                    (Routing.goToPage
+                        (Page.Ingredients Ingredients.index)
+                        model.navKey
+                    )
+
+        Nothing ->
+            Return.singleton model
 
 
 ensureExistence : List String -> Manager
@@ -108,6 +142,19 @@ ensureExistence names model =
 
         _ ->
             Return.singleton model
+
+
+gotContextForIngredientEdit : Ingredients.EditContext -> Manager
+gotContextForIngredientEdit editContext model =
+    (case model.page of
+        Ingredients (Ingredients.Edit _) ->
+            Ingredients (Ingredients.Edit editContext)
+
+        p ->
+            p
+    )
+        |> (\page -> { model | page = page })
+        |> Return.singleton
 
 
 gotContextForIngredientsIndex : Ingredients.IndexContext -> Manager

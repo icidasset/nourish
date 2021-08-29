@@ -112,6 +112,12 @@ update msg =
         AddIngredient a ->
             Ingredients.add a
 
+        EditIngredient a ->
+            Ingredients.edit a
+
+        GotContextForIngredientEdit a ->
+            Ingredients.gotContextForIngredientEdit a
+
         GotContextForIngredientsIndex a ->
             Ingredients.gotContextForIngredientsIndex a
 
