@@ -133,6 +133,12 @@ update msg =
         AddNourishment a ->
             Nourishments.add a
 
+        EditNourishment a ->
+            Nourishments.edit a
+
+        GotContextForNourishmentEdit a ->
+            Nourishments.gotContextForNourishmentEdit a
+
         GotContextForNourishmentsIndex a ->
             Nourishments.gotContextForNourishmentsIndex a
 

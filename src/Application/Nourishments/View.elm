@@ -8,8 +8,10 @@ import Html.Extra as Html
 import List.Extra as List
 import Material.Icons as Icons
 import Material.Icons.Types exposing (Coloring(..))
+import Maybe.Extra as Maybe
 import MultiSelect
 import Nourishments.Page exposing (Page(..))
+import Page
 import Radix exposing (..)
 import RemoteData exposing (RemoteData(..))
 import UI.Kit
@@ -24,6 +26,9 @@ view page model =
         (case page of
             Detail context ->
                 detail context model
+
+            Edit context ->
+                edit context model
 
             Index context ->
                 case model.userData.nourishments of
@@ -128,14 +133,117 @@ detail context model =
                     Html.nothing
 
             --
+            , UI.Kit.buttonLink
+                [ { uuid = context.uuid }
+                    |> Nourishments.Page.edit
+                    |> Page.Nourishments
+                    |> Page.toString
+                    |> A.href
+                ]
+                [ Html.text "Edit" ]
+
+            --
             , UI.Kit.button
-                [ E.onClick (RemoveNourishment { uuid = context.uuid }) ]
-                [ Html.text "Remove" ]
+                [ E.onDoubleClick (RemoveNourishment { uuid = context.uuid })
+                , A.class "mt-3"
+                ]
+                [ Html.text "Double click to remove" ]
             ]
 
         Nothing ->
             -- TODO
             []
+
+
+
+-- EDIT
+
+
+edit context model =
+    let
+        nourishment =
+            case context.nourishment of
+                Just i ->
+                    Just i
+
+                Nothing ->
+                    UserData.findNourishment context model.userData
+    in
+    [ UI.Kit.h1
+        []
+        [ Html.text "Edit food" ]
+
+    --
+    , nameField
+        { onInput =
+            \name -> GotContextForNourishmentEdit { context | name = Just name }
+        , value =
+            context.name
+                |> Maybe.orElse (Maybe.map .name nourishment)
+                |> Maybe.withDefault ""
+        }
+
+    --
+    , descriptionField
+        { onInput =
+            \description -> GotContextForNourishmentEdit { context | description = Just description }
+        , value =
+            context.description
+                |> Maybe.orElse (Maybe.andThen .description nourishment)
+                |> Maybe.withDefault ""
+        }
+
+    --
+    , ingredientsField
+        { msg =
+            \ingredients ->
+                GotContextForNourishmentEdit
+                    { context | ingredients = Just ingredients }
+        , userData =
+            model.userData
+        , value =
+            context.ingredients
+                |> Maybe.orElse
+                    (Maybe.map
+                        (.ingredients >> List.map .name >> MultiSelect.init)
+                        nourishment
+                    )
+                |> Maybe.withDefault (MultiSelect.init [])
+        }
+
+    --
+    , tagsField
+        { msg =
+            \tags ->
+                GotContextForNourishmentEdit
+                    { context | tags = Just (MultiSelect.mapSelected List.sort tags) }
+        , value =
+            context.tags
+                |> Maybe.orElse (Maybe.map (.tags >> MultiSelect.init) nourishment)
+                |> Maybe.withDefault (MultiSelect.init [])
+        }
+
+    --
+    , instructionsField
+        { onInput =
+            \instructions ->
+                GotContextForNourishmentEdit
+                    { context | instructions = Just instructions }
+        , value =
+            context.instructions
+                |> Maybe.orElse (Maybe.andThen .instructions nourishment)
+                |> Maybe.withDefault ""
+        }
+
+    --
+    , UI.Kit.button
+        [ E.onClick (EditNourishment context) ]
+        [ Icons.add 20 Inherit
+        , Html.span
+            [ A.class "ml-2" ]
+            [ Html.text "Save food" ]
+        ]
+    ]
 
 
 
@@ -226,107 +334,52 @@ new context model =
         [ Html.text "Add a new food" ]
 
     --
-    , UI.Kit.formField
-        [ UI.Kit.label
-            [ A.for "nourishment_name" ]
-            [ Html.text "Name" ]
-        , UI.Kit.textField
-            [ A.id "nourishment_name"
-            , E.onInput
-                (\name ->
-                    GotContextForNewNourishment
-                        { context | name = name }
-                )
-            , A.placeholder "Soup"
-            , A.required True
-            , A.type_ "text"
-            , A.value context.name
-            ]
-            []
-        ]
+    , nameField
+        { onInput =
+            \name -> GotContextForNewNourishment { context | name = name }
+        , value =
+            context.name
+        }
 
     --
-    , UI.Kit.formField
-        [ UI.Kit.label
-            [ A.for "nourishment_description" ]
-            [ Html.text "Description" ]
-        , UI.Kit.textArea
-            [ A.id "nourishment_description"
-            , A.rows 3
-            , A.value (Maybe.withDefault "" context.description)
-            , E.onInput
-                (\description ->
-                    GotContextForNewNourishment
-                        { context | description = Just description }
-                )
-            ]
-            []
-        ]
+    , descriptionField
+        { onInput =
+            \description -> GotContextForNewNourishment { context | description = Just description }
+        , value =
+            Maybe.withDefault "" context.description
+        }
 
     --
-    , UI.Kit.formField
-        [ UI.Kit.label
-            [ A.for "nourishment_ingredients" ]
-            [ Html.text "Ingredients" ]
-        , UI.Kit.multiSelect
-            { addButton = [ Icons.add_circle 18 Inherit ]
-            , allowCreation = True
-            , inputPlaceholder = "Type to find, or create, an ingredient"
-            , items =
-                model.userData.ingredients
-                    |> RemoteData.withDefault []
-                    |> List.map
-                        (\i ->
-                            i.emoji
-                                |> Maybe.map (\e -> e ++ " ")
-                                |> Maybe.withDefault ""
-                                |> (\s -> s ++ i.name)
-                        )
-            , msg =
-                \ingredients ->
-                    GotContextForNewNourishment
-                        { context | ingredients = ingredients }
-            , uid = "selectIngredients"
-            }
+    , ingredientsField
+        { msg =
+            \ingredients ->
+                GotContextForNewNourishment
+                    { context | ingredients = ingredients }
+        , userData =
+            model.userData
+        , value =
             context.ingredients
-        ]
+        }
 
     --
-    , UI.Kit.formField
-        [ UI.Kit.label
-            [ A.for "nourishment_tags" ]
-            [ Html.text "Tags" ]
-        , UI.Kit.multiSelect
-            { addButton = [ Icons.add_circle 18 Inherit ]
-            , allowCreation = True
-            , inputPlaceholder = "Type to find or create a tag"
-            , items = List.sort [ "Breakfast", "Dinner", "Lunch", "Supper" ]
-            , msg =
-                \tags ->
-                    GotContextForNewNourishment
-                        { context | tags = MultiSelect.mapSelected List.sort tags }
-            , uid = "selectTags"
-            }
+    , tagsField
+        { msg =
+            \tags ->
+                GotContextForNewNourishment
+                    { context | tags = MultiSelect.mapSelected List.sort tags }
+        , value =
             context.tags
-        ]
+        }
 
     --
-    , UI.Kit.formField
-        [ UI.Kit.label
-            [ A.for "nourishment_instructions" ]
-            [ Html.text "Instructions" ]
-        , UI.Kit.textArea
-            [ A.id "nourishment_instructions"
-            , A.rows 3
-            , A.value (Maybe.withDefault "" context.instructions)
-            , E.onInput
-                (\instructions ->
-                    GotContextForNewNourishment
-                        { context | instructions = Just instructions }
-                )
-            ]
-            []
-        ]
+    , instructionsField
+        { onInput =
+            \instructions ->
+                GotContextForNewNourishment
+                    { context | instructions = Just instructions }
+        , value =
+            Maybe.withDefault "" context.instructions
+        }
 
     --
     , UI.Kit.button
@@ -337,3 +390,97 @@ new context model =
             [ Html.text "Add food" ]
         ]
     ]
+
+
+
+-- FIELDS
+
+
+descriptionField { onInput, value } =
+    UI.Kit.formField
+        [ UI.Kit.label
+            [ A.for "nourishment_description" ]
+            [ Html.text "Description" ]
+        , UI.Kit.textArea
+            [ A.id "nourishment_description"
+            , A.rows 3
+            , A.value value
+            , E.onInput onInput
+            ]
+            []
+        ]
+
+
+ingredientsField { msg, userData, value } =
+    UI.Kit.formField
+        [ UI.Kit.label
+            [ A.for "nourishment_ingredients" ]
+            [ Html.text "Ingredients" ]
+        , UI.Kit.multiSelect
+            { addButton = [ Icons.add_circle 18 Inherit ]
+            , allowCreation = True
+            , inputPlaceholder = "Type to find, or create, an ingredient"
+            , items =
+                userData.ingredients
+                    |> RemoteData.withDefault []
+                    |> List.map
+                        (\i ->
+                            i.emoji
+                                |> Maybe.map (\e -> e ++ " ")
+                                |> Maybe.withDefault ""
+                                |> (\s -> s ++ i.name)
+                        )
+            , msg = msg
+            , uid = "selectIngredients"
+            }
+            value
+        ]
+
+
+instructionsField { onInput, value } =
+    UI.Kit.formField
+        [ UI.Kit.label
+            [ A.for "nourishment_instructions" ]
+            [ Html.text "Instructions" ]
+        , UI.Kit.textArea
+            [ A.id "nourishment_instructions"
+            , A.rows 3
+            , A.value value
+            , E.onInput onInput
+            ]
+            []
+        ]
+
+
+nameField { onInput, value } =
+    UI.Kit.formField
+        [ UI.Kit.label
+            [ A.for "nourishment_name" ]
+            [ Html.text "Name" ]
+        , UI.Kit.textField
+            [ A.id "nourishment_name"
+            , E.onInput onInput
+            , A.placeholder "Soup"
+            , A.required True
+            , A.type_ "text"
+            , A.value value
+            ]
+            []
+        ]
+
+
+tagsField { msg, value } =
+    UI.Kit.formField
+        [ UI.Kit.label
+            [ A.for "nourishment_tags" ]
+            [ Html.text "Tags" ]
+        , UI.Kit.multiSelect
+            { addButton = [ Icons.add_circle 18 Inherit ]
+            , allowCreation = True
+            , inputPlaceholder = "Type to find or create a tag"
+            , items = List.sort [ "Breakfast", "Dinner", "Lunch", "Supper" ]
+            , msg = msg
+            , uid = "selectTags"
+            }
+            value
+        ]

@@ -76,6 +76,8 @@ type Msg
       -- Nourishments
       -----------------------------------------
     | AddNourishment Nourishments.Page.NewContext
+    | EditNourishment Nourishments.Page.EditContext
+    | GotContextForNourishmentEdit Nourishments.Page.EditContext
     | GotContextForNourishmentsIndex Nourishments.Page.IndexContext
     | GotContextForNewNourishment Nourishments.Page.NewContext
     | RemoveNourishment { uuid : String }

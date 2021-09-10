@@ -3,6 +3,7 @@ module Nourishments.State exposing (..)
 import Ingredients.State as Ingredients
 import Json.Decode as Decode
 import Json.Decode.Ext as Decode
+import Maybe.Extra as Maybe
 import MultiSelect
 import Nourishment
 import Nourishments.Page as Nourishments
@@ -69,6 +70,67 @@ add context model =
                 (Page.Nourishments Nourishments.index)
                 model.navKey
             )
+
+
+edit : Nourishments.EditContext -> Manager
+edit ({ uuid } as context) model =
+    case UserData.findNourishment { uuid = uuid } model.userData of
+        Just nourishment ->
+            model.userData
+                |> UserData.replaceNourishment
+                    { unit =
+                        { nourishment
+                            | name = Maybe.withDefault nourishment.name context.name
+                            , description = Maybe.or context.description nourishment.description
+                            , instructions = Maybe.or context.instructions nourishment.instructions
+                            , tags = Maybe.withDefault nourishment.tags (Maybe.map MultiSelect.selected context.tags)
+
+                            --
+                            , ingredients =
+                                context.ingredients
+                                    |> Maybe.map MultiSelect.selected
+                                    |> Maybe.map
+                                        (List.map
+                                            (\name ->
+                                                { name = name
+                                                , description = ""
+                                                }
+                                            )
+                                        )
+                                    |> Maybe.withDefault nourishment.ingredients
+                        }
+                    , uuid = uuid
+                    }
+                |> (\u ->
+                        return
+                            { model | userData = u }
+                            (u.nourishments
+                                |> RemoteData.withDefault []
+                                |> Nourishments.Wnfs.save
+                                |> Ports.webnativeRequest
+                            )
+                   )
+                |> Return.command
+                    (Routing.goToPage
+                        (Page.Nourishments Nourishments.index)
+                        model.navKey
+                    )
+
+        Nothing ->
+            Return.singleton model
+
+
+gotContextForNourishmentEdit : Nourishments.EditContext -> Manager
+gotContextForNourishmentEdit editContext model =
+    (case model.page of
+        Nourishments (Nourishments.Edit _) ->
+            Nourishments (Nourishments.Edit editContext)
+
+        p ->
+            p
+    )
+        |> (\page -> { model | page = page })
+        |> Return.singleton
 
 
 gotContextForNourishmentsIndex : Nourishments.IndexContext -> Manager

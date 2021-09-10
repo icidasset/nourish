@@ -103,10 +103,10 @@ detail context model =
 
             --
             , UI.Kit.button
-                [ E.onClick (RemoveIngredient { uuid = context.uuid })
+                [ E.onDoubleClick (RemoveIngredient { uuid = context.uuid })
                 , A.class "mt-3"
                 ]
-                [ Html.text "Remove" ]
+                [ Html.text "Double click to remove" ]
             ]
 
         Nothing ->

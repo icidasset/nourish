@@ -10,6 +10,7 @@ import Nourishment exposing (Nourishment)
 
 type Page
     = Detail DetailContext
+    | Edit EditContext
     | Index IndexContext
     | New NewContext
 
@@ -26,6 +27,38 @@ type alias DetailContext =
 detail : DetailContext -> Page
 detail =
     Detail
+
+
+
+-- EDIT
+
+
+type alias EditContext =
+    { uuid : String
+    , nourishment : Maybe Nourishment
+
+    --
+    , description : Maybe String
+    , name : Maybe String
+    , ingredients : Maybe MultiSelect.State
+    , instructions : Maybe String
+    , tags : Maybe MultiSelect.State
+    }
+
+
+edit : { uuid : String } -> Page
+edit { uuid } =
+    Edit
+        { uuid = uuid
+        , nourishment = Nothing
+
+        --
+        , description = Nothing
+        , name = Nothing
+        , ingredients = Nothing
+        , instructions = Nothing
+        , tags = Nothing
+        }
 
 
 
