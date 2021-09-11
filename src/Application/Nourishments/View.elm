@@ -252,13 +252,13 @@ edit context model =
 -- INDEX
 
 
-index context nourishments _ =
+index context nourishments model =
     case nourishments of
         [] ->
             indexHeader :: []
 
         _ ->
-            indexHeader :: nourishmentsList context nourishments
+            indexHeader :: nourishmentsList context nourishments model
 
 
 indexHeader =
@@ -267,7 +267,7 @@ indexHeader =
         [ Html.text "Food" ]
 
 
-nourishmentsList context nourishments =
+nourishmentsList context nourishments model =
     let
         tags =
             context.filter
@@ -284,9 +284,7 @@ nourishmentsList context nourishments =
                 [ Icons.filter_alt 18 Inherit ]
             , allowCreation = False
             , inputPlaceholder = "Search tags"
-            , items =
-                -- TODO
-                []
+            , items = model.tags.nourishments
             , msg =
                 \filter ->
                     GotContextForNourishmentsIndex

@@ -181,13 +181,13 @@ edit context model =
 -- INDEX
 
 
-index context ingredients _ =
+index context ingredients model =
     case ingredients of
         [] ->
             indexHeader :: []
 
         _ ->
-            indexHeader :: ingredientsList context ingredients
+            indexHeader :: ingredientsList context ingredients model
 
 
 indexHeader =
@@ -196,7 +196,7 @@ indexHeader =
         [ Html.text "Ingredients" ]
 
 
-ingredientsList context ingredients =
+ingredientsList context ingredients model =
     let
         tags =
             context.filter
@@ -213,7 +213,7 @@ ingredientsList context ingredients =
                 [ Icons.filter_alt 18 Inherit ]
             , allowCreation = False
             , inputPlaceholder = "Search tags"
-            , items = List.sort [ "Vegetable", "Legume", "Fruit" ]
+            , items = model.tags.ingredients
             , msg =
                 \filter ->
                     GotContextForIngredientsIndex
