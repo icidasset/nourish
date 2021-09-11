@@ -16,6 +16,12 @@ import Wnfs
 -- 🌱
 
 
+type alias CollectedTags =
+    { ingredients : List String
+    , nourishments : List String
+    }
+
+
 type alias Init =
     { seeds : List Int
     }
@@ -31,6 +37,7 @@ type alias Model =
     , page : Page
     , preparing : Bool
     , seeds : UUID.Seeds
+    , tags : CollectedTags
     , url : Url
     , userData : UserData
     }

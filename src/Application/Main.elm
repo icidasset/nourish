@@ -62,6 +62,10 @@ init { seeds } url navKey =
                     , seed3 = Random.initialSeed 0
                     , seed4 = Random.initialSeed 0
                     }
+        , tags =
+            { ingredients = []
+            , nourishments = []
+            }
         , url = url
         , userData = UserData.empty
         }

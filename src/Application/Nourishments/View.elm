@@ -213,7 +213,9 @@ edit context model =
 
     --
     , tagsField
-        { msg =
+        { available =
+            model.tags.nourishments
+        , msg =
             \tags ->
                 GotContextForNourishmentEdit
                     { context | tags = Just (MultiSelect.mapSelected List.sort tags) }
@@ -238,7 +240,7 @@ edit context model =
     --
     , UI.Kit.button
         [ E.onClick (EditNourishment context) ]
-        [ Icons.add 20 Inherit
+        [ Icons.done 20 Inherit
         , Html.span
             [ A.class "ml-2" ]
             [ Html.text "Save food" ]
@@ -363,7 +365,9 @@ new context model =
 
     --
     , tagsField
-        { msg =
+        { available =
+            model.tags.nourishments
+        , msg =
             \tags ->
                 GotContextForNewNourishment
                     { context | tags = MultiSelect.mapSelected List.sort tags }
@@ -469,7 +473,7 @@ nameField { onInput, value } =
         ]
 
 
-tagsField { msg, value } =
+tagsField { available, msg, value } =
     UI.Kit.formField
         [ UI.Kit.label
             [ A.for "nourishment_tags" ]
@@ -478,7 +482,7 @@ tagsField { msg, value } =
             { addButton = [ Icons.add_circle 18 Inherit ]
             , allowCreation = True
             , inputPlaceholder = "Type to find or create a tag"
-            , items = List.sort [ "Breakfast", "Dinner", "Lunch", "Supper" ]
+            , items = available
             , msg = msg
             , uid = "selectTags"
             }

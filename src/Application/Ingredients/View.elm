@@ -154,7 +154,9 @@ edit context model =
 
     --
     , tagsField
-        { msg =
+        { available =
+            model.tags.ingredients
+        , msg =
             \tags ->
                 GotContextForIngredientEdit
                     { context | tags = Just (MultiSelect.mapSelected List.sort tags) }
@@ -272,7 +274,7 @@ defaultEmoji =
 -- NEW
 
 
-new context _ =
+new context model =
     [ UI.Kit.h1
         []
         [ Html.text "Add a new ingredient" ]
@@ -293,7 +295,9 @@ new context _ =
 
     --
     , tagsField
-        { msg =
+        { available =
+            model.tags.ingredients
+        , msg =
             \tags ->
                 GotContextForNewIngredient
                     { context | tags = MultiSelect.mapSelected List.sort tags }
@@ -362,7 +366,7 @@ nameField { onInput, value } =
         ]
 
 
-tagsField { msg, value } =
+tagsField { available, msg, value } =
     UI.Kit.formField
         [ UI.Kit.label
             [ A.for "ingredient_tags" ]
@@ -371,7 +375,7 @@ tagsField { msg, value } =
             { addButton = [ Icons.add_circle 18 Inherit ]
             , allowCreation = True
             , inputPlaceholder = "Type to find or create a tag"
-            , items = List.sort [ "Vegetable", "Legume", "Fruit" ]
+            , items = available
             , msg = msg
             , uid = "selectTags"
             }

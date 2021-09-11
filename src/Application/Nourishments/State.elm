@@ -3,6 +3,7 @@ module Nourishments.State exposing (..)
 import Ingredients.State as Ingredients
 import Json.Decode as Decode
 import Json.Decode.Ext as Decode
+import List.Extra as List
 import Maybe.Extra as Maybe
 import MultiSelect
 import Nourishment
@@ -65,6 +66,7 @@ add context model =
                     )
            )
         |> Return.andThen (Ingredients.ensureExistence ingredients)
+        |> Return.andThen populateTags
         |> Return.command
             (Routing.goToPage
                 (Page.Nourishments Nourishments.index)
@@ -110,6 +112,7 @@ edit ({ uuid } as context) model =
                                 |> Ports.webnativeRequest
                             )
                    )
+                |> Return.andThen populateTags
                 |> Return.command
                     (Routing.goToPage
                         (Page.Nourishments Nourishments.index)
@@ -166,13 +169,33 @@ loaded { json } model =
             model.userData
                 |> (\u -> { u | nourishments = Success nourishments })
                 |> (\u -> { model | userData = u })
-                |> Return.singleton
+                |> populateTags
 
         Err err ->
             model.userData
                 |> (\u -> { u | ingredients = Failure (Decode.errorToString err) })
                 |> (\u -> { model | userData = u })
                 |> Return.singleton
+
+
+populateTags : Manager
+populateTags model =
+    case model.userData.nourishments of
+        Success nourishments ->
+            nourishments
+                |> List.map .tags
+                |> List.concat
+                |> List.unique
+                |> List.sort
+                |> (\tags ->
+                        model.tags
+                            |> (\t -> { t | nourishments = tags })
+                            |> (\t -> { model | tags = t })
+                   )
+                |> Return.singleton
+
+        _ ->
+            Return.singleton model
 
 
 remove : { uuid : String } -> Manager
