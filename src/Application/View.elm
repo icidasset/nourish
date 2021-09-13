@@ -57,10 +57,15 @@ view model =
 navigation page =
     chunk
         Html.section
-        [ "bottom-0"
+        [ "bg-gray-100"
+        , "bottom-0"
         , "fixed"
         , "left-0"
         , "right-0"
+
+        -- Dark mode
+        ------------
+        , "dark:bg-gray-900"
         ]
         []
         [ case page of

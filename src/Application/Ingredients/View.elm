@@ -231,6 +231,7 @@ ingredientsList context ingredients model =
                     tags
                     (List.map String.toLower ingredient.tags)
             )
+        |> List.sortBy .name
         |> List.map
             (\ingredient ->
                 chunk
