@@ -194,6 +194,7 @@ multiSelect =
             ]
         , searchResultsContainer =
             [ "flex"
+            , "flex-wrap"
             , "font-medium"
             , "mt-2"
             , "text-xs"
@@ -206,6 +207,7 @@ multiSelect =
         , searchResult =
             [ "bg-gray-400"
             , "bg-opacity-60"
+            , "mb-[6px]"
             , "mr-[6px]"
             , "px-[5px]"
             , "py-1"
@@ -220,6 +222,7 @@ multiSelect =
             [ "bg-gray-500"
             , "bg-opacity-60"
             , "inline-block"
+            , "mb-[6px]"
             , "mr-[6px]"
             , "px-[8px]"
             , "py-1"
@@ -233,6 +236,7 @@ multiSelect =
             ]
         , selectedItemsContainer =
             [ "flex"
+            , "flex-wrap"
             , "mb-3"
             ]
         , selectedItemsEmptyContainer =
