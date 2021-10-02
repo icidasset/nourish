@@ -8,13 +8,13 @@
     "examples": [
         {
             "uuid": "f1c851e4-2235-45e9-a443-13932389534d",
-            "nourishment": "Mom's World Famous Banana Bread",
+            "item": "Mom's World Famous Banana Bread",
             "scheduledAt": "2021-07-03"
         }
     ],
     "required": [
         "uuid",
-        "nourishment",
+        "item",
         "scheduledAt"
     ],
     "properties": {
@@ -28,11 +28,11 @@
             "f1c851e4-2235-45e9-a443-13932389534d"
           ]
         },
-        "nourishment": {
-          "$id": "#/properties/nourishment",
+        "item": {
+          "$id": "#/properties/item",
           "type": "string",
-          "title": "Nourishment",
-          "description": "The scheduled nourishment.",
+          "title": "Item",
+          "description": "The scheduled nourishment or ingredient. Sometimes a nourishment can be an ingredient as well, for example, an apple.",
           "default": "",
           "examples": [
             "Mom's World Famous Banana Bread"
