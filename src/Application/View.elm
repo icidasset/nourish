@@ -124,7 +124,7 @@ mainNavigation page =
                     False
             )
             [ A.href "/ingredients/" ]
-            [ Icons.park 20 Inherit ]
+            [ Icons.forest 20 Inherit ]
         ]
 
 
