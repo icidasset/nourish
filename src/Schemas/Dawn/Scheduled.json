@@ -28,14 +28,17 @@
             "f1c851e4-2235-45e9-a443-13932389534d"
           ]
         },
-        "item": {
-          "$id": "#/properties/item",
-          "type": "string",
+        "items": {
+          "$id": "#/properties/items",
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
           "title": "Item",
-          "description": "The scheduled nourishment or ingredient. Sometimes a nourishment can be an ingredient as well, for example, an apple.",
-          "default": "",
+          "description": "The scheduled nourishments and/or ingredients. Sometimes a nourishment can be an ingredient as well, for example, an apple.",
+          "default": [],
           "examples": [
-            "Mom's World Famous Banana Bread"
+            [ "Mom's World Famous Banana Bread" ]
           ]
         },
         "scheduledAt": {
