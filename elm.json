@@ -25,7 +25,8 @@
             "fission-suite/kit": "2.1.0",
             "fission-suite/webnative-elm": "6.0.0",
             "icidasset/elm-material-icons": "9.0.0",
-            "krisajenkins/remotedata": "6.0.1"
+            "krisajenkins/remotedata": "6.0.1",
+            "mercurymedia/elm-datetime-picker": "5.0.0"
         },
         "indirect": {
             "TSFoster/elm-bytes-extra": "1.3.0",
@@ -35,10 +36,13 @@
             "elm/bytes": "1.0.8",
             "elm/file": "1.0.5",
             "elm/http": "2.0.0",
+            "elm/parser": "1.1.0",
             "elm/regex": "1.0.0",
             "elm/svg": "1.0.1",
             "elm/time": "1.0.0",
             "elm/virtual-dom": "1.0.2",
+            "justinmimbs/date": "3.2.1",
+            "justinmimbs/time-extra": "1.1.0",
             "rtfeldman/elm-hex": "1.0.0",
             "zwilias/elm-utf-tools": "2.0.1"
         }

@@ -12,6 +12,7 @@ import Material.Icons.Types exposing (Coloring(..))
 import Nourishments.View as Nourishments
 import Page exposing (Page(..))
 import Radix exposing (Model, Msg(..))
+import Schedule.View as Schedule
 import UI.Kit
 
 
@@ -48,6 +49,9 @@ view model =
                 Nourishments page ->
                     Nourishments.view page model
 
+                Schedule page ->
+                    Schedule.view page model
+
             --
             , navigation model.page
             ]
@@ -78,6 +82,9 @@ navigation page =
             Nourishments nourishmentsPage ->
                 Nourishments.navigation nourishmentsPage
 
+            Schedule schedulePage ->
+                Schedule.navigation schedulePage
+
         --
         , mainNavigation page
         ]
@@ -100,15 +107,27 @@ mainNavigation page =
         ]
         []
         [ link
-            False
+            (page == Index)
             [ A.href "/" ]
             [ Icons.cottage 20 Inherit ]
         , link
-            False
+            (case page of
+                Schedule _ ->
+                    True
+
+                _ ->
+                    False
+            )
             [ A.href "/menu/" ]
             [ Icons.calendar_view_week 20 Inherit ]
         , link
-            False
+            (case page of
+                Nourishments _ ->
+                    True
+
+                _ ->
+                    False
+            )
             [ A.href "/foods/" ]
             [ Icons.local_dining 20 Inherit ]
         , link

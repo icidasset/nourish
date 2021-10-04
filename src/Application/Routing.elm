@@ -8,6 +8,7 @@ import Page exposing (Page(..))
 import Ports
 import Radix exposing (permissions)
 import Return exposing (return)
+import Schedule.Page as Schedule
 import Url exposing (Url)
 import Url.Parser as Url exposing (..)
 import Url.Parser.Query as Query
@@ -93,4 +94,10 @@ route =
         , map
             (\uuid -> Nourishments <| Nourishments.edit { uuid = uuid })
             (s "foods" </> string </> s "edit")
+
+        -----------------------------------------
+        -- Schedule
+        -----------------------------------------
+        , map (Schedule Schedule.index) (s "menu")
+        , map (Schedule Schedule.new) (s "menu" </> s "add")
         ]

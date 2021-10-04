@@ -2,6 +2,7 @@ module Page exposing (..)
 
 import Ingredients.Page as Ingredients
 import Nourishments.Page as Nourishments
+import Schedule.Page as Schedule
 import Url exposing (Url)
 
 
@@ -14,6 +15,7 @@ type Page
       --
     | Ingredients Ingredients.Page
     | Nourishments Nourishments.Page
+    | Schedule Schedule.Page
 
 
 
@@ -55,3 +57,12 @@ toString page =
 
         Nourishments (Nourishments.New _) ->
             "/foods/new/"
+
+        -----------------------------------------
+        -- Schedule
+        -----------------------------------------
+        Schedule Schedule.Index ->
+            "/menu/"
+
+        Schedule (Schedule.New _) ->
+            "/menu/add/"
