@@ -2,6 +2,7 @@ module UserData exposing (..)
 
 import Ingredient exposing (Ingredient)
 import List.Extra as List
+import Meal exposing (Meal)
 import Nourishment exposing (Nourishment)
 import RemoteData exposing (RemoteData(..))
 import Webnative.Path as Path
@@ -13,6 +14,7 @@ import Webnative.Path as Path
 
 type alias UserData =
     { ingredients : RemoteData String (List Ingredient)
+    , meals : RemoteData String (List Meal)
     , nourishments : RemoteData String (List Nourishment)
     , userName : Maybe String
     }
@@ -20,6 +22,7 @@ type alias UserData =
 
 empty =
     { ingredients = Loading
+    , meals = Loading
     , nourishments = Loading
     , userName = Nothing
     }
@@ -55,6 +58,38 @@ replaceIngredient =
 
 mapIngredients =
     makeMapper .ingredients (\a u -> { u | ingredients = a })
+
+
+
+-- MEALS
+
+
+mealsPath =
+    Path.file [ "Meals.json" ]
+
+
+addMeal meal =
+    mapMeals (addToList meal)
+
+
+findMeal =
+    makeFinder .meals
+
+
+removeMeal =
+    without >> mapMeals
+
+
+replaceMeal =
+    replace >> mapMeals
+
+
+
+-- MEALS  🀰  🛠
+
+
+mapMeals =
+    makeMapper .meals (\a u -> { u | meals = a })
 
 
 

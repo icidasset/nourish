@@ -3,6 +3,7 @@ module Radix exposing (..)
 import Browser
 import Browser.Navigation as Nav
 import Ingredients.Page
+import Meals.Page
 import Nourishments.Page
 import Page exposing (Page)
 import UUID
@@ -94,6 +95,10 @@ type Msg
     | SignIn
     | UrlChanged Url
     | UrlRequested Browser.UrlRequest
+      -----------------------------------------
+      -- Meals
+      -----------------------------------------
+    | GotContextForNewMeal Meals.Page.NewContext
 
 
 type alias Manager =

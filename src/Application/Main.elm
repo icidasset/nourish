@@ -4,6 +4,7 @@ import Browser
 import Browser.Navigation as Nav
 import Ingredients.Page
 import Ingredients.State as Ingredients
+import Meals.State as Meals
 import Nourishments.State as Nourishments
 import Page exposing (Page(..))
 import Ports
@@ -130,6 +131,12 @@ update msg =
 
         RemoveIngredient a ->
             Ingredients.remove a
+
+        -----------------------------------------
+        -- Meals
+        -----------------------------------------
+        GotContextForNewMeal a ->
+            Meals.gotContextForNewMeal a
 
         -----------------------------------------
         -- Nourishments

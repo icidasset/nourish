@@ -3,12 +3,12 @@ module Routing exposing (..)
 import Browser
 import Browser.Navigation as Nav
 import Ingredients.Page as Ingredients
+import Meals.Page as Meals
 import Nourishments.Page as Nourishments
 import Page exposing (Page(..))
 import Ports
 import Radix exposing (permissions)
 import Return exposing (return)
-import Schedule.Page as Schedule
 import Url exposing (Url)
 import Url.Parser as Url exposing (..)
 import Url.Parser.Query as Query
@@ -96,8 +96,8 @@ route =
             (s "foods" </> string </> s "edit")
 
         -----------------------------------------
-        -- Schedule
+        -- Meals
         -----------------------------------------
-        , map (Schedule Schedule.index) (s "menu")
-        , map (Schedule Schedule.new) (s "menu" </> s "add")
+        , map (Meals Meals.index) (s "meals")
+        , map (Meals Meals.new) (s "meals" </> s "add")
         ]

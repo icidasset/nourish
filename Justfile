@@ -33,6 +33,7 @@ gen := "src/Generated"
 	echo "🔮  Translating schemas into Elm code"
 	mkdir -p src/Generated
 	quicktype -s schema -o src/Generated/Ingredient.elm --module Ingredient src/Schemas/Dawn/Ingredient.json
+	quicktype -s schema -o src/Generated/Meal.elm --module Meal src/Schemas/Dawn/Meal.json
 	quicktype -s schema -o src/Generated/Nourishment.elm --module Nourishment src/Schemas/Dawn/Nourishment.json
 
 

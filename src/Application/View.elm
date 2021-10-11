@@ -9,10 +9,10 @@ import Ingredients.View as Ingredients
 import Kit.Components as Fission
 import Material.Icons as Icons
 import Material.Icons.Types exposing (Coloring(..))
+import Meals.View as Meals
 import Nourishments.View as Nourishments
 import Page exposing (Page(..))
 import Radix exposing (Model, Msg(..))
-import Schedule.View as Schedule
 import UI.Kit
 
 
@@ -49,8 +49,8 @@ view model =
                 Nourishments page ->
                     Nourishments.view page model
 
-                Schedule page ->
-                    Schedule.view page model
+                Meals page ->
+                    Meals.view page model
 
             --
             , navigation model.page
@@ -82,8 +82,8 @@ navigation page =
             Nourishments nourishmentsPage ->
                 Nourishments.navigation nourishmentsPage
 
-            Schedule schedulePage ->
-                Schedule.navigation schedulePage
+            Meals schedulePage ->
+                Meals.navigation schedulePage
 
         --
         , mainNavigation page
@@ -112,13 +112,13 @@ mainNavigation page =
             [ Icons.cottage 20 Inherit ]
         , link
             (case page of
-                Schedule _ ->
+                Meals _ ->
                     True
 
                 _ ->
                     False
             )
-            [ A.href "/menu/" ]
+            [ A.href "/meals/" ]
             [ Icons.calendar_view_week 20 Inherit ]
         , link
             (case page of
@@ -130,10 +130,11 @@ mainNavigation page =
             )
             [ A.href "/foods/" ]
             [ Icons.local_dining 20 Inherit ]
-        , link
-            False
-            [ A.href "/stores/" ]
-            [ Icons.store 20 Inherit ]
+
+        -- , link
+        --     False
+        --     [ A.href "/stores/" ]
+        --     [ Icons.store 20 Inherit ]
         , link
             (case page of
                 Ingredients _ ->
