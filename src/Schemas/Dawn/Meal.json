@@ -14,7 +14,7 @@
     ],
     "required": [
         "uuid",
-        "item",
+        "items",
         "scheduledAt"
     ],
     "properties": {
