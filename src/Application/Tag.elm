@@ -10,6 +10,12 @@ type
     | LoadedIngredients
     | SavedIngredients
       -----------------------------------------
+      -- Meals
+      -----------------------------------------
+    | EnsureMeals
+    | LoadedMeals
+    | SavedMeals
+      -----------------------------------------
       -- Nourishments
       -----------------------------------------
     | EnsureNourishments
@@ -35,6 +41,18 @@ fromString string =
 
         "SavedIngredients" ->
             Ok SavedIngredients
+
+        -----------------------------------------
+        -- Meals
+        -----------------------------------------
+        "EnsureMeals" ->
+            Ok EnsureMeals
+
+        "LoadedMeals" ->
+            Ok LoadedMeals
+
+        "SavedMeals" ->
+            Ok SavedMeals
 
         -----------------------------------------
         -- Nourishments
@@ -72,6 +90,18 @@ toString tag =
 
         SavedIngredients ->
             "SavedIngredients"
+
+        -----------------------------------------
+        -- Meals
+        -----------------------------------------
+        EnsureMeals ->
+            "EnsureMeals"
+
+        LoadedMeals ->
+            "LoadedMeals"
+
+        SavedMeals ->
+            "SavedMeals"
 
         -----------------------------------------
         -- Nourishments

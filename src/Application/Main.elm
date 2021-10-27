@@ -135,6 +135,9 @@ update msg =
         -----------------------------------------
         -- Meals
         -----------------------------------------
+        AddMeal a ->
+            Meals.add a
+
         GotContextForNewMeal a ->
             Meals.gotContextForNewMeal a
 
@@ -193,6 +196,26 @@ gotWebnativeResponse response model =
             Ingredients.loaded { json = json } model
 
         Wnfs SavedIngredients _ ->
+            publish model
+
+        -----------------------------------------
+        -- Meals
+        -----------------------------------------
+        Wnfs EnsureMeals (Wnfs.Boolean False) ->
+            Meals.loaded { json = "[]" } model
+
+        Wnfs EnsureMeals (Wnfs.Boolean True) ->
+            { path = UserData.nourishmentsPath
+            , tag = Tag.toString LoadedMeals
+            }
+                |> Wnfs.readUtf8 appBase
+                |> Ports.webnativeRequest
+                |> return model
+
+        Wnfs LoadedMeals (Wnfs.Utf8Content json) ->
+            Meals.loaded { json = json } model
+
+        Wnfs SavedMeals _ ->
             publish model
 
         -----------------------------------------

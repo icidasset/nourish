@@ -165,6 +165,7 @@ multiSelect =
             [ "inline-block"
             , "items-center"
             , "justify-center"
+            , "mb-[6px]"
             , "px-2"
             , "py-2"
             , "rounded"

@@ -97,6 +97,15 @@ new context model =
         { onInput = \scheduledAt -> GotContextForNewMeal { context | scheduledAt = Just scheduledAt }
         , value = context.scheduledAt
         }
+
+    --
+    , UI.Kit.button
+        [ E.onClick (AddMeal context) ]
+        [ Icons.add 20 Inherit
+        , Html.span
+            [ A.class "ml-2" ]
+            [ Html.text "Plan" ]
+        ]
     ]
 
 

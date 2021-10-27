@@ -81,6 +81,11 @@ type Msg
     | GotContextForNewIngredient Ingredients.Page.NewContext
     | RemoveIngredient { uuid : String }
       -----------------------------------------
+      -- Meals
+      -----------------------------------------
+    | AddMeal Meals.Page.NewContext
+    | GotContextForNewMeal Meals.Page.NewContext
+      -----------------------------------------
       -- Nourishments
       -----------------------------------------
     | AddNourishment Nourishments.Page.NewContext
@@ -95,10 +100,6 @@ type Msg
     | SignIn
     | UrlChanged Url
     | UrlRequested Browser.UrlRequest
-      -----------------------------------------
-      -- Meals
-      -----------------------------------------
-    | GotContextForNewMeal Meals.Page.NewContext
 
 
 type alias Manager =
