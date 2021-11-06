@@ -6,6 +6,7 @@ import Ingredients.Page
 import Meals.Page
 import Nourishments.Page
 import Page exposing (Page)
+import Time
 import UUID
 import Url exposing (Url)
 import UserData exposing (UserData)
@@ -24,7 +25,8 @@ type alias CollectedTags =
 
 
 type alias Init =
-    { seeds : List Int
+    { currentTime : Int
+    , seeds : List Int
     }
 
 
@@ -34,7 +36,8 @@ type alias Flags =
 
 
 type alias Model =
-    { navKey : Nav.Key
+    { currentTime : Time.Posix
+    , navKey : Nav.Key
     , page : Page
     , preparing : Bool
     , seeds : UUID.Seeds

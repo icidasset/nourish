@@ -5,12 +5,14 @@ import Html exposing (Html)
 import Html.Attributes as A
 import Html.Events as E
 import Html.Extra as Html
+import Iso8601
 import Material.Icons as Icons
 import Material.Icons.Types exposing (Coloring(..))
 import Meals.Page exposing (Page(..))
 import Page
 import Radix exposing (..)
-import RemoteData
+import RemoteData exposing (RemoteData(..))
+import Time
 import UI.Kit
 
 
@@ -20,25 +22,23 @@ view page model =
         []
         (case page of
             Index ->
-                -- case model.userData.nourishments of
-                --     NotAsked ->
-                --         []
-                --
-                --     Loading ->
-                --         -- TODO
-                --         [ Html.text "Loading" ]
-                --
-                --     Failure error ->
-                --         -- TODO
-                --         [ Html.text "Failed to load user data."
-                --         , Html.br [] []
-                --         , Html.text error
-                --         ]
-                --
-                --     Success nourishments ->
-                --         index context nourishments model
-                --
-                index
+                case model.userData.meals of
+                    NotAsked ->
+                        []
+
+                    Loading ->
+                        -- TODO
+                        [ Html.text "Loading" ]
+
+                    Failure error ->
+                        -- TODO
+                        [ Html.text "Failed to load user data."
+                        , Html.br [] []
+                        , Html.text error
+                        ]
+
+                    Success meals ->
+                        index meals model
 
             New context ->
                 new context model
@@ -69,11 +69,71 @@ navigation page =
 -- INDEX
 
 
-index =
+index meals model =
+    let
+        now =
+            Time.posixToMillis model.currentTime
+
+        ( future, past ) =
+            meals
+                |> List.filterMap
+                    (\meal ->
+                        case Iso8601.toTime meal.scheduledAt of
+                            Ok scheduledAt ->
+                                Just ( Time.posixToMillis scheduledAt, meal )
+
+                            Err _ ->
+                                Nothing
+                    )
+                |> List.sortBy Tuple.first
+                |> List.partition (\( s, _ ) -> s >= now)
+
+        ( next_week, after_next_week ) =
+            List.partition
+                (\( s, _ ) -> s <= now + 604800 * 1000)
+                future
+    in
     [ UI.Kit.h1
         []
         [ Html.text "What's for dinner?" ]
+
+    --
+    , UI.Kit.h2
+        []
+        [ Html.text "This week" ]
+    , next_week
+        |> List.map indexItem
+        |> chunk Html.div [ "mb-6" ] []
+
+    --
+    , UI.Kit.h2
+        []
+        [ Html.text "Next week" ]
+    , after_next_week
+        |> List.map indexItem
+        |> chunk Html.div [ "mb-6" ] []
+
+    --
+    , UI.Kit.h2
+        []
+        [ Html.text "Past" ]
+    , past
+        |> List.map indexItem
+        |> chunk Html.div [ "mb-6" ] []
     ]
+
+
+indexItem ( _, meal ) =
+    case meal.items of
+        item :: _ ->
+            chunk
+                Html.div
+                []
+                []
+                [ Html.text item ]
+
+        _ ->
+            Html.text ""
 
 
 

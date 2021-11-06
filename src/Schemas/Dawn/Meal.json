@@ -8,7 +8,7 @@
     "examples": [
         {
             "uuid": "f1c851e4-2235-45e9-a443-13932389534d",
-            "item": "Mom's World Famous Banana Bread",
+            "items": [ "Mom's World Famous Banana Bread" ],
             "scheduledAt": "2021-07-03"
         }
     ],

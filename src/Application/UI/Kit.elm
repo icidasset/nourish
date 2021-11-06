@@ -95,6 +95,15 @@ h1 =
         ]
 
 
+h2 =
+    chunk
+        Html.h2
+        [ "font-bold"
+        , "mb-3"
+        , "text-sm"
+        ]
+
+
 label =
     chunk
         Html.label

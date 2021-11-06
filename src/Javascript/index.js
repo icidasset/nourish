@@ -12,6 +12,7 @@ const wn = webnative
 
 const app = Elm.Main.init({
   flags: {
+    currentTime: Date.now(),
     seeds: Array.from(
       crypto.getRandomValues(new Uint32Array(4))
     )
@@ -112,12 +113,18 @@ async function copyOverTempFilesIfNeeded(permissions) {
     webnative.path.file("Ingredients.json")
   )
 
+  const mealsPath = webnative.path.combine(
+    base,
+    webnative.path.file("Meals.json")
+  )
+
   const nourishmentsPath = webnative.path.combine(
     base,
     webnative.path.file("Nourishments.json")
   )
 
   const ingredients = await tempFs.cat(ingredientsPath).catch(_ => "[]")
+  const meals = await tempFs.cat(mealsPath).catch(_ => "[]")
   const nourishments = await tempFs.cat(nourishmentsPath).catch(_ => "[]")
 
   // Load user's filesystem
@@ -126,12 +133,14 @@ async function copyOverTempFilesIfNeeded(permissions) {
   // Check existance
   const filesExist =
     await userFs.exists(ingredientsPath) ||
+    await userFs.exists(mealsPath) ||
     await userFs.exists(nourishmentsPath)
 
   if (filesExist) return userFs
 
   // Copy files
   await userFs.write(ingredientsPath, ingredients)
+  await userFs.write(mealsPath, meals)
   await userFs.write(nourishmentsPath, nourishments)
   await userFs.publish()
 

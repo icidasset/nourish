@@ -14,6 +14,7 @@ import RemoteData exposing (RemoteData(..))
 import Return exposing (return)
 import Routing
 import Tag exposing (Tag(..))
+import Time
 import Url exposing (Url)
 import UserData
 import View
@@ -43,9 +44,10 @@ main =
 
 
 init : Init -> Url -> Nav.Key -> ( Model, Cmd Msg )
-init { seeds } url navKey =
+init { currentTime, seeds } url navKey =
     Return.singleton
-        { navKey = navKey
+        { currentTime = Time.millisToPosix currentTime
+        , navKey = navKey
         , page = Routing.fromUrl url
         , preparing = True
         , seeds =
@@ -75,7 +77,6 @@ init { seeds } url navKey =
 initPartTwo : Flags -> Manager
 initPartTwo flags model =
     model.userData
-        |> Debug.log "Pt. Deux"
         |> (\u -> { u | userName = flags.authenticatedUsername })
         |> (\u -> { model | preparing = False, userData = u })
         |> Return.singleton
@@ -89,6 +90,13 @@ initPartTwo flags model =
         |> Return.command
             ({ path = UserData.nourishmentsPath
              , tag = Tag.toString EnsureNourishments
+             }
+                |> Wnfs.exists appBase
+                |> Ports.webnativeRequest
+            )
+        |> Return.command
+            ({ path = UserData.mealsPath
+             , tag = Tag.toString EnsureMeals
              }
                 |> Wnfs.exists appBase
                 |> Ports.webnativeRequest
@@ -205,7 +213,7 @@ gotWebnativeResponse response model =
             Meals.loaded { json = "[]" } model
 
         Wnfs EnsureMeals (Wnfs.Boolean True) ->
-            { path = UserData.nourishmentsPath
+            { path = UserData.mealsPath
             , tag = Tag.toString LoadedMeals
             }
                 |> Wnfs.readUtf8 appBase
