@@ -88,38 +88,36 @@ index meals model =
                 |> List.sortBy Tuple.first
                 |> List.partition (\( s, _ ) -> s >= now)
 
-        ( next_week, after_next_week ) =
+        ( nextWeek, afterNextWeek ) =
             List.partition
                 (\( s, _ ) -> s <= now + 604800 * 1000)
                 future
+
+        renderItems items =
+            case items of
+                [] ->
+                    nothingPlanned
+
+                _ ->
+                    items
+                        |> List.map indexItem
+                        |> chunk Html.div [ "mb-7" ] []
     in
     [ UI.Kit.h1
         []
         [ Html.text "What's for dinner?" ]
 
     --
-    , UI.Kit.h2
-        []
-        [ Html.text "This week" ]
-    , next_week
-        |> List.map indexItem
-        |> chunk Html.div [ "mb-6" ] []
+    , UI.Kit.h2 [] [ Html.text "This week" ]
+    , renderItems nextWeek
 
     --
-    , UI.Kit.h2
-        []
-        [ Html.text "Next week" ]
-    , after_next_week
-        |> List.map indexItem
-        |> chunk Html.div [ "mb-6" ] []
+    , UI.Kit.h2 [] [ Html.text "Next week" ]
+    , renderItems afterNextWeek
 
     --
-    , UI.Kit.h2
-        []
-        [ Html.text "Past" ]
-    , past
-        |> List.map indexItem
-        |> chunk Html.div [ "mb-6" ] []
+    , UI.Kit.h2 [] [ Html.text "Past" ]
+    , renderItems past
     ]
 
 
@@ -134,6 +132,19 @@ indexItem ( _, meal ) =
 
         _ ->
             Html.text ""
+
+
+nothingPlanned =
+    chunk
+        Html.div
+        [ "font-medium"
+        , "italic"
+        , "mb-7"
+        , "opacity-80"
+        , "text-sm"
+        ]
+        []
+        [ Html.text "Nothing here yet." ]
 
 
 

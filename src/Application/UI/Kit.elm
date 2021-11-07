@@ -98,9 +98,12 @@ h1 =
 h2 =
     chunk
         Html.h2
-        [ "font-bold"
+        [ "font-semibold"
         , "mb-3"
-        , "text-sm"
+        , "opacity-60"
+        , "text-xs"
+        , "tracking-wide"
+        , "uppercase"
         ]
 
 

@@ -49,8 +49,18 @@ module.exports = {
       addBase({
         '@font-face': {
           fontFamily: "Inter",
+          fontStyle: "normal",
           fontWeight: "100 1000",
-          src: `url("/Fonts/Inter-VariableFont_slnt,wght.woff2") format("woff2")`
+          src: `url("/Fonts/Inter-VariableFont_roman.woff2") format("woff2")`
+        }
+      })
+
+      addBase({
+        '@font-face': {
+          fontFamily: "Inter",
+          fontStyle: "italic",
+          fontWeight: "100 1000",
+          src: `url("/Fonts/Inter-VariableFont_italic.woff2") format("woff2")`
         }
       })
     })
