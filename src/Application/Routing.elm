@@ -3,6 +3,7 @@ module Routing exposing (..)
 import Browser
 import Browser.Navigation as Nav
 import Ingredients.Page as Ingredients
+import Json.Encode as Json
 import Meals.Page as Meals
 import Nourishments.Page as Nourishments
 import Page exposing (Page(..))
@@ -39,6 +40,13 @@ signIn : Radix.Manager
 signIn model =
     permissions
         |> Webnative.redirectToLobby CurrentUrl
+        |> Ports.webnativeRequest
+        |> return model
+
+
+signOut : Radix.Manager
+signOut model =
+    Webnative.leave
         |> Ports.webnativeRequest
         |> return model
 

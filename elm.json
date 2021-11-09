@@ -21,10 +21,10 @@
             "elm/url": "1.0.0",
             "elm-community/html-extra": "3.4.0",
             "elm-community/list-extra": "8.5.1",
-            "elm-community/maybe-extra": "5.2.0",
+            "elm-community/maybe-extra": "5.2.1",
             "elm-community/string-extra": "4.0.1",
             "fission-suite/kit": "2.1.0",
-            "fission-suite/webnative-elm": "6.0.0",
+            "fission-suite/webnative-elm": "6.1.0",
             "icidasset/elm-material-icons": "9.0.0",
             "krisajenkins/remotedata": "6.0.1",
             "rtfeldman/elm-iso8601-date-strings": "1.1.4"

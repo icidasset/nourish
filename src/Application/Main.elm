@@ -176,6 +176,9 @@ update msg =
         SignIn ->
             Routing.signIn
 
+        SignOut ->
+            Routing.signOut
+
         UrlChanged a ->
             Routing.urlChanged a
 

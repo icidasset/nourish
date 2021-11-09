@@ -101,6 +101,7 @@ type Msg
       -- Routing
       -----------------------------------------
     | SignIn
+    | SignOut
     | UrlChanged Url
     | UrlRequested Browser.UrlRequest
 

@@ -196,6 +196,12 @@ indexView model =
             UI.Kit.layout
                 []
                 [ Html.text "Authenticated as "
-                , Html.text userName
+                , chunk
+                    Html.span
+                    [ "pointer"
+                    , "underline"
+                    ]
+                    [ E.onClick SignOut ]
+                    [ Html.text userName ]
                 , Html.text "."
                 ]

@@ -1,6 +1,6 @@
 import * as webnative from "webnative"
 import * as webnativeElm from "webnative-elm"
-import { appDataPath } from "webnative/dist/ucan/permissions.js"
+import { appDataPath } from "webnative/ucan/permissions.js"
 
 import { Elm } from "../Application/Main.elm"
 
@@ -136,13 +136,13 @@ async function copyOverTempFilesIfNeeded(permissions) {
     await userFs.exists(mealsPath) ||
     await userFs.exists(nourishmentsPath)
 
-  if (filesExist) return userFs
-
-  // Copy files
-  await userFs.write(ingredientsPath, ingredients)
-  await userFs.write(mealsPath, meals)
-  await userFs.write(nourishmentsPath, nourishments)
-  await userFs.publish()
+  // Copy files if needed
+  if (!filesExist) {
+    await userFs.write(ingredientsPath, ingredients)
+    await userFs.write(mealsPath, meals)
+    await userFs.write(nourishmentsPath, nourishments)
+    await userFs.publish()
+  }
 
   // Remove temporary filesystem
   removeTemporaryFileSystem()
