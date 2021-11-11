@@ -20,11 +20,18 @@ gen := "src/Generated"
 	pnpm install
 
 
+@production-build: clean translate-schemas
+	pnpx vite build src/ \
+		--config vite.config.js \
+		--outDir ../build/
+
+
 
 # Pieces
 # ======
 
 @css:
+	# Triggered by a custom vite plugin (see vite config)
 	echo "🎨  Generating Css"
 	TAILWIND_MODE=build ./node_modules/.bin/tailwind build --output {{gen}}/application.css
 

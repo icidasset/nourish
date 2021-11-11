@@ -69,7 +69,7 @@ gotContextForNewMeal newContext model =
 
 loaded : { json : String } -> Manager
 loaded { json } model =
-    case Debug.log "" <| Decode.decodeString (Decode.listIgnore Meal.meal) json of
+    case Decode.decodeString (Decode.listIgnore Meal.meal) json of
         Ok meals ->
             model.userData
                 |> (\u -> { u | meals = Success meals })
