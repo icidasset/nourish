@@ -78,6 +78,10 @@ edit : Nourishments.EditContext -> Manager
 edit ({ uuid } as context) model =
     case UserData.findNourishment { uuid = uuid } model.userData of
         Just nourishment ->
+            let
+                ingredients =
+                    Maybe.map MultiSelect.selected context.ingredients
+            in
             model.userData
                 |> UserData.replaceNourishment
                     { unit =
@@ -89,8 +93,7 @@ edit ({ uuid } as context) model =
 
                             --
                             , ingredients =
-                                context.ingredients
-                                    |> Maybe.map MultiSelect.selected
+                                ingredients
                                     |> Maybe.map
                                         (List.map
                                             (\name ->
@@ -111,6 +114,13 @@ edit ({ uuid } as context) model =
                                 |> Nourishments.Wnfs.save
                                 |> Ports.webnativeRequest
                             )
+                   )
+                |> (case ingredients of
+                        Just i ->
+                            Return.andThen (Ingredients.ensureExistence i)
+
+                        Nothing ->
+                            identity
                    )
                 |> Return.andThen populateTags
                 |> Return.command
