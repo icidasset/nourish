@@ -1,6 +1,7 @@
 module Nourishments.View exposing (navigation, view)
 
 import Chunky exposing (..)
+import Common
 import Html exposing (Html)
 import Html.Attributes as A
 import Html.Events as E
@@ -99,22 +100,22 @@ detail context model =
             , UI.Kit.label
                 []
                 [ Html.text "Ingredients" ]
-            , chunk
-                Html.ul
-                [ "list-disc"
-                , "list-inside"
-                , "mb-5"
-                ]
-                []
-                (List.map
+            , nourishment.ingredients
+                |> List.sortBy .name
+                |> List.map
                     (\ingredient ->
                         Html.li
                             []
                             [ Html.text ingredient.name
                             ]
                     )
-                    nourishment.ingredients
-                )
+                |> chunk
+                    Html.ul
+                    [ "list-disc"
+                    , "list-inside"
+                    , "mb-5"
+                    ]
+                    []
 
             --
             , case nourishment.instructions of
@@ -284,7 +285,7 @@ nourishmentsList context nourishments model =
                 [ Icons.filter_alt 18 Inherit ]
             , allowCreation = False
             , inputPlaceholder = "Search tags"
-            , items = model.tags.nourishments
+            , items = MultiSelect.initItemList model.tags.nourishments
             , msg =
                 \filter ->
                     GotContextForNourishmentsIndex
@@ -425,13 +426,8 @@ ingredientsField { msg, userData, value } =
             , items =
                 userData.ingredients
                     |> RemoteData.withDefault []
-                    |> List.map
-                        (\i ->
-                            i.emoji
-                                |> Maybe.map (\e -> e ++ " ")
-                                |> Maybe.withDefault ""
-                                |> (\s -> s ++ i.name)
-                        )
+                    |> List.sortBy .name
+                    |> List.map Common.emojiMultiSelectItem
             , msg = msg
             , uid = "selectIngredients"
             }
@@ -480,7 +476,7 @@ tagsField { available, msg, value } =
             { addButton = [ Icons.add_circle 18 Inherit ]
             , allowCreation = True
             , inputPlaceholder = "Type to find or create a tag"
-            , items = available
+            , items = MultiSelect.initItemList available
             , msg = msg
             , uid = "selectTags"
             }

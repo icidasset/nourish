@@ -197,13 +197,14 @@ itemsField { msg, userData, value } =
                             |> Maybe.map (\e -> e ++ " ")
                             |> Maybe.withDefault ""
                             |> (\s -> s ++ i.name)
+                            |> (\n -> { name = n, value = i.name })
                     )
 
         foods =
             userData.nourishments
                 |> RemoteData.withDefault []
-                |> List.map .name
-                |> List.sort
+                |> List.sortBy .name
+                |> List.map (\n -> { name = n.name, value = n.name })
 
         items =
             List.append foods ingredients

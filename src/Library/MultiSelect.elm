@@ -20,9 +20,15 @@ type alias Config msg =
     { addButton : List (Html msg)
     , allowCreation : Bool
     , inputPlaceholder : String
-    , items : List String
+    , items : List Item
     , msg : State -> msg
     , uid : String
+    }
+
+
+type alias Item =
+    { name : String
+    , value : String
     }
 
 
@@ -43,6 +49,11 @@ init val =
         }
 
 
+initItemList : List String -> List Item
+initItemList =
+    List.map (\v -> { name = v, value = v })
+
+
 
 -- 🛠
 
@@ -55,6 +66,30 @@ mapSelected fn (State state) =
 selected : State -> List String
 selected (State state) =
     state.selected
+
+
+selectedItems : List Item -> State -> List Item
+selectedItems items (State state) =
+    items
+        |> List.foldr
+            (\item ( a, s ) ->
+                let
+                    val =
+                        item.value
+                in
+                List.foldr
+                    (\x ( acc, sel ) ->
+                        if val == x then
+                            ( item :: acc, sel )
+
+                        else
+                            ( acc, x :: sel )
+                    )
+                    ( a, [] )
+                    s
+            )
+            ( [], state.selected )
+        |> Tuple.first
 
 
 
@@ -86,13 +121,13 @@ view styles cfg (State stt) =
                         a =
                             String.toLower s
                     in
-                    List.filter (\b -> String.contains a (String.toLower b))
+                    List.filter (\b -> String.contains a (String.toLower b.value))
 
         searchResults =
             cfg.items
                 |> List.filter
                     (\i ->
-                        not (List.member i stt.selected)
+                        not (List.member i.value stt.selected)
                     )
                 |> searchFilter
     in
@@ -116,10 +151,10 @@ view styles cfg (State stt) =
                         chunk
                             Html.button
                             styles.selectedItem
-                            [ E.onClick (onSelect cfg stt selectedItem False) ]
-                            [ Html.text selectedItem ]
+                            [ E.onClick (onSelect cfg stt selectedItem.value False) ]
+                            [ Html.text selectedItem.name ]
                     )
-                    stt.selected
+                    (selectedItems cfg.items <| State stt)
                 )
                 [ chunk
                     Html.button
@@ -177,8 +212,8 @@ view styles cfg (State stt) =
                                         chunk
                                             Html.button
                                             styles.searchResult
-                                            [ E.onClick (onSelect cfg stt result True) ]
-                                            [ Html.text result ]
+                                            [ E.onClick (onSelect cfg stt result.value True) ]
+                                            [ Html.text result.name ]
                                     )
                                     searchResults
                                 )

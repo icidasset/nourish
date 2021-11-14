@@ -213,7 +213,7 @@ ingredientsList context ingredients model =
                 [ Icons.filter_alt 18 Inherit ]
             , allowCreation = False
             , inputPlaceholder = "Search tags"
-            , items = model.tags.ingredients
+            , items = MultiSelect.initItemList model.tags.ingredients
             , msg =
                 \filter ->
                     GotContextForIngredientsIndex
@@ -376,7 +376,7 @@ tagsField { available, msg, value } =
             { addButton = [ Icons.add_circle 18 Inherit ]
             , allowCreation = True
             , inputPlaceholder = "Type to find or create a tag"
-            , items = available
+            , items = MultiSelect.initItemList available
             , msg = msg
             , uid = "selectTags"
             }
