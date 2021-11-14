@@ -165,7 +165,8 @@ new context model =
 
     --
     , scheduledAtField
-        { onInput = \scheduledAt -> GotContextForNewMeal { context | scheduledAt = Just scheduledAt }
+        { currentTime = model.currentTime
+        , onInput = \scheduledAt -> GotContextForNewMeal { context | scheduledAt = Just scheduledAt }
         , value = context.scheduledAt
         }
 
@@ -223,7 +224,7 @@ itemsField { msg, userData, value } =
         ]
 
 
-scheduledAtField { onInput, value } =
+scheduledAtField { currentTime, onInput, value } =
     UI.Kit.formField
         [ UI.Kit.label
             [ A.for "schedule_date" ]
@@ -234,7 +235,18 @@ scheduledAtField { onInput, value } =
             , A.placeholder ""
             , A.required True
             , A.type_ "date"
-            , A.value (Maybe.withDefault "" value)
+            , A.value
+                (case value of
+                    Just v ->
+                        v
+
+                    Nothing ->
+                        currentTime
+                            |> Iso8601.fromTime
+                            |> String.split "T"
+                            |> List.head
+                            |> Maybe.withDefault ""
+                )
             ]
             []
         ]
