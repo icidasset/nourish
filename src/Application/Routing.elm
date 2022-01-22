@@ -46,7 +46,7 @@ signIn model =
 
 signOut : Radix.Manager
 signOut model =
-    Webnative.leave
+    Webnative.signOut
         |> Ports.webnativeRequest
         |> return model
 

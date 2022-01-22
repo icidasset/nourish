@@ -1,6 +1,13 @@
 module Common exposing (..)
 
+import Html
+import Html.Attributes exposing (class)
 import MultiSelect
+
+
+classes : List String -> Html.Attribute msg
+classes list =
+    class (String.join " " list)
 
 
 emojiMultiSelectItem : { a | emoji : Maybe String, name : String } -> MultiSelect.Item

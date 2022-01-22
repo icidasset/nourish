@@ -1,8 +1,10 @@
 module UI.Kit exposing (..)
 
 import Chunky exposing (..)
+import Common
 import Html exposing (Html)
 import Html.Attributes as A
+import Kit.Components
 import Material.Icons as Icons
 import Material.Icons.Types exposing (Coloring(..))
 import MultiSelect
@@ -52,10 +54,42 @@ button =
         buttonClasses
 
 
+buttonWithSize size attributes =
+    Kit.Components.button
+        size
+        (List.append
+            [ Common.classes buttonColorClasses ]
+            attributes
+        )
+
+
 buttonLink =
     chunk
         Html.a
         buttonClasses
+
+
+buttonLinkWithSize size attributes =
+    Kit.Components.buttonLink
+        size
+        (List.append
+            [ Common.classes buttonColorClasses ]
+            attributes
+        )
+
+
+buttonColorClasses =
+    [ "bg-green-600"
+    , "bg-opacity-60"
+    , "text-white"
+
+    -- Dark mode
+    ------------
+    , "dark:bg-green-400"
+    , "dark:bg-opacity-40"
+    , "dark:text-green-100"
+    , "dark:text-opacity-70"
+    ]
 
 
 buttonClasses =

@@ -9,7 +9,7 @@
     "dependencies": {
         "direct": {
             "Fresheyeball/elm-return": "7.1.0",
-            "NoRedInk/elm-json-decode-pipeline": "1.0.0",
+            "NoRedInk/elm-json-decode-pipeline": "1.0.1",
             "TSFoster/elm-uuid": "4.1.0",
             "avh4/elm-color": "1.0.0",
             "elm/browser": "1.0.2",
@@ -20,11 +20,11 @@
             "elm/time": "1.0.0",
             "elm/url": "1.0.0",
             "elm-community/html-extra": "3.4.0",
-            "elm-community/list-extra": "8.5.1",
-            "elm-community/maybe-extra": "5.2.1",
+            "elm-community/list-extra": "8.5.2",
+            "elm-community/maybe-extra": "5.3.0",
             "elm-community/string-extra": "4.0.1",
-            "fission-suite/kit": "2.1.0",
-            "fission-suite/webnative-elm": "6.1.0",
+            "fission-suite/kit": "2.2.0",
+            "fission-suite/webnative-elm": "7.0.0",
             "icidasset/elm-material-icons": "9.0.0",
             "krisajenkins/remotedata": "6.0.1",
             "rtfeldman/elm-iso8601-date-strings": "1.1.4"

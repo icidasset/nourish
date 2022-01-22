@@ -4,11 +4,10 @@ const kit = require("@fission-suite/kit")
 
 
 module.exports = {
-  mode: "jit",
   darkMode: "media",
 
 
-  purge: [
+  content: [
     "src/Application/**/*.elm",
     "src/Library/**/*.elm",
     ...kit.tailwindPurgeList()
@@ -28,7 +27,9 @@ module.exports = {
       fontFamily: {
         body: [ "Inter" ],
         display: [ "Caveat" ]
-      }
+      },
+
+      fontSize: kit.fontSizes
 
     },
   },
