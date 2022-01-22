@@ -20,7 +20,8 @@ view : Model -> Html Msg
 view model =
     chunk
         Html.main_
-        [ "bg-gray-100"
+        [ "antialiased"
+        , "bg-gray-100"
         , "font-body"
         , "min-h-screen"
         , "relative"
@@ -31,7 +32,7 @@ view model =
         , "dark:bg-gray-900"
         , "dark:text-gray-300"
         ]
-        [ A.style "text-rendering" "geometricPrecision" ]
+        []
         (if model.preparing then
             [ UI.Kit.layout
                 []
@@ -108,7 +109,7 @@ mainNavigation page =
         []
         [ link
             (page == Index)
-            [ A.href "/" ]
+            [ A.href "#/" ]
             [ Icons.cottage 20 Inherit ]
         , link
             (case page of
@@ -118,7 +119,7 @@ mainNavigation page =
                 _ ->
                     False
             )
-            [ A.href "/meals/" ]
+            [ A.href "#/meals/" ]
             [ Icons.calendar_view_week 20 Inherit ]
         , link
             (case page of
@@ -128,12 +129,12 @@ mainNavigation page =
                 _ ->
                     False
             )
-            [ A.href "/foods/" ]
+            [ A.href "#/foods/" ]
             [ Icons.local_dining 20 Inherit ]
 
         -- , link
         --     False
-        --     [ A.href "/stores/" ]
+        --     [ A.href "#/stores/" ]
         --     [ Icons.store 20 Inherit ]
         , link
             (case page of
@@ -143,7 +144,7 @@ mainNavigation page =
                 _ ->
                     False
             )
-            [ A.href "/ingredients/" ]
+            [ A.href "#/ingredients/" ]
             [ Icons.forest 20 Inherit ]
         ]
 

@@ -22,13 +22,16 @@ import Webnative exposing (RedirectTo(..))
 
 fromUrl : Url -> Page
 fromUrl url =
-    Maybe.withDefault Index (Url.parse route url)
+    { url | path = Maybe.withDefault "" url.fragment }
+        |> Url.parse route
+        |> Maybe.withDefault Index
 
 
 goToPage : Page -> Nav.Key -> Cmd msg
 goToPage page navKey =
     page
         |> Page.toString
+        |> String.append "#"
         |> Nav.pushUrl navKey
 
 

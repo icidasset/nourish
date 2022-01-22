@@ -54,13 +54,13 @@ navigation page =
     case page of
         Index ->
             UI.Kit.bottomNavButton
-                [ A.href "/meals/add/" ]
+                [ A.href "#/meals/add/" ]
                 Icons.event
                 "Plan a meal"
 
         _ ->
             UI.Kit.bottomNavButton
-                [ A.href "../" ]
+                [ A.href "#/meals/" ]
                 Icons.arrow_back
                 "Back to overview"
 

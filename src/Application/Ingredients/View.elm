@@ -63,19 +63,19 @@ navigation page =
     case page of
         Edit _ ->
             UI.Kit.bottomNavButton
-                [ A.href "../../" ]
+                [ A.href "#/ingredients/" ]
                 Icons.arrow_back
                 "Back to list"
 
         Index _ ->
             UI.Kit.bottomNavButton
-                [ A.href "/ingredients/new/" ]
+                [ A.href "#/ingredients/new/" ]
                 Icons.add
                 "Add ingredient"
 
         _ ->
             UI.Kit.bottomNavButton
-                [ A.href "../" ]
+                [ A.href "#/ingredients/" ]
                 Icons.arrow_back
                 "Back to list"
 
@@ -97,6 +97,7 @@ detail context model =
                     |> Ingredients.Page.edit
                     |> Page.Ingredients
                     |> Page.toString
+                    |> String.append "#"
                     |> A.href
                 ]
                 [ Html.text "Edit" ]
@@ -241,7 +242,7 @@ ingredientsList context ingredients model =
                     [ chunk
                         Html.a
                         []
-                        [ A.href (Url.percentEncode ingredient.uuid ++ "/") ]
+                        [ A.href ("#/ingredients/" ++ Url.percentEncode ingredient.uuid ++ "/") ]
                         [ chunk
                             Html.span
                             [ "mr-2" ]

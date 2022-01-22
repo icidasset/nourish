@@ -65,13 +65,13 @@ navigation page =
     case page of
         Index _ ->
             UI.Kit.bottomNavButton
-                [ A.href "/foods/new/" ]
+                [ A.href "#/foods/new/" ]
                 Icons.add
                 "Add food"
 
         _ ->
             UI.Kit.bottomNavButton
-                [ A.href "../" ]
+                [ A.href "#/foods/" ]
                 Icons.arrow_back
                 "Back to list"
 
@@ -143,6 +143,7 @@ detail context model =
                         |> Nourishments.Page.edit
                         |> Page.Nourishments
                         |> Page.toString
+                        |> String.append "#"
                         |> A.href
                     ]
                     [ Html.text "Edit" ]
@@ -303,13 +304,13 @@ nourishmentsList context nourishments model =
     --
     , nourishments
         |> List.filter
-            (\ingredient ->
+            (\nourishment ->
                 List.isSubsequenceOf
                     tags
-                    (List.map String.toLower ingredient.tags)
+                    (List.map String.toLower nourishment.tags)
             )
         |> List.map
-            (\ingredient ->
+            (\nourishment ->
                 chunk
                     Html.div
                     [ "mb-2" ]
@@ -317,9 +318,9 @@ nourishmentsList context nourishments model =
                     [ chunk
                         Html.a
                         []
-                        [ A.href (Url.percentEncode ingredient.uuid ++ "/") ]
+                        [ A.href ("#/foods/" ++ Url.percentEncode nourishment.uuid ++ "/") ]
                         [ Html.text
-                            ingredient.name
+                            nourishment.name
                         ]
                     ]
             )
