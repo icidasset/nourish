@@ -30,6 +30,7 @@ add context model =
 
                     --
                     , items = MultiSelect.selected context.items
+                    , replacedIngredients = Nothing
                     , scheduledAt = scheduledAt
                     }
                 |> (\u ->

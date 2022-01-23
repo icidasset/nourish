@@ -1,56 +1,97 @@
 {
-    "$schema": "http://json-schema.org/draft-07/schema",
-    "$id": "http://example.com/example.json",
-    "type": "object",
-    "title": "Meal",
-    "description": "Schema for a scheduled nourishment.",
-    "default": {},
-    "examples": [
-        {
-            "uuid": "f1c851e4-2235-45e9-a443-13932389534d",
-            "items": [ "Mom's World Famous Banana Bread" ],
-            "scheduledAt": "2021-07-03"
-        }
-    ],
-    "required": [
-        "uuid",
-        "items",
-        "scheduledAt"
-    ],
-    "properties": {
-        "uuid": {
-          "$id": "#/properties/uuid",
-          "type": "string",
-          "title": "UUID",
-          "description": "A uuid for this item.",
-          "default": "",
-          "examples": [
-            "f1c851e4-2235-45e9-a443-13932389534d"
-          ]
-        },
-        "items": {
-          "$id": "#/properties/items",
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "title": "Item",
-          "description": "The scheduled nourishments and/or ingredients. Sometimes a nourishment can be an ingredient as well, for example, an apple.",
-          "default": [],
-          "examples": [
-            [ "Mom's World Famous Banana Bread" ]
-          ]
-        },
-        "scheduledAt": {
-          "$id": "#/properties/scheduledAt",
-          "type": "string",
-          "title": "Scheduled at",
-          "description": "Date this item was scheduled at in the ISO8601 format.",
-          "default": "",
-          "examples": [
-            "2021-07-03"
-          ]
-        },
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "$id": "http://example.com/example.json",
+  "type": "object",
+  "title": "Meal",
+  "description": "Schema for a scheduled nourishment.",
+  "default": {},
+  "examples": [
+    {
+      "uuid": "f1c851e4-2235-45e9-a443-13932389534d",
+      "items": [ "Mom's World Famous Banana Bread" ],
+      "scheduledAt": "2021-07-03"
+    }
+  ],
+  "required": [
+    "uuid",
+    "items",
+    "scheduledAt"
+  ],
+  "properties": {
+    "uuid": {
+      "$id": "#/properties/uuid",
+      "type": "string",
+      "title": "UUID",
+      "description": "A uuid for this item.",
+      "default": "",
+      "examples": [
+        "f1c851e4-2235-45e9-a443-13932389534d"
+      ]
     },
-    "additionalProperties": true
+    "items": {
+      "$id": "#/properties/items",
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "title": "Item",
+      "description": "The scheduled nourishments and/or ingredients. Sometimes a nourishment can be an ingredient as well, for example, an apple.",
+      "default": [],
+      "examples": [
+        [ "Mom's World Famous Banana Bread" ]
+      ]
+    },
+    "replacedIngredients": {
+      "$id": "#/properties/replacedIngredients",
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "additionalProperties": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string",
+              "title": "Name",
+              "description": "The name of an ingredient, this matches the name in the ingredient schema.",
+              "default": "",
+              "examples": [
+                "Banana"
+              ]
+            },
+            "description": {
+              "type": "string",
+              "title": "Description",
+              "description": "The amount and state of the ingredient that is used in the nourishment.",
+              "default": "",
+              "examples": [
+                "3 or 4 ripe bananas, smashed"
+              ]
+            }
+          },
+          "additionalProperties": true
+        }
+      },
+      "title": "Replaced ingredients",
+      "description": "Ingredient replacements for nourishments. For example, switching out 'white rice' with 'brown rice' in a curry dish. On the first level is the uppercased name of the nourishment, and on the second level are the uppercased names of the replaced ingredients. See the example for more details.",
+      "default": {},
+      "examples": [
+        {
+          "CURRY DISH": {
+            "WHITE RICE": { "name": "Brown rice", "description": "" }
+          }
+        }
+      ]
+    },
+    "scheduledAt": {
+      "$id": "#/properties/scheduledAt",
+      "type": "string",
+      "title": "Scheduled at",
+      "description": "Date this item was scheduled at in the ISO8601 format.",
+      "default": "",
+      "examples": [
+        "2021-07-03"
+      ]
+    },
+  },
+  "additionalProperties": true
 }

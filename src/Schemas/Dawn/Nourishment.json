@@ -1,219 +1,219 @@
 {
-    "$schema": "http://json-schema.org/draft-07/schema",
-    "$id": "http://example.com/example.json",
-    "type": "object",
-    "title": "Nourishment",
-    "description": "Schema for a nourishment.",
-    "default": {},
-    "examples": [
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "$id": "http://example.com/example.json",
+  "type": "object",
+  "title": "Nourishment",
+  "description": "Schema for a nourishment.",
+  "default": {},
+  "examples": [
+    {
+      "uuid": "48e18bdc-6937-40d1-9fdd-d93edf47b08e",
+      "name": "Mom's World Famous Banana Bread",
+      "description": "This classic banana bread recipe comes from my mom -- the walnuts add a nice texture and flavor to the banana bread.",
+      "cookTime": "PT1H",
+      "prepTime": "PT15M",
+      "ingredients": [
         {
-            "uuid": "48e18bdc-6937-40d1-9fdd-d93edf47b08e",
-            "name": "Mom's World Famous Banana Bread",
-            "description": "This classic banana bread recipe comes from my mom -- the walnuts add a nice texture and flavor to the banana bread.",
-            "cookTime": "PT1H",
-            "prepTime": "PT15M",
-            "ingredients": [
-                {
-                    "name": "Banana",
-                    "description": "3 or 4 ripe bananas, smashed"
-                },
-                {
-                    "name": "Egg",
-                    "description": "1 egg"
-                },
-                {
-                    "name": "Sugar",
-                    "description": "3/4 cup of sugar"
-                }
-            ],
-            "image": "bananabread.jpg",
-            "instructions": "Preheat the oven to 350 degrees. Mix in the ingredients in a bowl. Add the flour last. Pour the mixture into a loaf pan and bake for one hour.",
-            "tags": [
-              "Breakfast"
-            ],
-            "yields": "1 loaf"
+          "name": "Banana",
+          "description": "3 or 4 ripe bananas, smashed"
+        },
+        {
+          "name": "Egg",
+          "description": "1 egg"
+        },
+        {
+          "name": "Sugar",
+          "description": "3/4 cup of sugar"
         }
-    ],
-    "required": [
-        "uuid",
-        "name",
-        "ingredients",
-        "tags"
-    ],
-    "properties": {
-        "uuid": {
-          "$id": "#/properties/uuid",
-          "type": "string",
-          "title": "UUID",
-          "description": "A uuid for this item.",
-          "default": "",
-          "examples": [
-            "48e18bdc-6937-40d1-9fdd-d93edf47b08e"
-          ]
-        },
-        "name": {
-            "$id": "#/properties/name",
-            "type": "string",
-            "title": "Name",
-            "description": "The name of the nourishment.",
-            "default": "",
-            "examples": [
-                "Mom's World Famous Banana Bread"
-            ]
-        },
-        "description": {
-            "$id": "#/properties/description",
-            "type": "string",
-            "title": "Description",
-            "description": "A description of the nourishment.",
-            "default": "",
-            "examples": [
-                "This classic banana bread recipe comes from my mom -- the walnuts add a nice texture and flavor to the banana bread."
-            ]
-        },
-        "cookTime": {
-            "$id": "#/properties/cookTime",
-            "type": "string",
-            "title": "Cook time",
-            "description": "The time it takes to actually cook the dish, in ISO 8601 duration format.",
-            "default": "",
-            "examples": [
-                "PT1H"
-            ]
-        },
-        "prepTime": {
-            "$id": "#/properties/prepTime",
-            "type": "string",
-            "title": "Prepare time",
-            "description": "The length of time it takes to prepare the items to be used in instructions or a direction, in ISO 8601 duration format.",
-            "default": "",
-            "examples": [
-                "PT15M"
-            ]
-        },
-        "ingredients": {
-            "$id": "#/properties/ingredients",
-            "type": "array",
-            "title": "Ingredients",
-            "description": "The ingredients of the nourishment.",
-            "default": [],
-            "examples": [
-                [
-                    {
-                        "name": "Banana",
-                        "description": "3 or 4 ripe bananas, smashed"
-                    },
-                    {
-                        "name": "Egg",
-                        "description": "1 egg"
-                    }
-                ]
-            ],
-            "additionalItems": true,
-            "items": {
-                "$id": "#/properties/ingredients/items",
-                "anyOf": [
-                    {
-                        "$id": "#/properties/ingredients/items/anyOf/0",
-                        "type": "object",
-                        "title": "Ingredient",
-                        "description": "A specific ingredient and how it is used in this nourishment.",
-                        "default": {},
-                        "examples": [
-                            {
-                                "name": "Banana",
-                                "description": "3 or 4 ripe bananas, smashed"
-                            }
-                        ],
-                        "required": [
-                            "name",
-                            "description"
-                        ],
-                        "properties": {
-                            "name": {
-                                "$id": "#/properties/ingredients/items/anyOf/0/properties/name",
-                                "type": "string",
-                                "title": "Name",
-                                "description": "The name of an ingredient, this matches the name in the ingredient schema.",
-                                "default": "",
-                                "examples": [
-                                    "Banana"
-                                ]
-                            },
-                            "description": {
-                                "$id": "#/properties/ingredients/items/anyOf/0/properties/description",
-                                "type": "string",
-                                "title": "Description",
-                                "description": "The amount and state of the ingredient that is used in the nourishment.",
-                                "default": "",
-                                "examples": [
-                                    "3 or 4 ripe bananas, smashed"
-                                ]
-                            }
-                        },
-                        "additionalProperties": true
-                    }
-                ]
-            }
-        },
-        "image": {
-            "$id": "#/properties/image",
-            "type": "string",
-            "title": "Image",
-            "description": "Image URL for the nourishment.",
-            "default": "",
-            "examples": [
-                "bananabread.jpg"
-            ]
-        },
-        "instructions": {
-            "$id": "#/properties/instructions",
-            "type": "string",
-            "title": "Instructions",
-            "description": "Optional instructions, in case this is a recipe. Written in the Markdown format.",
-            "default": "",
-            "examples": [
-                "Preheat the oven to 350 degrees. Mix in the ingredients in a bowl. Add the flour last. Pour the mixture into a loaf pan and bake for one hour."
-            ]
-        },
-        "tags": {
-            "$id": "#/properties/tags",
-            "type": "array",
-            "title": "Tags",
-            "description": "Additional tags for this nourishment.",
-            "default": [],
-            "examples": [
-                [
-                    "Breakfast"
-                ]
-            ],
-            "additionalItems": true,
-            "items": {
-                "$id": "#/properties/tags/items",
-                "anyOf": [
-                    {
-                        "$id": "#/properties/tags/items/anyOf/0",
-                        "type": "string",
-                        "title": "Tag",
-                        "description": "The name of the tag.",
-                        "default": "",
-                        "examples": [
-                            "Breakfast"
-                        ]
-                    }
-                ]
-            }
-        },
-        "yields": {
-            "$id": "#/properties/yields",
-            "type": "string",
-            "title": "Yields",
-            "description": "In case this is a recipe, what nourishment does this recipe yield.",
-            "default": "",
-            "examples": [
-                "1 loaf"
-            ]
-        }
+      ],
+      "image": "bananabread.jpg",
+      "instructions": "Preheat the oven to 350 degrees. Mix in the ingredients in a bowl. Add the flour last. Pour the mixture into a loaf pan and bake for one hour.",
+      "tags": [
+        "Breakfast"
+      ],
+      "yields": "1 loaf"
+    }
+  ],
+  "required": [
+    "uuid",
+    "name",
+    "ingredients",
+    "tags"
+  ],
+  "properties": {
+    "uuid": {
+      "$id": "#/properties/uuid",
+      "type": "string",
+      "title": "UUID",
+      "description": "A uuid for this item.",
+      "default": "",
+      "examples": [
+        "48e18bdc-6937-40d1-9fdd-d93edf47b08e"
+      ]
     },
-    "additionalProperties": true
+    "name": {
+      "$id": "#/properties/name",
+      "type": "string",
+      "title": "Name",
+      "description": "The name of the nourishment.",
+      "default": "",
+      "examples": [
+        "Mom's World Famous Banana Bread"
+      ]
+    },
+    "description": {
+      "$id": "#/properties/description",
+      "type": "string",
+      "title": "Description",
+      "description": "A description of the nourishment.",
+      "default": "",
+      "examples": [
+        "This classic banana bread recipe comes from my mom -- the walnuts add a nice texture and flavor to the banana bread."
+      ]
+    },
+    "cookTime": {
+      "$id": "#/properties/cookTime",
+      "type": "string",
+      "title": "Cook time",
+      "description": "The time it takes to actually cook the dish, in ISO 8601 duration format.",
+      "default": "",
+      "examples": [
+        "PT1H"
+      ]
+    },
+    "prepTime": {
+      "$id": "#/properties/prepTime",
+      "type": "string",
+      "title": "Prepare time",
+      "description": "The length of time it takes to prepare the items to be used in instructions or a direction, in ISO 8601 duration format.",
+      "default": "",
+      "examples": [
+        "PT15M"
+      ]
+    },
+    "ingredients": {
+      "$id": "#/properties/ingredients",
+      "type": "array",
+      "title": "Ingredients",
+      "description": "The ingredients of the nourishment.",
+      "default": [],
+      "examples": [
+        [
+          {
+            "name": "Banana",
+            "description": "3 or 4 ripe bananas, smashed"
+          },
+          {
+            "name": "Egg",
+            "description": "1 egg"
+          }
+        ]
+      ],
+      "additionalItems": true,
+      "items": {
+        "$id": "#/properties/ingredients/items",
+        "anyOf": [
+          {
+            "$id": "#/properties/ingredients/items/anyOf/0",
+            "type": "object",
+            "title": "Ingredient",
+            "description": "A specific ingredient and how it is used in this nourishment.",
+            "default": {},
+            "examples": [
+              {
+                "name": "Banana",
+                "description": "3 or 4 ripe bananas, smashed"
+              }
+            ],
+            "required": [
+              "name",
+              "description"
+            ],
+            "properties": {
+              "name": {
+                "$id": "#/properties/ingredients/items/anyOf/0/properties/name",
+                "type": "string",
+                "title": "Name",
+                "description": "The name of an ingredient, this matches the name in the ingredient schema.",
+                "default": "",
+                "examples": [
+                  "Banana"
+                ]
+              },
+              "description": {
+                "$id": "#/properties/ingredients/items/anyOf/0/properties/description",
+                "type": "string",
+                "title": "Description",
+                "description": "The amount and state of the ingredient that is used in the nourishment.",
+                "default": "",
+                "examples": [
+                  "3 or 4 ripe bananas, smashed"
+                ]
+              }
+            },
+            "additionalProperties": true
+          }
+        ]
+      }
+    },
+    "image": {
+      "$id": "#/properties/image",
+      "type": "string",
+      "title": "Image",
+      "description": "Image URL for the nourishment.",
+      "default": "",
+      "examples": [
+        "bananabread.jpg"
+      ]
+    },
+    "instructions": {
+      "$id": "#/properties/instructions",
+      "type": "string",
+      "title": "Instructions",
+      "description": "Optional instructions, in case this is a recipe. Written in the Markdown format.",
+      "default": "",
+      "examples": [
+        "Preheat the oven to 350 degrees. Mix in the ingredients in a bowl. Add the flour last. Pour the mixture into a loaf pan and bake for one hour."
+      ]
+    },
+    "tags": {
+      "$id": "#/properties/tags",
+      "type": "array",
+      "title": "Tags",
+      "description": "Additional tags for this nourishment.",
+      "default": [],
+      "examples": [
+        [
+          "Breakfast"
+        ]
+      ],
+      "additionalItems": true,
+      "items": {
+        "$id": "#/properties/tags/items",
+        "anyOf": [
+          {
+            "$id": "#/properties/tags/items/anyOf/0",
+            "type": "string",
+            "title": "Tag",
+            "description": "The name of the tag.",
+            "default": "",
+            "examples": [
+              "Breakfast"
+            ]
+          }
+        ]
+      }
+    },
+    "yields": {
+      "$id": "#/properties/yields",
+      "type": "string",
+      "title": "Yields",
+      "description": "In case this is a recipe, what nourishment does this recipe yield.",
+      "default": "",
+      "examples": [
+        "1 loaf"
+      ]
+    }
+  },
+  "additionalProperties": true
 }
