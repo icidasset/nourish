@@ -6,6 +6,7 @@ import Html exposing (Html)
 import Html.Attributes as A
 import Html.Events as E
 import Html.Extra as Html
+import Ingredient exposing (ingredient)
 import Kit.Components
 import List.Extra as List
 import Material.Icons as Icons
@@ -18,7 +19,7 @@ import Radix exposing (..)
 import RemoteData exposing (RemoteData(..))
 import UI.Kit
 import Url
-import UserData
+import UserData exposing (UserData)
 
 
 view : Page -> Model -> Html Msg
@@ -105,15 +106,26 @@ detail context model =
                 |> List.sortBy .name
                 |> List.map
                     (\ingredient ->
-                        Html.li
+                        chunk
+                            Html.li
+                            [ "mb-px" ]
                             []
-                            [ Html.text ingredient.name
+                            [ case UserData.emojiForIngredient model.userData ingredient.name of
+                                Just emoji ->
+                                    chunk
+                                        Html.span
+                                        [ "inline-block", "mr-1" ]
+                                        []
+                                        [ Html.text emoji ]
+
+                                Nothing ->
+                                    Html.nothing
+                            , Html.text ingredient.name
                             ]
                     )
                 |> chunk
                     Html.ul
-                    [ "mb-5"
-                    ]
+                    [ "mb-5" ]
                     []
 
             --
@@ -133,10 +145,7 @@ detail context model =
                     Html.nothing
 
             --
-            , chunk
-                Html.div
-                [ "flex", "mt-3", "space-x-2" ]
-                []
+            , UI.Kit.buttonContainer
                 [ UI.Kit.buttonLinkWithSize
                     Kit.Components.Normal
                     [ { uuid = context.uuid }
@@ -245,7 +254,8 @@ edit context model =
         }
 
     --
-    , UI.Kit.button
+    , UI.Kit.buttonWithSize
+        Kit.Components.Normal
         [ E.onClick (EditNourishment context) ]
         [ Icons.done 20 Inherit
         , Html.span
@@ -391,7 +401,8 @@ new context model =
         }
 
     --
-    , UI.Kit.button
+    , UI.Kit.buttonWithSize
+        Kit.Components.Normal
         [ E.onClick (AddNourishment context) ]
         [ Icons.add 20 Inherit
         , Html.span

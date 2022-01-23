@@ -16,7 +16,7 @@ import Return exposing (return)
 import Routing
 import String.Extra as String
 import UUID
-import UserData
+import UserData exposing (UserData)
 
 
 add : Ingredients.NewContext -> Manager
@@ -191,13 +191,13 @@ loaded { json } model =
     case Decode.decodeString (Decode.listIgnore Ingredient.ingredient) json of
         Ok ingredients ->
             model.userData
-                |> (\u -> { u | ingredients = Success ingredients })
+                |> UserData.loadedIngredients ingredients
                 |> (\u -> { model | userData = u })
                 |> populateTags
 
         Err err ->
             model.userData
-                |> (\u -> { u | ingredients = Failure (Decode.errorToString err) })
+                |> UserData.failedToLoadIngredients (Decode.errorToString err)
                 |> (\u -> { model | userData = u })
                 |> Return.singleton
 

@@ -6,6 +6,7 @@ import Html.Attributes as A
 import Html.Events as E
 import Html.Extra as Html
 import Ingredients.Page exposing (Page(..))
+import Kit.Components
 import List.Extra as List
 import Material.Icons as Icons
 import Material.Icons.Types exposing (Coloring(..))
@@ -92,22 +93,24 @@ detail context model =
                 [ Html.text ingredient.name ]
 
             --
-            , UI.Kit.buttonLink
-                [ { uuid = context.uuid }
-                    |> Ingredients.Page.edit
-                    |> Page.Ingredients
-                    |> Page.toString
-                    |> String.append "#"
-                    |> A.href
-                ]
-                [ Html.text "Edit" ]
+            , UI.Kit.buttonContainer
+                [ UI.Kit.buttonLinkWithSize
+                    Kit.Components.Normal
+                    [ { uuid = context.uuid }
+                        |> Ingredients.Page.edit
+                        |> Page.Ingredients
+                        |> Page.toString
+                        |> String.append "#"
+                        |> A.href
+                    ]
+                    [ Html.text "Edit" ]
 
-            --
-            , UI.Kit.button
-                [ E.onDoubleClick (RemoveIngredient { uuid = context.uuid })
-                , A.class "mt-3"
+                --
+                , UI.Kit.buttonWithSize
+                    Kit.Components.Normal
+                    [ E.onDoubleClick (RemoveIngredient { uuid = context.uuid }) ]
+                    [ Html.text "Double click to remove" ]
                 ]
-                [ Html.text "Double click to remove" ]
             ]
 
         Nothing ->
@@ -168,7 +171,8 @@ edit context model =
         }
 
     --
-    , UI.Kit.button
+    , UI.Kit.buttonWithSize
+        Kit.Components.Normal
         [ E.onClick (EditIngredient context) ]
         [ Icons.done 20 Inherit
         , Html.span
@@ -308,7 +312,8 @@ new context model =
         }
 
     --
-    , UI.Kit.button
+    , UI.Kit.buttonWithSize
+        Kit.Components.Normal
         [ E.onClick (AddIngredient context) ]
         [ Icons.add 20 Inherit
         , Html.span

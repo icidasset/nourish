@@ -6,10 +6,10 @@ import Html.Attributes as A
 import Html.Events as E
 import Html.Extra as Html
 import Iso8601
+import Kit.Components
 import Material.Icons as Icons
 import Material.Icons.Types exposing (Coloring(..))
 import Meals.Page exposing (Page(..))
-import Page
 import Radix exposing (..)
 import RemoteData exposing (RemoteData(..))
 import Time
@@ -171,7 +171,8 @@ new context model =
         }
 
     --
-    , UI.Kit.button
+    , UI.Kit.buttonWithSize
+        Kit.Components.Normal
         [ E.onClick (AddMeal context) ]
         [ Icons.add 20 Inherit
         , Html.span

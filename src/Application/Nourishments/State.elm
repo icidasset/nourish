@@ -183,7 +183,7 @@ loaded { json } model =
 
         Err err ->
             model.userData
-                |> (\u -> { u | ingredients = Failure (Decode.errorToString err) })
+                |> (\u -> { u | nourishments = Failure (Decode.errorToString err) })
                 |> (\u -> { model | userData = u })
                 |> Return.singleton
 

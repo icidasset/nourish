@@ -48,12 +48,6 @@ bottomNavButton attributes icon text =
         ]
 
 
-button =
-    chunk
-        Html.button
-        buttonClasses
-
-
 buttonWithSize size attributes =
     Kit.Components.button
         size
@@ -61,12 +55,6 @@ buttonWithSize size attributes =
             [ Common.classes buttonColorClasses ]
             attributes
         )
-
-
-buttonLink =
-    chunk
-        Html.a
-        buttonClasses
 
 
 buttonLinkWithSize size attributes =
@@ -92,25 +80,11 @@ buttonColorClasses =
     ]
 
 
-buttonClasses =
-    [ "bg-green-600"
-    , "bg-opacity-60"
-    , "flex"
-    , "items-center"
-    , "justify-center"
-    , "p-4"
-    , "rounded"
-    , "text-sm"
-    , "text-white"
-    , "w-full"
-
-    -- Dark mode
-    ------------
-    , "dark:bg-green-400"
-    , "dark:bg-opacity-40"
-    , "dark:text-green-100"
-    , "dark:text-opacity-70"
-    ]
+buttonContainer =
+    chunk
+        Html.div
+        [ "flex", "items-start", "mt-3", "space-x-2" ]
+        []
 
 
 formField =
