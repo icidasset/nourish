@@ -9,7 +9,7 @@
     "vite-plugin-elm": "^2.5.1"
   },
   "dependencies": {
-    "webnative": "^0.29.3",
+    "webnative": "0.30.x",
     "webnative-elm": "^7.0.0"
   }
 }
