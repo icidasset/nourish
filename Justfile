@@ -23,7 +23,8 @@ gen := "src/Generated"
 @production-build: clean translate-schemas
 	pnpx vite build src/ \
 		--config vite.config.js \
-		--outDir ../build/
+		--outDir ../build/ \
+		--emptyOutDir
 
 
 
