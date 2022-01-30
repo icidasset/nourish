@@ -1,5 +1,6 @@
 import * as webnative from "webnative"
 import * as webnativeElm from "webnative-elm"
+import { CID } from "multiformats/cid"
 import { appDataPath } from "webnative/ucan/permissions.js"
 
 import { Elm } from "../Application/Main.elm"
@@ -157,12 +158,12 @@ async function loadTemporaryFileSystem() {
   const cid = localStorage.getItem(TMP_KEY)
 
   const fs = cid
-    ? await webnative.fs.fromCID(cid, TMP_OPTS)
+    ? await webnative.fs.fromCID(CID.parse(cid), TMP_OPTS)
     : await webnative.fs.empty(TMP_OPTS);
 
   fs.publish = async function() {
     const c = await this.root.put()
-    localStorage.setItem(TMP_KEY, c)
+    localStorage.setItem(TMP_KEY, c.toString())
     return c
   }
 
