@@ -179,90 +179,115 @@ textFieldClasses =
 -- MULTI SELECT
 
 
+defaultMultiSelectConfig =
+    { addButton =
+        [ "inline-flex"
+        , "items-center"
+        , "justify-center"
+        , "mb-[6px]"
+        ]
+    , searchContainer =
+        []
+    , searchInput =
+        [ "bg-white"
+        , "block"
+        , "leading-relaxed"
+        , "p-2"
+        , "placeholder-gray-400"
+        , "placeholder-opacity-60"
+        , "relative"
+        , "rounded"
+        , "shadow"
+        , "text-sm"
+        , "w-full"
+        , "z-10"
+
+        -- Dark mode
+        ------------
+        , "dark:bg-gray-800"
+        ]
+    , searchResultsContainer =
+        [ "flex"
+        , "flex-wrap"
+        , "font-medium"
+        , "mt-2"
+        , "text-xs"
+        , "text-white"
+
+        -- Dark mode
+        ------------
+        , "dark:text-gray-400"
+        ]
+    , searchResult =
+        [ "bg-gray-400"
+        , "bg-opacity-60"
+        , "mb-[6px]"
+        , "mr-[6px]"
+        , "px-[5px]"
+        , "py-1"
+        , "rounded"
+
+        -- Dark mode
+        ------------
+        , "dark:bg-gray-600"
+        , "dark:bg-opacity-60"
+        ]
+    , selectedItem =
+        [ "bg-gray-500"
+        , "bg-opacity-60"
+        , "inline-block"
+        , "mb-[6px]"
+        , "mr-[6px]"
+        , "px-[8px]"
+        , "py-1"
+        , "rounded"
+        , "text-sm"
+        , "text-white"
+
+        -- Dark mode
+        ------------
+        , "dark:text-gray-300"
+        ]
+    , selectedItemsContainer =
+        [ "flex"
+        , "flex-wrap"
+        , "mb-3"
+        ]
+    , selectedItemsEmptyContainer =
+        [ "flex"
+        , "mb-3"
+        , "-ml-2"
+        ]
+    }
+
+
 multiSelect =
-    MultiSelect.view
-        { addButton =
-            [ "inline-block"
-            , "items-center"
-            , "justify-center"
-            , "mb-[6px]"
-            , "px-2"
-            , "py-2"
-            , "rounded"
-            , "text-gray-500"
-            , "text-opacity-60"
-            , "text-sm"
-            ]
-        , searchContainer =
-            []
-        , searchInput =
-            [ "bg-white"
-            , "block"
-            , "leading-relaxed"
-            , "p-2"
-            , "placeholder-gray-400"
-            , "placeholder-opacity-60"
-            , "relative"
-            , "rounded"
-            , "shadow"
-            , "text-sm"
-            , "w-full"
-            , "z-10"
+    MultiSelect.view defaultMultiSelectConfig
 
-            -- Dark mode
-            ------------
-            , "dark:bg-gray-800"
-            ]
-        , searchResultsContainer =
-            [ "flex"
-            , "flex-wrap"
-            , "font-medium"
-            , "mt-2"
-            , "text-xs"
-            , "text-white"
 
-            -- Dark mode
-            ------------
-            , "dark:text-gray-400"
-            ]
-        , searchResult =
-            [ "bg-gray-400"
-            , "bg-opacity-60"
-            , "mb-[6px]"
-            , "mr-[6px]"
-            , "px-[5px]"
-            , "py-1"
-            , "rounded"
+multiSelectForNonIconOnlyButtons =
+    defaultMultiSelectConfig
+        |> (\a ->
+                { a
+                    | selectedItemsEmptyContainer =
+                        List.filter
+                            (\s -> s /= "-ml-2")
+                            a.selectedItemsEmptyContainer
+                }
+           )
+        |> MultiSelect.view
 
-            -- Dark mode
-            ------------
-            , "dark:bg-gray-600"
-            , "dark:bg-opacity-60"
-            ]
-        , selectedItem =
-            [ "bg-gray-500"
-            , "bg-opacity-60"
-            , "inline-block"
-            , "mb-[6px]"
-            , "mr-[6px]"
-            , "px-[8px]"
-            , "py-1"
-            , "rounded"
-            , "text-sm"
-            , "text-white"
 
-            -- Dark mode
-            ------------
-            , "dark:text-gray-300"
-            ]
-        , selectedItemsContainer =
-            [ "flex"
-            , "flex-wrap"
-            , "mb-3"
-            ]
-        , selectedItemsEmptyContainer =
-            [ "flex"
-            , "mb-3"
-            , "-ml-2"
-            ]
-        }
+multiSelectAddButton =
+    chunk
+        Html.span
+        [ "inline-block"
+        , "px-2"
+        , "py-2"
+        , "rounded"
+        , "text-gray-500"
+        , "text-opacity-60"
+        , "text-sm"
+        ]
+        []
+        [ Icons.add_circle 18 Inherit ]

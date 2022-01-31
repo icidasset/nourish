@@ -1,6 +1,7 @@
 module Meals.Page exposing (..)
 
 import MultiSelect
+import String exposing (replace)
 
 
 
@@ -27,6 +28,7 @@ index =
 
 type alias NewContext =
     { items : MultiSelect.State
+    , replacements : MultiSelect.State
     , scheduledAt : Maybe String
     }
 
@@ -35,5 +37,6 @@ new : Page
 new =
     New
         { items = MultiSelect.init []
+        , replacements = MultiSelect.init []
         , scheduledAt = Nothing
         }

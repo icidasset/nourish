@@ -8,7 +8,6 @@ import Html exposing (Html)
 import Html.Attributes as A
 import Html.Events as E
 import Html.Events.Extra as E
-import Material.Icons as Icons
 import Material.Icons.Types exposing (Coloring(..))
 
 

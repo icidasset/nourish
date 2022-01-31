@@ -1,6 +1,7 @@
 module Meals.View exposing (navigation, view)
 
 import Chunky exposing (..)
+import Common
 import Html exposing (Html)
 import Html.Attributes as A
 import Html.Events as E
@@ -10,10 +11,11 @@ import Kit.Components
 import Material.Icons as Icons
 import Material.Icons.Types exposing (Coloring(..))
 import Meals.Page exposing (Page(..))
+import MultiSelect
 import Radix exposing (..)
 import RemoteData exposing (RemoteData(..))
 import Time
-import UI.Kit
+import UI.Kit exposing (multiSelect)
 
 
 view : Page -> Model -> Html Msg
@@ -157,6 +159,13 @@ new context model =
         [ Html.text "Plan a meal" ]
 
     --
+    , scheduledAtField
+        { currentTime = model.currentTime
+        , onInput = \scheduledAt -> GotContextForNewMeal { context | scheduledAt = Just scheduledAt }
+        , value = context.scheduledAt
+        }
+
+    --
     , itemsField
         { msg = \items -> GotContextForNewMeal { context | items = items }
         , userData = model.userData
@@ -164,11 +173,26 @@ new context model =
         }
 
     --
-    , scheduledAtField
-        { currentTime = model.currentTime
-        , onInput = \scheduledAt -> GotContextForNewMeal { context | scheduledAt = Just scheduledAt }
-        , value = context.scheduledAt
-        }
+    , case
+        MultiSelect.selectedItems
+            (model.userData.nourishments
+                |> RemoteData.withDefault []
+                |> List.sortBy .name
+                |> List.map (\n -> { name = n.name, value = n.name })
+            )
+            context.items
+      of
+        [] ->
+            Html.nothing
+
+        selectedNourishments ->
+            replaceIngredientsField
+                { availableIngredients = RemoteData.withDefault [] model.userData.ingredients
+                , nourishments = RemoteData.withDefault [] model.userData.nourishments
+                , msg = \r -> GotContextForNewMeal { context | replacements = r }
+                , selectedNourishments = selectedNourishments
+                , value = context.replacements
+                }
 
     --
     , UI.Kit.buttonWithSize
@@ -215,12 +239,43 @@ itemsField { msg, userData, value } =
             [ A.for "schedule_items" ]
             [ Html.text "Food & Ingredients" ]
         , UI.Kit.multiSelect
-            { addButton = [ Icons.add_circle 18 Inherit ]
+            { addButton = [ UI.Kit.multiSelectAddButton ]
             , allowCreation = True
             , inputPlaceholder = "Type to find a food or an ingredient"
             , items = items
             , msg = msg
             , uid = "schedule_items"
+            }
+            value
+        ]
+
+
+replaceIngredientsField { availableIngredients, msg, nourishments, selectedNourishments, value } =
+    UI.Kit.formField
+        [ UI.Kit.label
+            [ A.for "schedule_replacements" ]
+            [ Html.text "Replace Ingredients" ]
+        , UI.Kit.multiSelectForNonIconOnlyButtons
+            { addButton =
+                [ Kit.Components.button
+                    Kit.Components.ExtraSmall
+                    [ Common.classes UI.Kit.buttonColorClasses ]
+                    [ Icons.find_replace 16 Inherit
+                    , chunk
+                        Html.span
+                        [ "ml-1"
+                        , "transform"
+                        , "translate-y-[1px]"
+                        ]
+                        []
+                        [ Html.text "Select food" ]
+                    ]
+                ]
+            , allowCreation = False
+            , inputPlaceholder = "Type to select a food"
+            , items = selectedNourishments
+            , msg = msg
+            , uid = "schedule_replacements"
             }
             value
         ]

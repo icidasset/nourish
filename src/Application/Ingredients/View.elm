@@ -379,7 +379,7 @@ tagsField { available, msg, value } =
             [ A.for "ingredient_tags" ]
             [ Html.text "Tags" ]
         , UI.Kit.multiSelect
-            { addButton = [ Icons.add_circle 18 Inherit ]
+            { addButton = [ UI.Kit.multiSelectAddButton ]
             , allowCreation = True
             , inputPlaceholder = "Type to find or create a tag"
             , items = MultiSelect.initItemList available
