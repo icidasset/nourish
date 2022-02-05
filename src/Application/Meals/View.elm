@@ -8,10 +8,12 @@ import Html.Events as E
 import Html.Extra as Html
 import Iso8601
 import Kit.Components
+import List.Extra as List
 import Material.Icons as Icons
 import Material.Icons.Types exposing (Coloring(..))
-import Meals.Page exposing (Page(..))
+import Meals.Page exposing (..)
 import MultiSelect
+import Nourishment exposing (nourishment)
 import Radix exposing (..)
 import RemoteData exposing (RemoteData(..))
 import Time
@@ -188,10 +190,9 @@ new context model =
         selectedNourishments ->
             replaceIngredientsField
                 { availableIngredients = RemoteData.withDefault [] model.userData.ingredients
+                , context = context
                 , nourishments = RemoteData.withDefault [] model.userData.nourishments
-                , msg = \r -> GotContextForNewMeal { context | replacements = r }
                 , selectedNourishments = selectedNourishments
-                , value = context.replacements
                 }
 
     --
@@ -250,37 +251,6 @@ itemsField { msg, userData, value } =
         ]
 
 
-replaceIngredientsField { availableIngredients, msg, nourishments, selectedNourishments, value } =
-    UI.Kit.formField
-        [ UI.Kit.label
-            [ A.for "schedule_replacements" ]
-            [ Html.text "Replace Ingredients" ]
-        , UI.Kit.multiSelectForNonIconOnlyButtons
-            { addButton =
-                [ Kit.Components.button
-                    Kit.Components.ExtraSmall
-                    [ Common.classes UI.Kit.buttonColorClasses ]
-                    [ Icons.find_replace 16 Inherit
-                    , chunk
-                        Html.span
-                        [ "ml-1"
-                        , "transform"
-                        , "translate-y-[1px]"
-                        ]
-                        []
-                        [ Html.text "Select food" ]
-                    ]
-                ]
-            , allowCreation = False
-            , inputPlaceholder = "Type to select a food"
-            , items = selectedNourishments
-            , msg = msg
-            , uid = "schedule_replacements"
-            }
-            value
-        ]
-
-
 scheduledAtField { currentTime, onInput, value } =
     UI.Kit.formField
         [ UI.Kit.label
@@ -306,4 +276,173 @@ scheduledAtField { currentTime, onInput, value } =
                 )
             ]
             []
+        ]
+
+
+
+-- FIELDS  ▒  INGREDIENT REPLACING
+
+
+replaceIngredientsField ({ context } as arguments) =
+    UI.Kit.formField
+        [ UI.Kit.label
+            [ A.for "schedule_replacements" ]
+            [ Html.text "Replace Ingredients" ]
+
+        -----------------------------------------
+        -- Replacements
+        -----------------------------------------
+        , Html.text "" -- TODO
+
+        -----------------------------------------
+        -- Construct a replacement
+        -----------------------------------------
+        , case context.replacementConstructor of
+            NothingSelectedYet a ->
+                nothingSelectedYet arguments a
+
+            SelectedNourishment a b ->
+                selectedNourishment arguments a b
+
+            SelectedIngredient a b c ->
+                selectedIngredient arguments a b c
+        ]
+
+
+nothingSelectedYet { context, nourishments, selectedNourishments } state =
+    UI.Kit.multiSelectForNonIconOnlyButtons
+        { addButton =
+            [ replacementButton
+                Icons.find_replace
+                "Select food"
+            ]
+        , allowCreation = False
+        , inputPlaceholder = "Type to select a food"
+        , items = selectedNourishments
+        , msg =
+            \a ->
+                a
+                    |> MultiSelect.selected
+                    |> List.head
+                    |> Maybe.andThen
+                        (\v ->
+                            List.find
+                                (.name >> (==) v)
+                                nourishments
+                        )
+                    |> Maybe.map
+                        (\n ->
+                            SelectedNourishment n (MultiSelect.init [])
+                        )
+                    |> Maybe.withDefault
+                        (NothingSelectedYet a)
+                    |> (\c ->
+                            GotContextForNewMeal { context | replacementConstructor = c }
+                       )
+        , uid = "schedule_replacements"
+        }
+        state
+
+
+selectedNourishment { availableIngredients, context } nourishment state =
+    UI.Kit.multiSelectForNonIconOnlyButtons
+        { addButton =
+            [ replacementButton
+                Icons.find_replace
+                "Select ingredient"
+            ]
+        , allowCreation = False
+        , inputPlaceholder = "Type to select an ingredient"
+        , items =
+            List.map
+                (\i -> { name = i.name, value = i.name })
+                nourishment.ingredients
+        , msg =
+            \a ->
+                a
+                    |> MultiSelect.selected
+                    |> List.head
+                    |> Maybe.andThen
+                        (\v ->
+                            List.find
+                                (.name >> (==) v)
+                                availableIngredients
+                        )
+                    |> Maybe.map
+                        (\i ->
+                            SelectedIngredient nourishment i (MultiSelect.init [])
+                        )
+                    |> Maybe.withDefault
+                        (SelectedNourishment nourishment a)
+                    |> (\c ->
+                            GotContextForNewMeal { context | replacementConstructor = c }
+                       )
+        , uid = "schedule_replacements"
+        }
+        state
+
+
+selectedIngredient { availableIngredients, context } nourishment ingredient state =
+    UI.Kit.multiSelectForNonIconOnlyButtons
+        { addButton =
+            [ replacementButton
+                Icons.find_replace
+                "Select replacement"
+            ]
+        , allowCreation = False
+        , inputPlaceholder = "Type to select a different ingredient"
+        , items =
+            List.map
+                (\i -> { name = i.name, value = i.name })
+                availableIngredients
+        , msg =
+            \a ->
+                a
+                    |> MultiSelect.selected
+                    |> List.head
+                    |> Maybe.andThen
+                        (\v ->
+                            List.find
+                                (.name >> (==) v)
+                                availableIngredients
+                        )
+                    |> Maybe.map
+                        (\i ->
+                            let
+                                r =
+                                    { nourishment = nourishment
+                                    , ingredientToReplace = ingredient
+                                    , ingredientToUseInstead = i
+                                    }
+                            in
+                            GotContextForNewMeal
+                                { context
+                                    | replacements = context.replacements ++ [ r ]
+                                    , replacementConstructor = NothingSelectedYet (MultiSelect.init [])
+                                }
+                        )
+                    |> Maybe.withDefault
+                        (a
+                            |> SelectedIngredient nourishment ingredient
+                            |> (\c -> { context | replacementConstructor = c })
+                            |> GotContextForNewMeal
+                        )
+        , uid = "schedule_replacements"
+        }
+        state
+
+
+replacementButton icon text =
+    Kit.Components.button
+        Kit.Components.ExtraSmall
+        [ Common.classes UI.Kit.buttonColorClasses ]
+        [ icon 16 Inherit
+        , chunk
+            Html.span
+            [ "ml-1"
+            , "transform"
+            , "translate-y-[1px]"
+            ]
+            []
+            [ Html.text text ]
         ]
