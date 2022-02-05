@@ -1,11 +1,10 @@
 import * as webnative from "webnative"
 import * as webnativeElm from "webnative-elm"
 import { CID } from "multiformats/cid"
+import { InitialisationError, Scenario } from "webnative"
 import { appDataPath } from "webnative/ucan/permissions.js"
 
 import { Elm } from "../Application/Main.elm"
-
-const wn = webnative
 
 
 // App
@@ -51,10 +50,10 @@ webnative.initialise({
 }).then(async state => {
   switch (state.scenario) {
 
-    case wn.Scenario.AuthSucceeded:
+    case Scenario.AuthSucceeded:
       fileSystem = await copyOverTempFilesIfNeeded(state.permissions)
 
-    case wn.Scenario.Continuation:
+    case Scenario.Continuation:
       fileSystem = await webnative.loadFileSystem(state.permissions)
       break;
 
@@ -74,10 +73,10 @@ webnative.initialise({
   console.error(err)
 
   switch (err) {
-    case wn.InitialisationError.InsecureContext:
+    case InitialisationError.InsecureContext:
       console.error("Please load the app on HTTPS")
 
-    case wn.InitialisationError.UnsupportedBrowser:
+    case InitialisationError.UnsupportedBrowser:
       console.error("Unsupported browser, or browser mode.")
   }
 
