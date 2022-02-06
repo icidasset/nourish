@@ -278,7 +278,7 @@ multiSelectForNonIconOnlyButtons =
         |> MultiSelect.view
 
 
-multiSelectAddButton =
+multiSelectAddButton multiSelectState =
     chunk
         Html.span
         [ "inline-block"
@@ -288,6 +288,14 @@ multiSelectAddButton =
         , "text-gray-500"
         , "text-opacity-60"
         , "text-sm"
+        , "transition-transform"
+
+        --
+        , if MultiSelect.isOpened multiSelectState then
+            "rotate-45"
+
+          else
+            "rotate-0"
         ]
         []
         [ Icons.add_circle 18 Inherit ]

@@ -1,7 +1,6 @@
 module Meals.View exposing (navigation, view)
 
 import Chunky exposing (..)
-import Common
 import Html exposing (Html)
 import Html.Attributes as A
 import Html.Events as E
@@ -14,6 +13,7 @@ import List.Extra as List
 import Material.Icons as Icons
 import Material.Icons.Types exposing (Coloring(..))
 import Meals.Page exposing (..)
+import Meals.Replacement as Replacement exposing (..)
 import MultiSelect
 import Nourishment exposing (nourishment)
 import Radix exposing (..)
@@ -242,7 +242,7 @@ itemsField { msg, userData, value } =
             [ A.for "schedule_items" ]
             [ Html.text "Food & Ingredients" ]
         , UI.Kit.multiSelect
-            { addButton = [ UI.Kit.multiSelectAddButton ]
+            { addButton = [ UI.Kit.multiSelectAddButton value ]
             , allowCreation = True
             , inputPlaceholder = "Type to find a food or an ingredient"
             , items = items
@@ -310,34 +310,33 @@ replaceIngredientsField ({ context } as arguments) =
                         Html.div
                         [ "mt-2", "text-sm" ]
                         []
-                        [ Html.text "Replaced "
+                        [ Html.text "Replacing "
                         , Html.strong
                             []
                             [ Html.text r.ingredientToReplace.name ]
                         , Html.text " with "
 
                         --
-                        , Html.strong
-                            []
-                            [ case List.unconsLast r.ingredientsToUseInstead of
-                                Just ( last, init ) ->
-                                    (case init of
-                                        [] ->
-                                            last.name
+                        , case List.unconsLast r.ingredientsToUseInstead of
+                            Just ( last, init ) ->
+                                (case init of
+                                    [] ->
+                                        last.name
 
-                                        _ ->
-                                            " & " ++ last.name
-                                    )
-                                        |> String.append
-                                            (init
-                                                |> List.map .name
-                                                |> String.join ", "
-                                            )
-                                        |> Html.text
+                                    _ ->
+                                        " & " ++ last.name
+                                )
+                                    |> String.append
+                                        (init
+                                            |> List.map .name
+                                            |> String.join ", "
+                                        )
+                                    |> Html.text
+                                    |> List.singleton
+                                    |> Html.strong []
 
-                                Nothing ->
-                                    Html.text "..."
-                            ]
+                            Nothing ->
+                                Html.text "..."
 
                         --
                         , Html.text " in "

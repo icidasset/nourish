@@ -57,6 +57,11 @@ initItemList =
 -- 🛠
 
 
+deactivate : State -> State
+deactivate (State state) =
+    State { state | search = Nothing }
+
+
 isOpened : State -> Bool
 isOpened (State state) =
     case state.search of

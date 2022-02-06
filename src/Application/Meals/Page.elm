@@ -1,9 +1,7 @@
 module Meals.Page exposing (..)
 
-import Ingredient exposing (Ingredient)
+import Meals.Replacement as Replacement exposing (..)
 import MultiSelect
-import Nourishment exposing (Nourishment)
-import String exposing (replace)
 
 
 
@@ -31,7 +29,7 @@ index =
 type alias NewContext =
     { items : MultiSelect.State
     , replacements : List Replacement
-    , replacementConstructor : ReplacementConstructor
+    , replacementConstructor : Replacement.Constructor
     , scheduledAt : Maybe String
     }
 
@@ -44,16 +42,3 @@ new =
         , replacementConstructor = NothingSelectedYet (MultiSelect.init [])
         , scheduledAt = Nothing
         }
-
-
-type alias Replacement =
-    { nourishment : Nourishment
-    , ingredientToReplace : Ingredient
-    , ingredientsToUseInstead : List Ingredient
-    }
-
-
-type ReplacementConstructor
-    = NothingSelectedYet MultiSelect.State
-    | SelectedNourishment Nourishment MultiSelect.State
-    | SelectedIngredient Nourishment Ingredient MultiSelect.State

@@ -436,7 +436,7 @@ ingredientsField { msg, userData, value } =
             [ A.for "nourishment_ingredients" ]
             [ Html.text "Ingredients" ]
         , UI.Kit.multiSelect
-            { addButton = [ UI.Kit.multiSelectAddButton ]
+            { addButton = [ UI.Kit.multiSelectAddButton value ]
             , allowCreation = True
             , inputPlaceholder = "Type to find, or create, an ingredient"
             , items =
@@ -489,7 +489,7 @@ tagsField { available, msg, value } =
             [ A.for "nourishment_tags" ]
             [ Html.text "Tags" ]
         , UI.Kit.multiSelect
-            { addButton = [ UI.Kit.multiSelectAddButton ]
+            { addButton = [ UI.Kit.multiSelectAddButton value ]
             , allowCreation = True
             , inputPlaceholder = "Type to find or create a tag"
             , items = MultiSelect.initItemList available

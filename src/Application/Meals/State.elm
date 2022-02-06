@@ -4,6 +4,7 @@ import Json.Decode as Decode
 import Json.Decode.Ext as Decode
 import Meal
 import Meals.Page as Meals
+import Meals.Replacement as Replacement
 import Meals.Wnfs
 import MultiSelect
 import Page exposing (Page(..))
@@ -30,7 +31,7 @@ add context model =
 
                     --
                     , items = MultiSelect.selected context.items
-                    , replacedIngredients = Nothing
+                    , replacedIngredients = Replacement.toDictionary context.replacements
                     , scheduledAt = scheduledAt
                     }
                 |> (\u ->

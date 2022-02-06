@@ -8,13 +8,14 @@
   "examples": [
     {
       "uuid": "f1c851e4-2235-45e9-a443-13932389534d",
-      "items": [ "Mom's World Famous Banana Bread" ],
+      "items": ["Mom's World Famous Banana Bread"],
       "scheduledAt": "2021-07-03"
     }
   ],
   "required": [
     "uuid",
     "items",
+    "replacedIngredients",
     "scheduledAt"
   ],
   "properties": {
@@ -38,7 +39,7 @@
       "description": "The scheduled nourishments and/or ingredients. Sometimes a nourishment can be an ingredient as well, for example, an apple.",
       "default": [],
       "examples": [
-        [ "Mom's World Famous Banana Bread" ]
+        ["Mom's World Famous Banana Bread"]
       ]
     },
     "replacedIngredients": {
@@ -47,28 +48,35 @@
       "additionalProperties": {
         "type": "object",
         "additionalProperties": {
-          "type": "object",
-          "properties": {
-            "name": {
-              "type": "string",
-              "title": "Name",
-              "description": "The name of an ingredient, this matches the name in the ingredient schema.",
-              "default": "",
-              "examples": [
-                "Banana"
-              ]
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "name",
+              "description"
+            ],
+            "properties": {
+              "name": {
+                "type": "string",
+                "title": "Name",
+                "description": "The name of an ingredient, this matches the name in the ingredient schema.",
+                "default": "",
+                "examples": [
+                  "Banana"
+                ]
+              },
+              "description": {
+                "type": "string",
+                "title": "Description",
+                "description": "The amount and state of the ingredient that is used in the nourishment.",
+                "default": "",
+                "examples": [
+                  "3 or 4 ripe bananas, smashed"
+                ]
+              }
             },
-            "description": {
-              "type": "string",
-              "title": "Description",
-              "description": "The amount and state of the ingredient that is used in the nourishment.",
-              "default": "",
-              "examples": [
-                "3 or 4 ripe bananas, smashed"
-              ]
-            }
-          },
-          "additionalProperties": true
+            "additionalProperties": true
+          }
         }
       },
       "title": "Replaced ingredients",
@@ -77,7 +85,7 @@
       "examples": [
         {
           "CURRY DISH": {
-            "WHITE RICE": { "name": "Brown rice", "description": "" }
+            "WHITE RICE": [{ "name": "Brown rice", "description": "" }]
           }
         }
       ]
@@ -91,7 +99,7 @@
       "examples": [
         "2021-07-03"
       ]
-    },
+    }
   },
   "additionalProperties": true
 }
