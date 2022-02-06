@@ -297,8 +297,7 @@ nourishmentsList context nourishments model =
         ]
         []
         [ UI.Kit.multiSelect
-            { addButton =
-                [ Icons.filter_alt 18 Inherit ]
+            { addButton = [ UI.Kit.multiSelectFilterButton ]
             , allowCreation = False
             , inputPlaceholder = "Search tags"
             , items = MultiSelect.initItemList model.tags.nourishments

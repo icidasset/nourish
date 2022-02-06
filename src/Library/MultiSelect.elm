@@ -57,6 +57,16 @@ initItemList =
 -- 🛠
 
 
+isOpened : State -> Bool
+isOpened (State state) =
+    case state.search of
+        Just _ ->
+            True
+
+        _ ->
+            False
+
+
 mapSelected : (List String -> List String) -> State -> State
 mapSelected fn (State state) =
     State { state | selected = fn state.selected }

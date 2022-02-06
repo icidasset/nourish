@@ -291,3 +291,18 @@ multiSelectAddButton =
         ]
         []
         [ Icons.add_circle 18 Inherit ]
+
+
+multiSelectFilterButton =
+    chunk
+        Html.span
+        [ "inline-block"
+        , "px-2"
+        , "py-2"
+        , "rounded"
+        , "text-gray-500"
+        , "text-opacity-60"
+        , "text-sm"
+        ]
+        []
+        [ Icons.filter_alt 18 Inherit ]

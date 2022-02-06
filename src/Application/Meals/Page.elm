@@ -49,7 +49,7 @@ new =
 type alias Replacement =
     { nourishment : Nourishment
     , ingredientToReplace : Ingredient
-    , ingredientToUseInstead : Ingredient
+    , ingredientsToUseInstead : List Ingredient
     }
 
 
