@@ -33,6 +33,11 @@ const APP_PERMISSIONS = {
 }
 
 
+webnative.setup.debug({
+  enabled: true
+})
+
+
 webnativeElm.setup({
   app,
   webnative,

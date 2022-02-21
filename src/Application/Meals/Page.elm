@@ -28,6 +28,7 @@ index =
 
 type alias NewContext =
     { items : MultiSelect.State
+    , notes : Maybe String
     , replacements : List Replacement
     , replacementConstructor : Replacement.Constructor
     , scheduledAt : Maybe String
@@ -38,6 +39,7 @@ new : Page
 new =
     New
         { items = MultiSelect.init []
+        , notes = Nothing
         , replacements = []
         , replacementConstructor = NothingSelectedYet (MultiSelect.init [])
         , scheduledAt = Nothing

@@ -31,6 +31,7 @@ add context model =
 
                     --
                     , items = MultiSelect.selected context.items
+                    , notes = context.notes
                     , replacedIngredients = Replacement.toDictionary context.replacements
                     , scheduledAt = scheduledAt
                     }

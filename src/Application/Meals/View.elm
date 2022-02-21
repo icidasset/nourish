@@ -123,21 +123,19 @@ index meals model =
 
     --
     , UI.Kit.h2 [] [ Html.text "Past" ]
-    , renderItems past
+    , renderItems (List.reverse past |> List.take 50)
     ]
 
 
 indexItem ( _, meal ) =
-    case meal.items of
-        item :: _ ->
-            chunk
-                Html.div
-                []
-                []
-                [ Html.text item ]
-
-        _ ->
-            Html.text ""
+    chunk
+        Html.div
+        []
+        []
+        (List.map
+            (\item -> Html.div [] [ Html.text item ])
+            meal.items
+        )
 
 
 nothingPlanned =
@@ -198,6 +196,12 @@ new context model =
                 }
 
     --
+    , notesField
+        { onInput = \notes -> GotContextForNewMeal { context | notes = Just notes }
+        , value = Maybe.withDefault "" context.notes
+        }
+
+    --
     , UI.Kit.buttonWithSize
         Kit.Components.Normal
         [ E.onClick (AddMeal context) ]
@@ -250,6 +254,21 @@ itemsField { msg, userData, value } =
             , uid = "schedule_items"
             }
             value
+        ]
+
+
+notesField { onInput, value } =
+    UI.Kit.formField
+        [ UI.Kit.label
+            [ A.for "schedule_notes" ]
+            [ Html.text "Notes" ]
+        , UI.Kit.textArea
+            [ A.id "schedule_notes"
+            , A.rows 3
+            , A.value value
+            , E.onInput onInput
+            ]
+            []
         ]
 
 
