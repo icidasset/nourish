@@ -328,9 +328,7 @@ nourishmentsList context nourishments model =
                         Html.a
                         []
                         [ A.href ("#/foods/" ++ Url.percentEncode nourishment.uuid ++ "/") ]
-                        [ Html.text
-                            nourishment.name
-                        ]
+                        [ Html.text nourishment.name ]
                     ]
             )
         |> chunk

@@ -9,8 +9,23 @@ import MultiSelect
 
 
 type Page
-    = Index
+    = Detail DetailContext
+    | Index
     | New NewContext
+
+
+
+-- DETAIL
+
+
+type alias DetailContext =
+    { uuid : String
+    }
+
+
+detail : DetailContext -> Page
+detail =
+    Detail
 
 
 

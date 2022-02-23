@@ -3,6 +3,7 @@ module Meals.State exposing (..)
 import Json.Decode as Decode
 import Json.Decode.Ext as Decode
 import Meal
+import Meals.Common exposing (defaultDate)
 import Meals.Page as Meals
 import Meals.Replacement as Replacement
 import Meals.Wnfs
@@ -22,39 +23,39 @@ add context model =
     let
         ( uuid, newSeeds ) =
             UUID.step model.seeds
+
+        scheduledAt =
+            Maybe.withDefault
+                (defaultDate { currentTime = model.currentTime })
+                context.scheduledAt
     in
-    case context.scheduledAt of
-        Just scheduledAt ->
-            model.userData
-                |> UserData.addMeal
-                    { uuid = UUID.toString uuid
+    model.userData
+        |> UserData.addMeal
+            { uuid = UUID.toString uuid
 
-                    --
-                    , items = MultiSelect.selected context.items
-                    , notes = context.notes
-                    , replacedIngredients = Replacement.toDictionary context.replacements
-                    , scheduledAt = scheduledAt
+            --
+            , items = MultiSelect.selected context.items
+            , notes = context.notes
+            , replacedIngredients = Replacement.toDictionary context.replacements
+            , scheduledAt = scheduledAt
+            }
+        |> (\u ->
+                return
+                    { model
+                        | seeds = newSeeds
+                        , userData = u
                     }
-                |> (\u ->
-                        return
-                            { model
-                                | seeds = newSeeds
-                                , userData = u
-                            }
-                            (u.meals
-                                |> RemoteData.withDefault []
-                                |> Meals.Wnfs.save
-                                |> Ports.webnativeRequest
-                            )
-                   )
-                |> Return.command
-                    (Routing.goToPage
-                        (Page.Meals Meals.index)
-                        model.navKey
+                    (u.meals
+                        |> RemoteData.withDefault []
+                        |> Meals.Wnfs.save
+                        |> Ports.webnativeRequest
                     )
-
-        Nothing ->
-            Return.singleton model
+           )
+        |> Return.command
+            (Routing.goToPage
+                (Page.Meals Meals.index)
+                model.navKey
+            )
 
 
 gotContextForNewMeal : Meals.NewContext -> Manager
@@ -84,3 +85,23 @@ loaded { json } model =
                 |> (\u -> { u | meals = Failure (Decode.errorToString err) })
                 |> (\u -> { model | userData = u })
                 |> Return.singleton
+
+
+remove : { uuid : String } -> Manager
+remove args model =
+    model.userData
+        |> UserData.removeMeal args
+        |> (\u ->
+                return
+                    { model | userData = u }
+                    (u.meals
+                        |> RemoteData.withDefault []
+                        |> Meals.Wnfs.save
+                        |> Ports.webnativeRequest
+                    )
+           )
+        |> Return.command
+            (Routing.goToPage
+                (Page.Meals Meals.index)
+                model.navKey
+            )

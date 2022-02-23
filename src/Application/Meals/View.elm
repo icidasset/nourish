@@ -1,6 +1,8 @@
 module Meals.View exposing (navigation, view)
 
 import Chunky exposing (..)
+import Common
+import Date
 import Html exposing (Html)
 import Html.Attributes as A
 import Html.Events as E
@@ -12,6 +14,7 @@ import Kit.Components
 import List.Extra as List
 import Material.Icons as Icons
 import Material.Icons.Types exposing (Coloring(..))
+import Meals.Common exposing (..)
 import Meals.Page exposing (..)
 import Meals.Replacement as Replacement exposing (..)
 import MultiSelect
@@ -20,6 +23,8 @@ import Radix exposing (..)
 import RemoteData exposing (RemoteData(..))
 import Time
 import UI.Kit exposing (multiSelect)
+import Url
+import UserData
 
 
 view : Page -> Model -> Html Msg
@@ -27,6 +32,9 @@ view page model =
     UI.Kit.layout
         []
         (case page of
+            Detail context ->
+                detail context model
+
             Index ->
                 case model.userData.meals of
                     NotAsked ->
@@ -69,6 +77,37 @@ navigation page =
                 [ A.href "#/meals/" ]
                 Icons.arrow_back
                 "Back to overview"
+
+
+
+-- DETAIL
+
+
+detail context model =
+    case UserData.findMeal context model.userData of
+        Just meal ->
+            [ UI.Kit.buttonContainer
+                [ -- UI.Kit.buttonLinkWithSize
+                  --     Kit.Components.Normal
+                  --     [ { uuid = context.uuid }
+                  --         |> Nourishments.Page.edit
+                  --         |> Page.Nourishments
+                  --         |> Page.toString
+                  --         |> String.append "#"
+                  --         |> A.href
+                  --     ]
+                  --     [ Html.text "Edit" ]
+                  --
+                  -- ,
+                  UI.Kit.buttonWithSize
+                    Kit.Components.Normal
+                    [ E.onDoubleClick (RemoveMeal { uuid = context.uuid }) ]
+                    [ Html.text "Double click to remove" ]
+                ]
+            ]
+
+        Nothing ->
+            []
 
 
 
@@ -128,14 +167,30 @@ index meals model =
 
 
 indexItem ( _, meal ) =
+    -- TODO: Group by date
     chunk
         Html.div
+        [ "mt-3", "text-sm" ]
         []
-        []
-        (List.map
-            (\item -> Html.div [] [ Html.text item ])
-            meal.items
-        )
+        [ meal.scheduledAt
+            |> Date.fromIsoString
+            |> Result.map
+                (\date ->
+                    chunk
+                        Html.a
+                        []
+                        [ A.href ("#/meals/" ++ Url.percentEncode meal.uuid ++ "/") ]
+                        [ Html.text (Date.format "EEEE, d MMMM y" date) ]
+                )
+            |> Result.withDefault Html.nothing
+
+        --
+        , meal.items
+            |> Common.enumerate
+            |> Html.text
+            |> List.singleton
+            |> chunk Html.div [ "italic", "mt-px", "pt-px", "text-xs" ] []
+        ]
 
 
 nothingPlanned =
@@ -289,11 +344,7 @@ scheduledAtField { currentTime, onInput, value } =
                         v
 
                     Nothing ->
-                        currentTime
-                            |> Iso8601.fromTime
-                            |> String.split "T"
-                            |> List.head
-                            |> Maybe.withDefault ""
+                        defaultDate { currentTime = currentTime }
                 )
             ]
             []
