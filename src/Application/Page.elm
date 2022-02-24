@@ -44,6 +44,18 @@ toString page =
             "/ingredients/new/"
 
         -----------------------------------------
+        -- Meals
+        -----------------------------------------
+        Meals (Meals.Detail { uuid }) ->
+            "/meals/" ++ Url.percentEncode uuid ++ "/"
+
+        Meals Meals.Index ->
+            "/meals/"
+
+        Meals (Meals.New _) ->
+            "/meals/add/"
+
+        -----------------------------------------
         -- Nourishments
         -----------------------------------------
         Nourishments (Nourishments.Detail { uuid }) ->
@@ -57,12 +69,3 @@ toString page =
 
         Nourishments (Nourishments.New _) ->
             "/foods/new/"
-
-        -----------------------------------------
-        -- Meals
-        -----------------------------------------
-        Meals Meals.Index ->
-            "/meals/"
-
-        Meals (Meals.New _) ->
-            "/meals/add/"

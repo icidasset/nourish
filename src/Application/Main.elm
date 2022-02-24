@@ -2,7 +2,6 @@ module Main exposing (main)
 
 import Browser
 import Browser.Navigation as Nav
-import Ingredients.Page
 import Ingredients.State as Ingredients
 import Meals.State as Meals
 import Nourishments.State as Nourishments
@@ -19,7 +18,6 @@ import Url exposing (Url)
 import UserData
 import View
 import Webnative exposing (DecodedResponse(..))
-import Webnative.Path as Path
 import Wnfs
 
 
@@ -148,6 +146,9 @@ update msg =
 
         GotContextForNewMeal a ->
             Meals.gotContextForNewMeal a
+
+        RemoveMeal a ->
+            Meals.remove a
 
         -----------------------------------------
         -- Nourishments

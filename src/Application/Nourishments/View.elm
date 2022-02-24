@@ -297,8 +297,7 @@ nourishmentsList context nourishments model =
         ]
         []
         [ UI.Kit.multiSelect
-            { addButton =
-                [ Icons.filter_alt 18 Inherit ]
+            { addButton = [ UI.Kit.multiSelectFilterButton ]
             , allowCreation = False
             , inputPlaceholder = "Search tags"
             , items = MultiSelect.initItemList model.tags.nourishments
@@ -329,9 +328,7 @@ nourishmentsList context nourishments model =
                         Html.a
                         []
                         [ A.href ("#/foods/" ++ Url.percentEncode nourishment.uuid ++ "/") ]
-                        [ Html.text
-                            nourishment.name
-                        ]
+                        [ Html.text nourishment.name ]
                     ]
             )
         |> chunk
@@ -437,7 +434,7 @@ ingredientsField { msg, userData, value } =
             [ A.for "nourishment_ingredients" ]
             [ Html.text "Ingredients" ]
         , UI.Kit.multiSelect
-            { addButton = [ Icons.add_circle 18 Inherit ]
+            { addButton = [ UI.Kit.multiSelectAddButton value ]
             , allowCreation = True
             , inputPlaceholder = "Type to find, or create, an ingredient"
             , items =
@@ -490,7 +487,7 @@ tagsField { available, msg, value } =
             [ A.for "nourishment_tags" ]
             [ Html.text "Tags" ]
         , UI.Kit.multiSelect
-            { addButton = [ Icons.add_circle 18 Inherit ]
+            { addButton = [ UI.Kit.multiSelectAddButton value ]
             , allowCreation = True
             , inputPlaceholder = "Type to find or create a tag"
             , items = MultiSelect.initItemList available

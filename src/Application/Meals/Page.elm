@@ -1,5 +1,6 @@
 module Meals.Page exposing (..)
 
+import Meals.Replacement as Replacement exposing (..)
 import MultiSelect
 
 
@@ -8,8 +9,23 @@ import MultiSelect
 
 
 type Page
-    = Index
+    = Detail DetailContext
+    | Index
     | New NewContext
+
+
+
+-- DETAIL
+
+
+type alias DetailContext =
+    { uuid : String
+    }
+
+
+detail : DetailContext -> Page
+detail =
+    Detail
 
 
 
@@ -27,6 +43,9 @@ index =
 
 type alias NewContext =
     { items : MultiSelect.State
+    , notes : Maybe String
+    , replacements : List Replacement
+    , replacementConstructor : Replacement.Constructor
     , scheduledAt : Maybe String
     }
 
@@ -35,5 +54,8 @@ new : Page
 new =
     New
         { items = MultiSelect.init []
+        , notes = Nothing
+        , replacements = []
+        , replacementConstructor = NothingSelectedYet (MultiSelect.init [])
         , scheduledAt = Nothing
         }

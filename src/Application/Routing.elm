@@ -95,6 +95,15 @@ route =
             (s "ingredients" </> string </> s "edit")
 
         -----------------------------------------
+        -- Meals
+        -----------------------------------------
+        , map (Meals Meals.index) (s "meals")
+        , map (Meals Meals.new) (s "meals" </> s "add")
+        , map
+            (\uuid -> Meals <| Meals.detail { uuid = uuid })
+            (s "meals" </> string)
+
+        -----------------------------------------
         -- Nourishments
         -----------------------------------------
         , map (Nourishments Nourishments.index) (s "foods")
@@ -105,10 +114,4 @@ route =
         , map
             (\uuid -> Nourishments <| Nourishments.edit { uuid = uuid })
             (s "foods" </> string </> s "edit")
-
-        -----------------------------------------
-        -- Meals
-        -----------------------------------------
-        , map (Meals Meals.index) (s "meals")
-        , map (Meals Meals.new) (s "meals" </> s "add")
         ]

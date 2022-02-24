@@ -214,8 +214,7 @@ ingredientsList context ingredients model =
         ]
         []
         [ UI.Kit.multiSelect
-            { addButton =
-                [ Icons.filter_alt 18 Inherit ]
+            { addButton = [ UI.Kit.multiSelectFilterButton ]
             , allowCreation = False
             , inputPlaceholder = "Search tags"
             , items = MultiSelect.initItemList model.tags.ingredients
@@ -379,7 +378,7 @@ tagsField { available, msg, value } =
             [ A.for "ingredient_tags" ]
             [ Html.text "Tags" ]
         , UI.Kit.multiSelect
-            { addButton = [ Icons.add_circle 18 Inherit ]
+            { addButton = [ UI.Kit.multiSelectAddButton value ]
             , allowCreation = True
             , inputPlaceholder = "Type to find or create a tag"
             , items = MultiSelect.initItemList available

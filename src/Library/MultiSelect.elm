@@ -8,7 +8,6 @@ import Html exposing (Html)
 import Html.Attributes as A
 import Html.Events as E
 import Html.Events.Extra as E
-import Material.Icons as Icons
 import Material.Icons.Types exposing (Coloring(..))
 
 
@@ -56,6 +55,21 @@ initItemList =
 
 
 -- 🛠
+
+
+deactivate : State -> State
+deactivate (State state) =
+    State { state | search = Nothing }
+
+
+isOpened : State -> Bool
+isOpened (State state) =
+    case state.search of
+        Just _ ->
+            True
+
+        _ ->
+            False
 
 
 mapSelected : (List String -> List String) -> State -> State

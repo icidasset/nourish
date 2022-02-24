@@ -26,6 +26,7 @@
             "fission-suite/kit": "2.2.0",
             "fission-suite/webnative-elm": "7.0.0",
             "icidasset/elm-material-icons": "9.0.0",
+            "justinmimbs/date": "4.0.0",
             "krisajenkins/remotedata": "6.0.1",
             "rtfeldman/elm-iso8601-date-strings": "1.1.4"
         },
