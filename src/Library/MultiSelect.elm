@@ -82,8 +82,8 @@ selected (State state) =
     state.selected
 
 
-selectedItems : List Item -> State -> List Item
-selectedItems items (State state) =
+selectedItems : { includeCreated : Bool } -> List Item -> State -> List Item
+selectedItems { includeCreated } items (State state) =
     items
         |> List.foldr
             (\item ( a, s ) ->
@@ -103,7 +103,16 @@ selectedItems items (State state) =
                     s
             )
             ( [], state.selected )
-        |> Tuple.first
+        |> (\( acc, remainingSelected ) ->
+                if includeCreated then
+                    remainingSelected
+                        |> List.map (\x -> { name = x, value = x })
+                        |> List.append acc
+                        |> List.sortBy .name
+
+                else
+                    acc
+           )
 
 
 
@@ -168,7 +177,11 @@ view styles cfg (State stt) =
                             [ E.onClick (onSelect cfg stt selectedItem.value False) ]
                             [ Html.text selectedItem.name ]
                     )
-                    (selectedItems cfg.items <| State stt)
+                    (selectedItems
+                        { includeCreated = cfg.allowCreation }
+                        cfg.items
+                        (State stt)
+                    )
                 )
                 [ chunk
                     Html.button

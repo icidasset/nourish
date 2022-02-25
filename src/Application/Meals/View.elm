@@ -232,6 +232,7 @@ new context model =
     --
     , case
         MultiSelect.selectedItems
+            { includeCreated = False }
             (model.userData.nourishments
                 |> RemoteData.withDefault []
                 |> List.sortBy .name
