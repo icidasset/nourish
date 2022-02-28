@@ -144,6 +144,12 @@ update msg =
         AddMeal a ->
             Meals.add a
 
+        EditMeal a ->
+            Meals.edit a
+
+        GotContextForMealEdit a ->
+            Meals.gotContextForMealEdit a
+
         GotContextForNewMeal a ->
             Meals.gotContextForNewMeal a
 

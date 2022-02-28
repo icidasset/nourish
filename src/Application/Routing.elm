@@ -102,6 +102,9 @@ route =
         , map
             (\uuid -> Meals <| Meals.detail { uuid = uuid })
             (s "meals" </> string)
+        , map
+            (\uuid -> Meals <| Meals.edit { uuid = uuid })
+            (s "meals" </> string </> s "edit")
 
         -----------------------------------------
         -- Nourishments

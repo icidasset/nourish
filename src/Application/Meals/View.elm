@@ -8,17 +8,20 @@ import Html.Attributes as A
 import Html.Events as E
 import Html.Events.Extra as E
 import Html.Extra as Html
-import Ingredient exposing (ingredient)
+import Ingredient exposing (Ingredient, ingredient)
 import Iso8601
 import Kit.Components
 import List.Extra as List
 import Material.Icons as Icons
 import Material.Icons.Types exposing (Coloring(..))
+import Maybe.Extra as Maybe
+import Meal exposing (Meal)
 import Meals.Common exposing (..)
 import Meals.Page exposing (..)
 import Meals.Replacement as Replacement exposing (..)
 import MultiSelect
-import Nourishment exposing (nourishment)
+import Nourishment exposing (Nourishment, nourishment)
+import Page
 import Radix exposing (..)
 import RemoteData exposing (RemoteData(..))
 import Time
@@ -34,6 +37,9 @@ view page model =
         (case page of
             Detail context ->
                 detail context model
+
+            Edit context ->
+                edit context model
 
             Index ->
                 case model.userData.meals of
@@ -87,19 +93,17 @@ detail context model =
     case UserData.findMeal context model.userData of
         Just meal ->
             [ UI.Kit.buttonContainer
-                [ -- UI.Kit.buttonLinkWithSize
-                  --     Kit.Components.Normal
-                  --     [ { uuid = context.uuid }
-                  --         |> Nourishments.Page.edit
-                  --         |> Page.Nourishments
-                  --         |> Page.toString
-                  --         |> String.append "#"
-                  --         |> A.href
-                  --     ]
-                  --     [ Html.text "Edit" ]
-                  --
-                  -- ,
-                  UI.Kit.buttonWithSize
+                [ UI.Kit.buttonLinkWithSize
+                    Kit.Components.Normal
+                    [ { uuid = context.uuid }
+                        |> Meals.Page.edit
+                        |> Page.Meals
+                        |> Page.toString
+                        |> String.append "#"
+                        |> A.href
+                    ]
+                    [ Html.text "Edit" ]
+                , UI.Kit.buttonWithSize
                     Kit.Components.Normal
                     [ E.onDoubleClick (RemoveMeal { uuid = context.uuid }) ]
                     [ Html.text "Double click to remove" ]
@@ -111,9 +115,119 @@ detail context model =
 
 
 
+-- EDIT
+
+
+edit : EditContext -> Model -> List (Html Msg)
+edit context model =
+    let
+        meal =
+            case context.meal of
+                Just i ->
+                    Just i
+
+                Nothing ->
+                    UserData.findMeal context model.userData
+    in
+    [ UI.Kit.h1
+        []
+        [ Html.text "Edit meal" ]
+
+    --
+    , scheduledAtField
+        { currentTime = model.currentTime
+        , onInput = \scheduledAt -> GotContextForMealEdit { context | scheduledAt = Just scheduledAt }
+        , value =
+            Maybe.orElse
+                (Maybe.map .scheduledAt meal)
+                context.scheduledAt
+        }
+
+    --
+    , itemsField
+        { msg = \items -> GotContextForMealEdit { context | items = Just items }
+        , userData = model.userData
+        , value =
+            context.items
+                |> Maybe.orElse
+                    (Maybe.map
+                        (.items >> MultiSelect.init)
+                        meal
+                    )
+                |> Maybe.withDefault (MultiSelect.init [])
+        }
+
+    --
+    , case
+        MultiSelect.selectedItems
+            { includeCreated = False }
+            (model.userData.nourishments
+                |> RemoteData.withDefault []
+                |> List.sortBy .name
+                |> List.map (\n -> { name = n.name, value = n.name })
+            )
+            (Maybe.withDefault
+                (MultiSelect.init <| Maybe.unwrap [] .items meal)
+                context.items
+            )
+      of
+        [] ->
+            Html.nothing
+
+        selectedNourishments ->
+            replaceIngredientsField
+                { availableIngredients = RemoteData.withDefault [] model.userData.ingredients
+                , contextMsgConstructor =
+                    \c ->
+                        case c of
+                            UpdateReplacementConstructor con ->
+                                GotContextForMealEdit { context | replacementConstructor = con }
+
+                            UpdateReplacementsAndConstructor rep con ->
+                                GotContextForMealEdit { context | replacements = Just rep, replacementConstructor = con }
+                , nourishments = RemoteData.withDefault [] model.userData.nourishments
+                , replacements = Maybe.withDefault [] context.replacements
+                , replacementConstructor = context.replacementConstructor
+                , selectedNourishments = selectedNourishments
+                }
+
+    --
+    , notesField
+        { onInput =
+            \notes -> GotContextForMealEdit { context | notes = Just notes }
+        , value =
+            context.notes
+                |> Maybe.orElse (Maybe.andThen .notes meal)
+                |> Maybe.withDefault ""
+        }
+
+    --
+    , nameField
+        { onInput =
+            \name -> GotContextForMealEdit { context | name = Just name }
+        , value =
+            context.name
+                |> Maybe.orElse (Maybe.andThen .name meal)
+                |> Maybe.withDefault ""
+        }
+
+    --
+    , UI.Kit.buttonWithSize
+        Kit.Components.Normal
+        [ E.onClick (EditMeal context) ]
+        [ Icons.done 20 Inherit
+        , Html.span
+            [ A.class "ml-2" ]
+            [ Html.text "Save meal" ]
+        ]
+    ]
+
+
+
 -- INDEX
 
 
+index : List Meal -> Model -> List (Html Msg)
 index meals model =
     let
         now =
@@ -210,6 +324,7 @@ nothingPlanned =
 -- NEW
 
 
+new : NewContext -> Model -> List (Html Msg)
 new context model =
     [ UI.Kit.h1
         []
@@ -246,8 +361,17 @@ new context model =
         selectedNourishments ->
             replaceIngredientsField
                 { availableIngredients = RemoteData.withDefault [] model.userData.ingredients
-                , context = context
+                , contextMsgConstructor =
+                    \c ->
+                        case c of
+                            UpdateReplacementConstructor con ->
+                                GotContextForNewMeal { context | replacementConstructor = con }
+
+                            UpdateReplacementsAndConstructor rep con ->
+                                GotContextForNewMeal { context | replacements = rep, replacementConstructor = con }
                 , nourishments = RemoteData.withDefault [] model.userData.nourishments
+                , replacements = context.replacements
+                , replacementConstructor = context.replacementConstructor
                 , selectedNourishments = selectedNourishments
                 }
 
@@ -255,6 +379,12 @@ new context model =
     , notesField
         { onInput = \notes -> GotContextForNewMeal { context | notes = Just notes }
         , value = Maybe.withDefault "" context.notes
+        }
+
+    --
+    , nameField
+        { onInput = \name -> GotContextForNewMeal { context | name = Just name }
+        , value = Maybe.withDefault "" context.name
         }
 
     --
@@ -299,7 +429,7 @@ itemsField { msg, userData, value } =
     in
     UI.Kit.formField
         [ UI.Kit.label
-            [ A.for "schedule_items" ]
+            [ A.for "meal_items" ]
             [ Html.text "Food & Ingredients" ]
         , UI.Kit.multiSelect
             { addButton = [ UI.Kit.multiSelectAddButton value ]
@@ -307,19 +437,34 @@ itemsField { msg, userData, value } =
             , inputPlaceholder = "Type to find a food or an ingredient"
             , items = items
             , msg = msg
-            , uid = "schedule_items"
+            , uid = "meal_items"
             }
             value
+        ]
+
+
+nameField { onInput, value } =
+    UI.Kit.formField
+        [ UI.Kit.label
+            [ A.for "meal_name" ]
+            [ Html.text "Name (optional)" ]
+        , UI.Kit.textField
+            [ A.id "meal_name"
+            , E.onInput onInput
+            , A.type_ "text"
+            , A.value value
+            ]
+            []
         ]
 
 
 notesField { onInput, value } =
     UI.Kit.formField
         [ UI.Kit.label
-            [ A.for "schedule_notes" ]
-            [ Html.text "Notes" ]
+            [ A.for "meal_notes" ]
+            [ Html.text "Notes (optional)" ]
         , UI.Kit.textArea
-            [ A.id "schedule_notes"
+            [ A.id "meal_notes"
             , A.rows 3
             , A.value value
             , E.onInput onInput
@@ -331,10 +476,10 @@ notesField { onInput, value } =
 scheduledAtField { currentTime, onInput, value } =
     UI.Kit.formField
         [ UI.Kit.label
-            [ A.for "schedule_date" ]
+            [ A.for "meal_date" ]
             [ Html.text "Date" ]
         , UI.Kit.textField
-            [ A.id "schedule_date"
+            [ A.id "meal_date"
             , E.onInput onInput
             , A.placeholder ""
             , A.required True
@@ -356,10 +501,26 @@ scheduledAtField { currentTime, onInput, value } =
 -- FIELDS  ▒  INGREDIENT REPLACING
 
 
-replaceIngredientsField ({ context } as arguments) =
+type ContextMsgConstructor
+    = UpdateReplacementConstructor Constructor
+    | UpdateReplacementsAndConstructor (List Replacement) Constructor
+
+
+type alias ReplaceIngredientFieldArgs =
+    { availableIngredients : List Ingredient
+    , contextMsgConstructor : ContextMsgConstructor -> Msg
+    , nourishments : List Nourishment
+    , replacements : List Replacement
+    , replacementConstructor : Constructor
+    , selectedNourishments : List { name : String, value : String }
+    }
+
+
+replaceIngredientsField : ReplaceIngredientFieldArgs -> Html Msg
+replaceIngredientsField ({ replacements, replacementConstructor } as arguments) =
     UI.Kit.formField
         [ UI.Kit.label
-            [ A.for "schedule_replacements" ]
+            [ A.for "meal_replacements" ]
             [ Html.text "Replace Ingredients" ]
 
         -----------------------------------------
@@ -367,7 +528,7 @@ replaceIngredientsField ({ context } as arguments) =
         -----------------------------------------
         , chunk
             Html.div
-            (case context.replacements of
+            (case replacements of
                 [] ->
                     []
 
@@ -417,13 +578,13 @@ replaceIngredientsField ({ context } as arguments) =
                         , Html.text "."
                         ]
                 )
-                context.replacements
+                replacements
             )
 
         -----------------------------------------
         -- Construct a replacement
         -----------------------------------------
-        , case context.replacementConstructor of
+        , case replacementConstructor of
             NothingSelectedYet a ->
                 nothingSelectedYet arguments a
 
@@ -435,7 +596,8 @@ replaceIngredientsField ({ context } as arguments) =
         ]
 
 
-nothingSelectedYet { context, nourishments, selectedNourishments } state =
+nothingSelectedYet : ReplaceIngredientFieldArgs -> MultiSelect.State -> Html Msg
+nothingSelectedYet { contextMsgConstructor, nourishments, selectedNourishments } state =
     UI.Kit.multiSelectForNonIconOnlyButtons
         { addButton =
             [ replacementButton
@@ -462,15 +624,15 @@ nothingSelectedYet { context, nourishments, selectedNourishments } state =
                         )
                     |> Maybe.withDefault
                         (NothingSelectedYet newState)
-                    |> (\c ->
-                            GotContextForNewMeal { context | replacementConstructor = c }
-                       )
-        , uid = "schedule_replacements"
+                    |> UpdateReplacementConstructor
+                    |> contextMsgConstructor
+        , uid = "meal_replacements"
         }
         state
 
 
-selectedNourishment { availableIngredients, context } nourishment state =
+selectedNourishment : ReplaceIngredientFieldArgs -> Nourishment -> MultiSelect.State -> Html Msg
+selectedNourishment { availableIngredients, contextMsgConstructor } nourishment state =
     chunk
         Html.div
         []
@@ -485,8 +647,8 @@ selectedNourishment { availableIngredients, context } nourishment state =
             [ []
                 |> MultiSelect.init
                 |> NothingSelectedYet
-                |> (\c -> { context | replacementConstructor = c })
-                |> GotContextForNewMeal
+                |> UpdateReplacementConstructor
+                |> contextMsgConstructor
                 |> E.onClick
             ]
             [ Html.text nourishment.name ]
@@ -521,16 +683,16 @@ selectedNourishment { availableIngredients, context } nourishment state =
                             )
                         |> Maybe.withDefault
                             (SelectedNourishment nourishment newState)
-                        |> (\c ->
-                                GotContextForNewMeal { context | replacementConstructor = c }
-                           )
-            , uid = "schedule_replacements"
+                        |> UpdateReplacementConstructor
+                        |> contextMsgConstructor
+            , uid = "meal_replacements"
             }
             state
         ]
 
 
-selectedIngredient { availableIngredients, context } nourishment ingredient state =
+selectedIngredient : ReplaceIngredientFieldArgs -> Nourishment -> Ingredient -> MultiSelect.State -> Html Msg
+selectedIngredient { availableIngredients, contextMsgConstructor, replacements } nourishment ingredient state =
     let
         confirm =
             state
@@ -560,12 +722,11 @@ selectedIngredient { availableIngredients, context } nourishment ingredient stat
                                 , ingredientsToUseInstead = i
                                 }
                         in
-                        GotContextForNewMeal
-                            { context
-                                | replacements = context.replacements ++ [ r ]
-                                , replacementConstructor = NothingSelectedYet (MultiSelect.init [])
-                            }
+                        UpdateReplacementsAndConstructor
+                            (replacements ++ [ r ])
+                            (NothingSelectedYet <| MultiSelect.init [])
                    )
+                |> contextMsgConstructor
     in
     chunk
         Html.div
@@ -581,8 +742,8 @@ selectedIngredient { availableIngredients, context } nourishment ingredient stat
             [ []
                 |> MultiSelect.init
                 |> NothingSelectedYet
-                |> (\c -> { context | replacementConstructor = c })
-                |> GotContextForNewMeal
+                |> UpdateReplacementConstructor
+                |> contextMsgConstructor
                 |> E.onClick
             ]
             [ Html.text nourishment.name ]
@@ -598,8 +759,8 @@ selectedIngredient { availableIngredients, context } nourishment ingredient stat
             [ []
                 |> MultiSelect.init
                 |> SelectedNourishment nourishment
-                |> (\c -> { context | replacementConstructor = c })
-                |> GotContextForNewMeal
+                |> UpdateReplacementConstructor
+                |> contextMsgConstructor
                 |> E.onClick
             ]
             [ Html.text ingredient.name ]
@@ -637,9 +798,9 @@ selectedIngredient { availableIngredients, context } nourishment ingredient stat
                 \newState ->
                     newState
                         |> SelectedIngredient nourishment ingredient
-                        |> (\c -> { context | replacementConstructor = c })
-                        |> GotContextForNewMeal
-            , uid = "schedule_replacements"
+                        |> UpdateReplacementConstructor
+                        |> contextMsgConstructor
+            , uid = "meal_replacements"
             }
             state
         ]

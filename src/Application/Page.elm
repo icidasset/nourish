@@ -49,6 +49,9 @@ toString page =
         Meals (Meals.Detail { uuid }) ->
             "/meals/" ++ Url.percentEncode uuid ++ "/"
 
+        Meals (Meals.Edit { uuid }) ->
+            "/meals/" ++ Url.percentEncode uuid ++ "/edit/"
+
         Meals Meals.Index ->
             "/meals/"
 

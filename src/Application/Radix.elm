@@ -87,6 +87,8 @@ type Msg
       -- Meals
       -----------------------------------------
     | AddMeal Meals.Page.NewContext
+    | EditMeal Meals.Page.EditContext
+    | GotContextForMealEdit Meals.Page.EditContext
     | GotContextForNewMeal Meals.Page.NewContext
     | RemoveMeal { uuid : String }
       -----------------------------------------
