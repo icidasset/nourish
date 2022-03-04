@@ -184,7 +184,7 @@ edit context model =
 
                 replacements =
                     context.replacements
-                        |> Maybe.or
+                        |> Maybe.orElse
                             (Maybe.map
                                 (\{ replacedIngredients } ->
                                     Replacement.fromDictionary
