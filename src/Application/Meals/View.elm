@@ -175,8 +175,30 @@ edit context model =
             Html.nothing
 
         selectedNourishments ->
+            let
+                ingredients =
+                    RemoteData.withDefault [] model.userData.ingredients
+
+                nourishments =
+                    RemoteData.withDefault [] model.userData.nourishments
+
+                replacements =
+                    context.replacements
+                        |> Maybe.or
+                            (Maybe.map
+                                (\{ replacedIngredients } ->
+                                    Replacement.fromDictionary
+                                        replacedIngredients
+                                        ingredients
+                                        nourishments
+                                )
+                                meal
+                            )
+                        |> Maybe.withDefault
+                            []
+            in
             replaceIngredientsField
-                { availableIngredients = RemoteData.withDefault [] model.userData.ingredients
+                { availableIngredients = ingredients
                 , contextMsgConstructor =
                     \c ->
                         case c of
@@ -185,8 +207,8 @@ edit context model =
 
                             UpdateReplacementsAndConstructor rep con ->
                                 GotContextForMealEdit { context | replacements = Just rep, replacementConstructor = con }
-                , nourishments = RemoteData.withDefault [] model.userData.nourishments
-                , replacements = Maybe.withDefault [] context.replacements
+                , nourishments = nourishments
+                , replacements = replacements
                 , replacementConstructor = context.replacementConstructor
                 , selectedNourishments = selectedNourishments
                 }
