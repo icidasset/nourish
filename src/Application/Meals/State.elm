@@ -28,7 +28,7 @@ add context model =
         scheduledAt =
             Maybe.withDefault
                 (defaultDate { currentTime = model.currentTime })
-                context.scheduledAt
+                (ensureDate context.scheduledAt)
     in
     model.userData
         |> UserData.addMeal
@@ -72,7 +72,7 @@ edit ({ uuid } as context) model =
                             , name = Maybe.or context.name meal.name
                             , notes = Maybe.or context.notes meal.notes
                             , replacedIngredients = Maybe.withDefault meal.replacedIngredients (Maybe.map Replacement.toDictionary context.replacements)
-                            , scheduledAt = Maybe.withDefault meal.scheduledAt context.scheduledAt
+                            , scheduledAt = Maybe.withDefault meal.scheduledAt (ensureDate context.scheduledAt)
                         }
                     , uuid = uuid
                     }
@@ -155,3 +155,20 @@ remove args model =
                 (Page.Meals Meals.index)
                 model.navKey
             )
+
+
+
+-- 🛠
+
+
+ensureDate : Maybe String -> Maybe String
+ensureDate maybe =
+    case Maybe.map String.trim maybe of
+        Just "" ->
+            Nothing
+
+        Just date ->
+            Just date
+
+        Nothing ->
+            Nothing
