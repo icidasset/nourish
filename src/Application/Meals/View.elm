@@ -321,11 +321,25 @@ indexItem ( _, meal ) =
             |> Result.withDefault Html.nothing
 
         --
-        , meal.items
-            |> Common.enumerate
-            |> Html.text
-            |> List.singleton
-            |> chunk Html.div [ "italic", "mt-px", "pt-px", "text-xs" ] []
+        , chunk
+            Html.div
+            [ "mt-px", "pt-px", "text-xs" ]
+            []
+            [ case meal.name of
+                Just "" ->
+                    Html.nothing
+
+                Just name ->
+                    chunk Html.strong [ "mr-1" ] [] [ Html.text name ]
+
+                Nothing ->
+                    Html.nothing
+            , meal.items
+                |> Common.enumerate
+                |> Html.text
+                |> List.singleton
+                |> Html.em []
+            ]
         ]
 
 
